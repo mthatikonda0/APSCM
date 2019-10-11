@@ -1,0 +1,54 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewClientCMS
+
+ <div class="well">
+           <div class="row">
+               <div class="col-lg-12 pull-right">
+                   <div class="btn-group pull-right" style="margin-right: 10px;">
+                       <button id="SaveClientassessement" rel="tooltip" type="submit" class="btn btn-success btn-md" title=" Save ">Save</button>
+                       <a id="cancel" rel="tooltip" class="btn btn-default btn-md" title=" Cancel ">Cancel</a>
+                   </div>
+               </div>
+           </div>
+
+           <div class="row nextline">
+               @Html.Partial("_ViewClientCMS", Model)
+           </div>
+
+           <div class="row nextline ">
+               <b>Time Case Plan Completed </b>
+               <br />
+               @*   @Html.EditorFor(m => m.viewcaseplan.ListCasePlanTime, "CasePlanTimes")*@
+               @for (int idx = 0; idx < Model.viewcaseplan.ListCasePlanTime.Count; idx++)
+               {   
+                   <div class="caseplantime" id="caseplantime@(idx)">
+
+                       @Html.HiddenFor(x => Model.viewcaseplan.ListCasePlanTime[idx].Id)
+                       @Html.HiddenFor(x => Model.viewcaseplan.ListCasePlanTime[idx].Code)
+                       @Html.CheckBoxFor(x => Model.viewcaseplan.ListCasePlanTime[idx].IsChecked) @Html.DisplayFor(x => Model.viewcaseplan.ListCasePlanTime[idx].Description)
+                       <br />
+
+                       @Html.HiddenFor(x => Model.viewcaseplan.ListCasePlanTime[idx].Description)
+                   </div>
+                   <div class="risk" id="risk@(idx)">
+                       @for (int i = 0; i < Model.viewcaseplan.ListCasePlanTime[idx].Risk.Count; i++)
+                       {        
+                                  
+                           @Html.HiddenFor(x => Model.viewcaseplan.ListCasePlanTime[idx].Risk[i].Id)
+                           @Html.HiddenFor(x => Model.viewcaseplan.ListCasePlanTime[idx].Risk[i].Code)
+                           @Html.CheckBoxFor(x => Model.viewcaseplan.ListCasePlanTime[idx].Risk[i].IsChecked) @Html.DisplayFor(x => Model.viewcaseplan.ListCasePlanTime[idx].Risk[i].Description)
+                           <br />
+
+                           @Html.HiddenFor(x => Model.viewcaseplan.ListCasePlanTime[idx].Risk[i].Description)                          
+
+                       }  
+                   </div>                       
+               }
+
+
+
+               <button type="submit" name="Next">Next</button>
+           </div>
+
+               <br />
+        
+                 </div>

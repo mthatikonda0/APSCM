@@ -1,0 +1,460 @@
+﻿@model AGE.CMS.Data.Models.Dashboard.ViewOpenClosedTransferedCasesModel
+@using PagedList.Mvc;
+<link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+
+
+
+
+<div class="panel-body">
+
+    @if (Model != null && Model.OpenCases != null && Model.OpenCases.Count > 0)
+    {
+        if (User.Identity.IsAuthenticated)
+        {
+            if (Model.FilterFirstName.Trim().Length > 0 || Model.FilterLastName.Trim().Length > 0 || Model.FilterDOB.Trim().Length > 0 || Model.FilterSSN.Trim().Length > 0 || Model.FilterCWLastName.Trim().Length > 0)
+            {
+                <h4>Filter Active (Lastname = @Model.FilterLastName.Trim()) (Firstname = @Model.FilterFirstName.Trim()) (DOB = @Model.FilterDOB.Trim()) (SSN = @Model.FilterSSN.Trim()) (CW Last Name = @Model.FilterCWLastName.Trim()) (Abuser Search = @Model.IsAbuserSearch)</h4> 
+            }
+
+            <table class="table table-striped table-hover  " id="OpenCasesTable" >
+                <caption style="display: none">List of Cases</caption>
+                <thead>
+                    <tr>
+                        @if (User.IsInRole("CMS_Supervisor") || User.IsInRole("CMS_IDOAStaff"))
+                        {
+                            <th class="col-lg-1">&nbsp;</th>
+                        }
+                        else
+                        {
+                            <th class="col-lg-1"></th>
+                        }
+                        <th class="col-lg-1">&nbsp;</th>
+                        <th class="col-lg-1">Client</th>
+                        <th class="col-lg-1">Intake Date</th>
+                        <th class="col-lg-3">Agency</th>
+                        @*   <th class="col-lg-1">Expected Case Closure Date</th>*@
+                        <th class="col-lg-1">Case Worker</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.OpenCases)
+                    {
+                        <tr class="">
+                            @if (User.IsInRole("CMS_Supervisor") || User.IsInRole("CMS_IDOAStaff"))
+                            {
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#TransferModal" data-transfer="@(item.Id)" data-transfer1="@(item.ListOfFormNames)">Transfer</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AssignModal" data-transfer="@(item.Id)">Assign</button>
+                                    </div>
+                                </td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                            <td>
+                                <div class="btn-group">
+                                    @*<a rel="tooltip" class="btn btn-default btn-xs" title="List Cases" href='@Url.Action("ListCases", "Case", new { Id = @item.ClientId })'><span class="glyphicon glyphicon-list"></span></a>*@
+                                    <a rel="tooltip" class="btn btn-default btn-xs" title="Manage Case" href='@Url.Action("ManageCase", "Case", new { CaseheaderId = @item.Id })'><span class="glyphicon glyphicon-th-large"></span></a>
+                                    <a rel="tooltip" class="btn btn-default btn-xs" title="Edit Client" href='@Url.Action("EditClient", "Case", new { Id = @item.ClientId, CaseheaderId = @item.Id, mode = "Case" })'><span class="glyphicon glyphicon-user"></span></a>
+                                    <a rel="tooltip" class="btn btn-default btn-xs" title="Time line of Open Case" href='@Url.Action("GetTimeline", "Case", new { CaseheaderId = @item.Id })'><span class="glyphicon glyphicon-time"></span></a>
+                                    @if (User.IsInRole("CMS_IDOAStaff"))
+                                    {
+                                        <a rel="tooltip" class="btn btn-danger btn-xs" title="Remove Case" href='@Url.Action("RemoveCase", "Case", new { CaseheaderId = @item.Id })'><span class="glyphicon glyphicon-remove"></span></a>
+                                    }
+
+                                    @*@if (item.ListOfFormsToCheck == null || item.ListOfFormsToCheck.Count() == 0)
+                                    {
+                                        // no forms check, if caseworker show PLUS
+                                        if (User.IsInRole("CMS_Caseworker"))
+                                        {
+                                            <v type="button" class="btn btn-default btn-xs" title="Add Actions" data-toggle="modal" data-transfer="@(item.Id)" data-target="#ToDoActionModal_@item.Id"><span class="glyphicon glyphicon-plus"></span></v>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // Forms are checked, if suprv or CW show FLAG
+                                        if (User.IsInRole("CMS_Supervisor") || User.IsInRole("CMS_Caseworker"))
+                                        {
+                                            <v rel="tooltip" class="btn btn-default btn-xs" title="Check Actions" data-toggle="modal" data-transfer="@(item.Id)" data-target="#ToDoActionModal_@item.Id"><span class="glyphicon glyphicon-flag"></span></v>
+                                        }
+                                    }*@
+
+                                    @if (item.ListOfFormsToCheck == null || item.ListOfFormsToCheck.Count() == 0)
+                                    {
+                                        if (User.IsInRole("CMS_Caseworker"))
+                                        {
+                                            <v type="button" class="btn btn-default btn-xs"  title="Add Actions" id="plus-@item.Id" data-toggle="modal" data-transfer="@(item.Id)" data-target="#ToDoActionModal_@item.Id"><span class="glyphicon glyphicon-plus"></span></v>
+                                            <v rel="tooltip" class="btn btn-default btn-xs" style="display: none;" id="flag-@item.Id" title="Check Actions" data-toggle="modal" data-transfer="@(item.Id)" data-target="#ToDoActionModal_@item.Id"><span class="glyphicon glyphicon-flag"></span></v>
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        if (User.IsInRole("CMS_Supervisor") || User.IsInRole("CMS_Caseworker"))
+                                        {
+                                            <v rel="tooltip" class="btn btn-default btn-xs" title="Check Actions" id="flag-@item.Id" data-toggle="modal" data-transfer="@(item.Id)" data-target="#ToDoActionModal_@item.Id"><span class="glyphicon glyphicon-flag"></span></v>
+                                        }
+                                        if (User.IsInRole("CMS_Caseworker"))
+                                        {
+                                            <v type="button" class="btn btn-default btn-xs" title="Add Actions" style="display: none;" id="plus-@item.Id" data-toggle="modal" data-transfer="@(item.Id)" data-target="#ToDoActionModal_@item.Id"><span class="glyphicon glyphicon-plus"></span></v>
+                                        }
+
+                                    }
+
+
+                                    <div class="modal fade" id="ToDoActionModal_@item.Id" tabindex="-1" role="dialog" aria-labelledby="ToDoActionModalLabel">
+                                        <div class="modal-dialog" role="document" style="padding-top: 10%">
+                                            {
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title" id="ToDoActionModalLabel">Select Forms that need Supervisor Action</h4>
+                                                    <b>Client: </b>@Html.DisplayFor(modelItem => item.LastName) , @Html.DisplayFor(modelItem => item.FirstName)
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div id="todoAction">
+                                                        <div class="row">
+                                                            @Html.HiddenFor(model => model.Id, new { @class = "form-control", id = "id" })
+                                                            <div class="col-lg-10 checkboxlist">
+                                                                @if (item.ListOfFormNames != null)
+                                                                {
+                                                                    for (var i = 0; i < item.ListOfFormNames.Count(); i++)
+                                                                    {
+                                                                        <div>
+                                                                            @Html.HiddenFor(x => item.ListOfFormNames[i].Id)
+                                                                            @Html.CheckBoxFor(x => item.ListOfFormNames[i].IsChecked)<span class="textspace"></span> @Html.DisplayFor(x => item.ListOfFormNames[i].Description)<br />
+                                                                        </div>
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-primary collectbtn" id="@item.Id">Update</button>
+                                                    <button type="button" id="dismissButton-@item.Id" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                </div>
+
+                                            </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.LastName) , @Html.DisplayFor(modelItem => item.FirstName)</td>
+                            <td>@item.DateCreated.ToShortDateString()</td>
+                            <td>@Html.DisplayFor(modelItem => item.ContractDescription)</td>
+                            @* <td>@Html.DisplayFor(modelItem => item.ClosureDate)</td>*@
+                            @if (String.IsNullOrEmpty(@item.CaseWorkerName) || @item.CaseWorkerName.Length < 9)
+                            {
+                                <td>@item.CaseWorkerName</td>
+                            }
+                            else
+                            {
+                                <td>@item.CaseWorkerName</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        }
+
+        <div id="container" style="margin-left: 20px">
+            <table width="100%" cellpadding="0">
+                <tr>
+                    <td width="150" valign="top" >
+                        Total Records: @Model.AllOpenCases.Count.ToString()
+                    </td>
+                    <td align="right" valign="top">
+                        Page @(Model.OpenCases.PageCount < Model.OpenCases.PageNumber ? 0 : Model.OpenCases.PageNumber) of @Model.OpenCases.PageCount
+                        @Html.PagedListPager(Model.OpenCases, page => Url.Action("ListOfCasesInAgency", "Case", new { Page = page, ListName = "open" }))
+                    </td>
+                </tr>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p>There are no <u><b>open</b></u> cases in Agency</p>
+        }
+
+
+
+        </>
+
+
+    <div class="modal fade" id="TransferModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document" style="padding-top: 20%">
+            <script>
+                        $(document).ready(function () {
+                            $('#submitform').click(function (e) {
+                                bootbox.confirm({
+                                    title: "Are you sure?",
+                                    message: "This cannot be undone",
+                                    buttons: {
+                                        cancel: {
+                                            label: '<i class="fa fa-times"></i> Cancel'
+                                        },
+                                        confirm: {
+                                            label: '<i class="fa fa-check"></i> Confirm'
+                                        }
+                                    },
+                                    callback: function (result) {
+                                        if (result) {
+
+                                            $.ajax({
+                                                url: '@Url.Action("TransferCase", "Case")',
+                                                type: "POST",
+                                                data: {
+                                                    Id: $('.Id').val(),
+                                                    ContractId: $('#ContractId').val(),
+                                                },
+                                                success: function (data) {
+                                                    window.location.href = data.Url;
+                                                },
+                                                error: function (request, status, error) {
+                                                    $('#fail').show();
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            })
+                        });
+            </script>
+            @*@using (Html.BeginForm("TransferCase", "Case", FormMethod.Post, new { @id = "TransferForm" }))
+                {*@
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">Transfer Case to Other Agency</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="transferform">
+                        <div class="row">
+                            @Html.HiddenFor(model => model.Id, new { @class = "form-control Id", id = "id" })
+
+                            <div class="col-lg-10">
+                                @Html.LabelFor(model => model.ContractId)
+                                <div>
+                                    @Html.DropDownListFor(model => model.ContractId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewContract { Id = 0, ContractName = " Select Agency" } }.Union(Model.AllContracts.Where(c => c.AgencyType.Code == "03").OrderBy(s => s.ContractName)), "Id", "DisplayContractName", Model.ContractId), new { @class = "form-control" })<br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="submitform" rel="tooltip" type="button" name="action:TransferCase" value="TransferCase" class="btn btn-primary btn-md" title="Transfer">Transfer</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            @*}*@
+        </div>
+    </div>
+    <div class="modal fade" id="AssignModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document" style="padding-top: 300px">
+            @using (Html.BeginForm("AssignCase", "Case", FormMethod.Post))
+            {
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="assignModalLabel">Assign Case Worker</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="assignform">
+                            <div class="row">
+
+                                @Html.HiddenFor(model => model.Id, new { @class = "form-control diabled", id = "id" })
+                                <div class="col-lg-6">
+                                    @Html.LabelFor(m => m.CaseWorkers, new { @class = "control-label" })
+                                    <div>
+                                        @*@Html.DropDownListFor(model => model.CaseWorkers, new SelectList(new[] { new AGE.CMS.Data.Models.Security.LoggedInUser { UserName = "EXTERNAL/", DisplayUserName = "Assign Caseworker" } }.Union(Model.CaseWorkers), "UserName", "DisplayUserName", Model.CaseWorkers), new { @class = "form-control" }) *@ 
+                                        @Html.DropDownListFor(model => model.CaseworkerId, new SelectList(Model.CaseWorkers.Caseworkers, "CWId", "CWFullName"), new { @class = "form-control", id="Caseworker_CWId" })
+                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="assign" rel="tooltip" type="submit" class="btn btn-primary btn-md">Submit</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+
+
+
+<br />
+
+    </div>
+
+    <script>
+    $(document).ready(function () {
+
+        @*$("#nextpage").click(function () {
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ListOfCasesInAgency", "Case")',
+                data: { page: $("#Page").val() }
+
+            });
+
+
+
+        });*@
+
+        $('form').submit(function (e) {
+            if (parseInt($("#Page").val()) > parseInt($("#OpenCasesCount").val())) {
+                e.preventDefault();
+                noti("There are only <b>" + $("#OpenCasesCount").val() + "</b> blocks", "danger");
+            }
+        });
+
+        $("#next").click(function () {
+            $("#Page").val(parseInt($("#pageNumber").val()) + 1);
+            $("#nextpage").click();
+        });
+
+        $("#Prev").click(function () {
+            $("#Page").val(parseInt($("#pageNumber").val()) - 1);
+            $("#nextpage").click();
+        });
+
+        var caseheaderid;
+        $("[Id*='ToDoActionModal']").on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var Id = button.data('transfer')
+            caseheaderid = button.data('transfer')
+            var modal = $(this)
+            modal.find('.modal-body #id').val(Id)
+
+        });
+
+
+        $(".collectbtn").click(function () {
+            var selectedIds = new Array();
+            var caseId;
+            console.log(this);
+            var Id = $(this).attr("id");
+            var checkedCount = 0;
+
+            $(this).parent().parent().find("[type='checkbox']").each(function () {
+                if ($(this).is(":checked")) {
+                    selectedIds.push($(this).siblings("[Id*='_Id']").val());
+                    checkedCount = checkedCount + 1;
+                }
+            });
+
+            
+
+            caseId = caseheaderid;
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ToCheckForms", "Case")',
+                traditional: true,
+                dataType: "json",
+                data: { caseheaderid: caseheaderid, 'selectedIds': selectedIds },
+                success: function (data) {
+                    selectedIds = [];
+                    
+                    //$('.modal').modal('hide');
+                }
+            });
+
+
+            if (checkedCount > 0) {
+
+                $('#flag-' + Id).show();
+                $('#plus-' + Id).hide();
+            }
+            else {
+                $('#flag-' + Id).hide();
+                $('#plus-' + Id).show();
+            }
+
+            $('#dismissButton-' + Id).click();
+
+
+
+           // location.reload();
+
+
+
+        });
+
+        $('#TransferModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var Id = button.data('transfer')
+            var modal = $(this)
+            modal.find('.modal-body #id').val(Id)
+
+        });
+
+
+        $('#AssignModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var Id = button.data('transfer')
+            var modal = $(this)
+            modal.find('.modal-body #id').val(Id)
+        });
+
+        $('#OpenCasesInAgency tfoot th').slice(2).each(function () {
+            var title = $(this).text();
+            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+        });
+
+
+        var table = $('#OpenCasesInAgency').DataTable({
+
+            //order: [[3, "desc"]],
+            "columns": [
+                { "orderable": false },
+                { "orderable": false },
+                null,
+                null,
+                null,
+                null
+            ]
+        });
+
+        table.columns().every(function () {
+            var that = this;
+
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+
+
+
+        //$('form').submit(function (e) {
+        //    var currentForm = this;
+        //    e.preventDefault();
+        //    bootbox.confirm("Are you sure?", function (result) {
+        //        if (result) {
+        //            currentForm.submit();
+        //        }
+        //    });
+        //});
+    });
+
+
+    </script>

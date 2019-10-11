@@ -1,0 +1,17 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewValidateIntake
+
+<div>
+   @if(Model.IsValid)
+   {
+       <p>You can goahead and submit case for Billing</p>
+   }
+   
+    else
+   {
+       foreach(var message in Model.Messages)
+       {
+           <p>@message</p>
+       }
+   }
+    
+</div>

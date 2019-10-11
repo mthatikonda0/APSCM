@@ -1,0 +1,119 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewCaseActivityTracker
+
+@{
+    ViewBag.Title = "Case Activity Tracker";
+}
+<script>
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            format: 'mm-dd-yyyy',
+            changeMonth: true,
+            changeYear: true,
+            maxDate: new Date
+        });
+
+        $("form").submit(function (e) {
+            
+            var cou = 0;
+            if ($("#IsAfterHours").is(':checked') && ($('#PriorityId').val() == 2 || $('#PriorityId').val() == 3)) {
+                cou = 1;
+                noti("<b>Please Select Priority Type 1 if After Hours is Checked</b> ", "info")
+            }
+            else {
+                
+            }
+
+            if (cou > 0) {
+                e.preventDefault();
+            }
+
+
+        });
+    });
+</script>
+<div class="container">
+
+    @using (Html.BeginForm("SaveCaseActivityTracker", "Case", FormMethod.Post))
+    {
+        <div class="panel panel-warning">
+
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <span class="titletextbegin">
+                        <span class="glyphicon glyphicon-edit"></span><span class="textspace">
+                            <text>Case Activity Tracker</text>
+                        </span>
+                    </span>
+                </h2>
+            </div>
+
+            <div class="panel-body">
+
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.IntakeId)
+                @Html.HiddenFor(model => model.viewIntake.viewCaseHeader.Client.Id)
+                @Html.HiddenFor(model => model.viewIntake.viewCaseHeader.Id)
+
+                <div class="row">
+                    <div class="col-lg-12 pull-right">
+                        <div class="btn-group pull-right" style="margin-right: 10px;">
+                            <button id="saveActivity" rel="tooltip" type="submit" class="btn btn-success btn-md btn-outline" title=" Save & Close ">Save & Close</button>
+                            <a id="cancel" rel="tooltip" class="btn btn-default btn-md" title=" Cancel " href='@Url.Action("ManageCase", "Case", new { CaseheaderId = @Model.viewIntake.CaseheaderId})'>Cancel</a>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row nextline" style="margin: 1px">
+                    @Html.Partial("_ViewClientCMS", Model.viewIntake.viewCaseHeader.Client)
+                </div>
+                <div class="row nextline" >
+                    <div class="col-lg-3">
+                        @Html.LabelFor(model => model.SubstantiationDecisionId)
+                        @Html.DropDownListFor(model => model.SubstantiationDecisionId, (List<SelectListItem>)ViewBag.SubstantiationTypes, "Select", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SubstantiationDecisionId)
+                    </div>
+                    <div class="col-lg-3">
+                        @Html.LabelFor(model => model.PriorityId)
+                        @Html.DropDownListFor(model => model.PriorityId, (List<SelectListItem>)ViewBag.PriorityTypes, "Select", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.PriorityId)
+                    </div>
+                    <div class="col-lg-2 form-group">
+                        @Html.LabelFor(model => model.DateInitiatedFTF)
+                        <div>
+                            @Html.TextBoxFor(model => model.DateInitiatedFTF, "{0:MM/dd/yyyy}" ,new { @class = "form-control datepicker", placeholder = "Initiated FTF  Date" })
+                            @Html.ValidationMessageFor(model => model.DateInitiatedFTF)
+                        </div>
+                    </div>
+                
+                    </div>
+
+                <div class="row nextline">
+                    <div class="col-lg-2 form-group">
+                        @Html.LabelFor(model => model.DateFTF)
+                        <div>
+                            @Html.TextBoxFor(model => model.DateFTF, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", placeholder = "FTF Date" })
+                            @Html.ValidationMessageFor(model => model.DateFTF)
+                        </div>
+                    </div>
+                    <div class="col-lg-2 form-group">
+                        @Html.LabelFor(model => model.DateStatus)
+                        <div>
+                            @Html.TextBoxFor(model => model.DateStatus, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", placeholder = "Status Date" })
+                            @Html.ValidationMessageFor(model => model.DateStatus)
+                        </div>
+                    </div>
+                   
+                    <div class="col-lg-4">
+                        @Html.LabelFor(model => model.ExceptionId)
+                        @Html.DropDownListFor(model => model.ExceptionId, (List<SelectListItem>)ViewBag.Exceptionsddl, "Select", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ExceptionId)
+                    </div>
+                    <div class="col-lg-4">
+                      @Html.CheckBoxFor(model => model.IsAfterHours)  @Html.LabelFor(model => model.IsAfterHours)                        
+                    </div>
+                    </div>
+                </div>
+        </div>
+    }
+</div>

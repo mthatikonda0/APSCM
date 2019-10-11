@@ -1,0 +1,186 @@
+﻿@model AGE.CMS.Data.Models.ClientAssessment.viewClientAssesssment
+
+@{
+    ViewBag.Title = "Client Assessement";
+    var errorclass = "";
+}
+
+
+<script>
+    $(document).ready(function () {
+        $("#Submit").click(function (ev) {
+            debugger;
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SubmitClientAssessement", "Case")',
+                dataType: "json",
+                data: $('#clientassessmentform').find('select, textarea, input').serialize(),
+                success: function (data) {
+                    window.location.href = data.Url;
+
+                }
+
+
+
+
+
+            });
+            ev.preventDefault();
+        });
+
+
+
+    });
+</script>
+<script src="~/Assets/Basic/Scripts/CMS/Case/EditClientAssessment.js"></script>
+<div class="container">
+    <div class="panel panel-warning">
+
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="titletextbegin">
+                    <span class="glyphicon glyphicon-edit"></span><span class="textspace">
+                        <text>Client Assessement</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+        @if (Model.InCompleteErrors.ErrorsInClientAssessment)
+        {
+            <span class="danger">Please correct the highlighted fields under each tab (and Report of Substantiation if applicable) to complete the Client Assessment</span>
+        }
+        else if (Model.StatusDescription == AGE.CMS.Data.Models.ENums.CaseStatus.Incomplete.ToString())
+        {
+            <span class="warning">Client Assessment is still Incomplete; Please Submit to complete</span>
+        }
+
+
+        <div class="panel-body">                       
+            @using (Html.BeginForm("SaveClientAssessement", "Case", FormMethod.Post, new { id = "clientassessmentform"}))
+            {
+                @Html.HiddenFor(model => model.Id)              
+                @Html.HiddenFor(model => model.IntakeId)      
+                @Html.HiddenFor(model => model.CaseheaderId)
+                @Html.HiddenFor(m => m.mode)
+                {
+                    errorclass = "";
+
+                    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsIsClientInterviewedANE)
+                    {
+                        errorclass = "has-error";
+                    }
+                    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsIsClientInterviewedSN)
+                    {
+                        errorclass = "has-error";
+                    }
+
+                }
+                <div class="">
+                    <div class="row">
+                        <div class="col-lg-12 pull-right">
+                            <div class="btn-group pull-right" style="margin-right: 10px;">      
+                                @*@if (Model.StatusDescription == "Submitted")
+                                    {
+                                        if (User.IsInRole("Supervisor") || User.IsInRole("IDOAStaff"))
+                                        {
+                                            <button id="ApproveClientAssessment" rel="tooltip" type="submit" name="action:ApproveClientAssessment" value="Validate" class="btn btn-primary btn-md" title=" ApproveClientAssessment ">Approve</button>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <button id="SaveClientassessement" rel="tooltip" type="submit" name="action:SaveClientassessement" value="SaveClientassessement" class="btn btn-success btn-md" title=" SaveClientassessement ">Save</button>
+                                    }*@
+
+                                <button id="SaveClientassessement" rel="tooltip" type="submit" value="SaveClientassessement" class="btn btn-success btn-md" title=" SaveClientassessement ">Save</button>
+                                @if (Model.StatusDescription == "Open")
+                                {
+
+                                    <button id="Submit" rel="tooltip"  class="btn btn-primary btn-md" >Submit</button>
+
+                                }
+                                <a id="cancelClientAssessment" rel="tooltip" class="btn btn-default btn-md" title=" Cancel " >Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row nextline" style="margin:1px">
+                        @Html.Partial("_ViewClientCMS", Model.viewIntake.viewCaseHeader.Client)
+                    </div>
+
+
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-lg-3 @errorclass" style="padding-top: 20px">
+                                @if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsIsClientInterviewedANE)
+                                {
+                                    <span class="danger">Please select whether client has been interviewed about allegations of ANE</span><br />
+                                }
+                                @Html.LabelFor(model => model.IsClientInterviewedANE, new { @class = "errorclass" })
+                                <br />
+                                @Html.RadioButtonFor(model => model.IsClientInterviewedANE, "y") Yes
+                                @Html.RadioButtonFor(model => model.IsClientInterviewedANE, "n") No
+                                @Html.RadioButtonFor(model => model.IsClientInterviewedANE, "x") Not applicable
+                            </div>
+                            <div class="col-lg-3 @errorclass" style="padding-top: 20px">
+                                @if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsIsClientInterviewedSN)
+                                {
+                                    <span class="danger">Please select whether client has been interviewed about allegations of SN</span><br />
+                                }
+                                @Html.LabelFor(model => model.IsClientInterviewedSN)
+                                <br />
+                                @Html.RadioButtonFor(model => model.IsClientInterviewedSN, "y") Yes
+                                @Html.RadioButtonFor(model => model.IsClientInterviewedSN, "n") No
+                                @Html.RadioButtonFor(model => model.IsClientInterviewedSN, "x") Not applicable
+                            </div>
+
+                            <div class="col-lg-34" style="padding-top: 20px">
+                                @Html.CheckBoxFor(model => model.IsClientUnableToInterviewed)
+                                @Html.LabelFor(m => m.IsClientUnableToInterviewed, new { @class = "control-label" })
+                            </div>
+                        </div>
+
+                        <div class="row nextline"></div>
+                        <div class="row nextline"></div>
+
+
+                        <div class="row">
+                            <div class="panel panel-default nextline">
+                                <div class="panel-body ">
+                                    <div id="content">
+                                        <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                                            <li class="active"><a href="#tabs-A" data-toggle="tab">Indicators</a></li>
+                                            @if (Model.mode == "summary")
+                                            {
+                                                <li><a href="#tabs-B" data-toggle="tab">Investigation Summary</a></li>
+                                                <li><a href="#tabs-C" data-toggle="tab">Assessment Status and Substantiation Decision </a></li>
+                                            }
+                                        </ul>
+
+                                        <div id="managecontent" class="tab-content">
+                                            <div id="tabs-A" class="tab-pane active">
+                                                @Html.Partial("PartialIndicators", Model)
+                                            </div>
+                                            @if (Model.mode == "summary")
+                                            {
+                                                <div id="tabs-B" class="tab-pane fade">
+                                                    @Html.Partial("InvestigationSummary", Model)
+                                                </div>
+                                                <div id="tabs-C" class="tab-pane fade">
+                                                    @Html.Partial("PartialAssessmentStatus", Model)
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+        </div>
+
+    </div>
+</div>

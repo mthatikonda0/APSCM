@@ -1,0 +1,613 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewAbuserInformation
+
+@{
+    ViewBag.Title = "EditAbuser";
+}
+
+<script src="~/Assets/Basic/Scripts/CMS/Case/EditAbuser.js"></script>
+<script>
+    $(document).ready(function () { 
+    $("#saveAbuserInfo").click(function (e) {
+        e.preventDefault();
+        $("#IsAjax").val(true);
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("SaveAbuser", "Case")',
+            dataType: "json",
+            data: $('#alldiv').find('select, textarea, input').serialize(),
+            success: function (data) {
+                console.log(data);
+                $('#Id').val(data.Id);
+                $("#IdandintakeId").val(data.IntakeId)
+                $("#IsAjax").val(false);
+                notification("<strong>Success</strong> Saved!");
+               
+            }
+
+        });
+
+    });
+
+
+    });
+
+
+</script>
+
+
+<div class="container" id="alldiv">
+
+    @using (Html.BeginForm("SaveAbuser", "Case", FormMethod.Post))
+    {
+
+        <div class="panel panel-warning">
+
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <span class="titletextbegin">
+                        <span class="glyphicon glyphicon-edit"></span><span class="textspace">
+                            <text>Alleged Abuser (AA) Information</text>
+                        </span>
+                    </span>
+                </h2>
+            </div>
+
+
+            <div class="panel-body">
+
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.CaseheaderId)
+                @Html.HiddenFor(model => model.IntakeId)
+                @Html.HiddenFor(model => model.IsAjax)
+
+                <div class="row">
+                    <div class="col-md-12 pull-right">
+                        <div class="btn-group pull-right" style="margin-right: 10px;">
+                            <button id="saveAbuserInfo" rel="tooltip"  class="btn btn-success btn-md" title=" Save ">Save</button>
+                            <button  rel="tooltip" type="submit" class="btn btn-success btn-md btn-outline" title=" Save ">Save & close</button>
+
+                            <a id="cancelAbuser" rel="tooltip" class="btn btn-default btn-md" title=" Cancel " href='@Url.Action("ManageCase", "Case", new { CaseheaderId = @Model.CaseheaderId})'>Cancel</a>
+                        </div>
+                    </div>
+                </div>
+                <br />
+
+                <p class="alert alert-info">
+                    <strong>Info!</strong> "Alleged Abuser" means the person who is reported as abusing, neglecting, or financially exploiting the eligible adult. It is important this person(s) be continually defined as "alleged" until there is sufficient evidence to substantiate this person as an "abuser". All revisions to the alleged abuser  or abuser will be done through this page.
+                </p>
+                <div class="row nextline" style="margin: 1px">
+                    @Html.Partial("_ViewClientCMS", Model.viewIntake.viewCaseHeader.Client)
+                </div>
+
+
+                <div class="well">
+                    <div class="well container" style="background-color: #fff">
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                                <div>
+                                    @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.LastName, new { @class = "control-label" })
+                                <div>
+                                    @Html.TextBoxFor(model => model.LastName, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-3" style="padding-top: 30px">
+                                @Html.CheckBoxFor(model => model.IsNameUnknown) <span class="textspace">
+                                    @Html.LabelFor(m => m.IsNameUnknown, new { @class = "control-label" })
+                                </span>
+                            </div>
+                            <div class="col-md-1">
+                                @Html.LabelFor(model => model.AANumber, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.AANumber, new { @class = "form-control" })
+                            </div>
+
+
+                        </div>
+
+
+
+
+
+
+                        <div class="row nextline">
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.GenderTypeId, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.GenderTypeId, new SelectList(new[] { new PersonProfile.Data.Entities.dtoGenderType { Id = 0, Description = " Select Gender" } }.Union(Model.caselookup.listofgender), "Id", "Description", Model.GenderTypeId), new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(m => m.Age, new { @class = "control-label" })
+                                <div>
+                                    @Html.TextBoxFor(model => model.Age, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-2" style="padding-top: 30px;">
+                                @Html.CheckBoxFor(model => model.IsAAAgeEstimate) <span class="textspace">
+                                    @Html.LabelFor(m => m.IsAAAgeEstimate, new { @class = "control-label" })
+                                </span>
+                            </div>
+                            <div class="col-md-3" style="padding-top: 30px;">
+
+                                @Html.LabelFor(m => m.IsAbuserAwareOfReport, new { @class = "control-label" })
+                                @Html.RadioButtonFor(model => model.IsAbuserAwareOfReport, "y") Yes
+                                @Html.RadioButtonFor(model => model.IsAbuserAwareOfReport, "n")No
+                            </div>
+                        </div>
+
+
+
+
+
+                        <div class="row nextline">
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.Phone, new { @class = "control-label" })
+                                <div>
+                                    @Html.TextBoxFor(model => model.Phone, new { @class = "form-control phonenumber" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.AltPhone, new { @class = "control-label" })
+                                <div>
+                                    @Html.TextBoxFor(model => model.AltPhone, new { @class = "form-control phonenumber" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.SocialSecurityNumber, new { @class = "control-label" })
+                                <div>
+
+                                    @Html.TextBoxFor(model => model.SocialSecurityNumber, new { @class = "form-control ssn", placeholder = "000-00-0000" })
+                                    @Html.ValidationMessageFor(m => m.SocialSecurityNumber)
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+
+
+
+
+                        <div class="row nextline">
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.AddressLine1, new { @class = "control-label" })
+                                <div>
+                                    @Html.TextBoxFor(model => model.AddressLine1, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.AddressLine2, new { @class = "control-label" })
+                                <div>
+                                    @Html.TextBoxFor(model => model.AddressLine2, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.City, new { @class = "control-label", placeholder = "City" })
+                                <div>
+                                    @Html.TextBoxFor(model => model.City, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-2 form-group">
+                                @Html.LabelFor(model => model.StateTypeId)
+                                <div>
+                                    @Html.DropDownListFor(model => model.StateTypeId, new SelectList(new[] { new PersonProfile.Data.Entities.dtoStateType { Id = 0, Description = " Select State " } }.Union(Model.caselookup.listofstates.OrderBy(s => s.Description)), "Id", "Description", Model.StateTypeId), new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                @Html.LabelFor(model => model.Zip5, new { @class = "control-label", placeholder = "Zip 5", @maxlength = "5" })
+                                <div>
+                                    @Html.TextBoxFor(model => model.Zip5, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                @Html.LabelFor(model => model.Zip4, new { @class = "control-label", placeholder = "Zip 4", @maxlength = "4" })
+                                <div>
+                                    @Html.TextBoxFor(model => model.Zip4, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="row nextline">
+
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.RelationId, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.RelationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewRelation { Id = 0, Description = " Select Relation" } }.Union(Model.caselookup.listofrelations), "Id", "Description", Model.RelationId), new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.MaritalStatusId, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.MaritalStatusId, new SelectList(new[] { new PersonProfile.Data.Entities.dtoMaritalStatusType { Id = 0, Description = " Select Marital status" } }.Union(Model.caselookup.listofmaritalstatus), "Id", "Description", Model.MaritalStatusId), new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                @Html.LabelFor(model => model.ContactTime, new { @class = "control-label", placeholder = "contact time" })
+                                <div>
+                                    @Html.TextAreaFor(model => model.ContactTime, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+                        <div class="row nextline">
+
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.SpouseDomesticPartnerName, new { @class = "control-label", placeholder = "contact time" })
+                                <div>
+                                    @Html.TextBoxFor(model => model.SpouseDomesticPartnerName, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.VeteranStatusId, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.VeteranStatusId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewVeteranStatus { Id = 0, Description = " Select Veteran status" } }.Union(Model.caselookup.listofveteranstatus), "Id", "Description", Model.VeteranStatusId), new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.SchoolingLevelId, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.SchoolingLevelId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewSchoolingLevel { Id = 0, Description = " Select Schooling Level" } }.Union(Model.caselookup.listofschoolinglevel), "Id", "Description", Model.SchoolingLevelId), new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="row nextline">
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.EmploymentStatusId, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.EmploymentStatusId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewEmploymentType { Id = 0, Description = " Select Employment Status" } }.Union(Model.caselookup.listofemploymenttypes), "Id", "Description", Model.EmploymentStatusId), new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.RaceTypeId, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.RaceTypeId, new SelectList(new[] { new PersonProfile.Data.Entities.dtoRaceType { Id = 0, Description = " Select Race" } }.Union(Model.caselookup.listofraces), "Id", "Description", Model.RaceTypeId), new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.EthnicityId, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.EthnicityId, new SelectList(new[] { new PersonProfile.Data.Entities.dtoEthnicityType { Id = 0, Description = " Select Ethinicity " } }.Union(Model.caselookup.listofdtoethinicities), "Id", "Description", Model.EthnicityId), new { @class = "form-control" })
+                                </div>
+                            </div>
+                             <div class="col-md-3 form-group" >
+                        <label class="control-label muted">@Html.LabelFor(m => m.LivingStatusId)</label>
+                        <div>
+                            @Html.DropDownListFor(model => model.LivingStatusId, new SelectList(new[] { new PersonProfile.Data.Entities.dtoLivingStatusType { Id = 0, Description = " Select Living Status " } }.Union(Model.caselookup.listoflivingstatus), "Id", "Description", Model.LivingStatusId), new { @class = "form-control" })
+                        </div>
+                    </div>
+                        </div>
+
+
+
+                        <div class="row nextline">
+
+
+
+                            <div class="col-md-3">
+                                @Html.LabelFor(m => m.PrimaryLanguage, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.PrimaryLanguage, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewPrimaryLanguage { Id = 0, Description = " Select Primary Language" } }.Union(Model.caselookup.listofprimarylanguage), "Id", "Description", Model.PrimaryLanguage), new { @class = "form-control" })
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-md-3" style="padding-top: 30px">
+                                @Html.CheckBoxFor(model => model.IsLimitedEnglishSpeaking) <span class="textspace">
+                                    @Html.LabelFor(m => m.IsLimitedEnglishSpeaking, new { @class = "control-label" })
+                                </span>
+                            </div>
+
+                            <div class="col-md-6">
+                                @Html.LabelFor(m => m.MentalCondition, new { @class = "control-label" })
+                                <div>
+                                    @Html.TextAreaFor(model => model.MentalCondition, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+
+                        <div class="row nextline">
+                            <div class="col-md-3" style="padding-top: 20px">
+                                @Html.LabelFor(model => model.DidClientFileAPoliceReport)
+                                <br />
+                                @Html.RadioButtonFor(model => model.DidClientFileAPoliceReport, "y") Yes
+                                @Html.RadioButtonFor(model => model.DidClientFileAPoliceReport, "n") No
+                                @Html.RadioButtonFor(model => model.DidClientFileAPoliceReport, "u") Unknown
+                                @Html.RadioButtonFor(model => model.DidClientFileAPoliceReport, "x") N/A
+                            </div>
+
+                            <div class="col-md-3" style="padding-top: 20px">
+                                @Html.LabelFor(model => model.IsAAInterviewed)
+                                <br />
+                                @Html.RadioButtonFor(model => model.IsAAInterviewed, "y", new { @id = "interviewed" }) Yes
+                                @Html.RadioButtonFor(model => model.IsAAInterviewed, "n", new { @id = "notinterviewed" }) No
+                            </div>
+
+                            @*<div class="col-md-6" style="padding-top: 20px">
+                                @Html.CheckBoxFor(model => model.IsClientHaveProtection) <span class="textspace">
+                                    @Html.LabelFor(m => m.IsClientHaveProtection, new { @class = "control-label" })
+                                </span>
+                            </div>*@
+
+
+                            <div class="col-md-6" style="padding-top: 20px">
+                                @Html.LabelFor(model => model.IsClientHaveProtection)
+                                <br />
+                                @Html.RadioButtonFor(model => model.IsClientHaveProtection, "y", new { @id = "Protected" }) Yes
+                                @Html.RadioButtonFor(model => model.IsClientHaveProtection, "n", new { @id = "notprotected" }) No
+                            </div>
+                        </div>
+
+                        <div class="row nextline">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-3" id="ifnotexplain">
+                                @Html.LabelFor(m => m.IsAANotInterviewedExplain, new { @class = "control-label" })
+                                <div>
+                                    @Html.TextAreaFor(model => model.IsAANotInterviewedExplain, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="row nextline">
+                            <div class="col-md-7" style="padding-top: 20px">
+                                @Html.CheckBoxFor(model => model.IsClientnotgivePermission)
+                                @Html.LabelFor(m => m.IsClientnotgivePermission, new { @class = "control-label" })
+
+                            </div>
+                        </div>
+                        <div class="row nextline">
+                            <div class="col-md-6" style="padding-top: 20px">
+                                @Html.LabelFor(model => model.DoesAAHaveUnrestrictedAccess)<br />
+                                @Html.RadioButtonFor(model => model.DoesAAHaveUnrestrictedAccess, "y") Yes
+                                @Html.RadioButtonFor(model => model.DoesAAHaveUnrestrictedAccess, "n") No
+                                @Html.RadioButtonFor(model => model.DoesAAHaveUnrestrictedAccess, "u") Unknown
+                            </div>
+
+
+                            <div class="col-md-6" style="padding-top: 30px;">
+
+                                @Html.LabelFor(m => m.IsCohabitationwithClient, new { @class = "control-label" })<br />
+                                @Html.RadioButtonFor(model => model.IsCohabitationwithClient, "y") Yes, living with client
+                                @Html.RadioButtonFor(model => model.IsCohabitationwithClient, "n") No, not living with client
+                                @Html.RadioButtonFor(model => model.IsCohabitationwithClient, "u") Unknown
+
+                            </div>
+
+                        </div>
+
+                        <div class="row nextline"></div>
+
+
+
+                        <div class="row nextline">
+                            <div class="col-md-9">
+                                @Html.LabelFor(m => m.Comments, new { @class = "control-label" })
+                                <div>
+                                    @Html.TextAreaFor(model => model.Comments, new { @class = "form-control" })
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="row nextline">
+                            @*<div class="col-md-3" style="padding-top: 20px">
+                                @Html.CheckBoxFor(model => model.IsNoticeToAbuserRequired) <span class="textspace">
+                                    @Html.LabelFor(m => m.IsNoticeToAbuserRequired, new { @class = "control-label" })
+                                </span>
+                            </div>*@
+                            <div class="col-md-3" style="padding-top: 20px">
+                                @Html.LabelFor(model => model.IsAllegedAbuserSubstabtiated)<br />
+                                @Html.RadioButtonFor(model => model.IsAllegedAbuserSubstabtiated, "y") Yes
+                                @Html.RadioButtonFor(model => model.IsAllegedAbuserSubstabtiated, "n") No
+
+                            </div>
+
+                        
+                        </div>
+
+                        <div class="row nextline"></div>
+                        <div class="row nextline"></div>
+                        <div class="row nextline">
+
+                            <div class="col-md-3">
+                                <b>Legal Status Related To Client At Start Of Case </b>
+                                <br />
+                                (Choose More Than One)<br />
+                                <br />
+                                @for (int idx = 0; idx < Model.LegalStatus.Count; idx++)
+                                {
+                                    @Html.HiddenFor(x => Model.LegalStatus[idx].Id)
+                                    @Html.CheckBoxFor(x => Model.LegalStatus[idx].IsChecked) @Html.DisplayFor(x => Model.LegalStatus[idx].Description) <br />
+                                    @Html.HiddenFor(x => Model.LegalStatus[idx].Description)
+                                }
+
+                            </div>
+
+
+                            <div class="col-md-3">
+                                <b>Barriers/Observations: </b>
+                                <br />
+                                @for (int idx = 0; idx < Model.Barriers.Count; idx++)
+                                {
+                                    @Html.HiddenFor(x => Model.Barriers[idx].Id)
+                                    @Html.CheckBoxFor(x => Model.Barriers[idx].IsChecked) @Html.DisplayFor(x => Model.Barriers[idx].Description) <br />
+                                    @Html.HiddenFor(x => Model.Barriers[idx].Description)
+                                }
+
+                                <div id="OtherBarrier" class="col-md-6">
+                                    @Html.LabelFor(m => m.BarrierOther, new { @class = "control-label" })
+                                    <div>
+                                        @Html.TextBoxFor(model => model.BarrierOther, new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-3">
+                                <b>Services Already Received By AA At Start Of Investigation </b>
+                                <br />
+                                (Choose More Than One)
+                                <br />
+                                @for (int idx = 0; idx < Model.Services.Count; idx++)
+                                {
+                                    @Html.HiddenFor(x => Model.Services[idx].Id)
+                                    @Html.CheckBoxFor(x => Model.Services[idx].IsChecked) @Html.DisplayFor(x => Model.Services[idx].Description) <br />
+                                    @Html.HiddenFor(x => Model.Services[idx].Description)
+
+                                }
+                            </div>
+                        </div>
+                        <div class="row nextline">
+
+
+                            <div class="col-md-8">
+                                @Html.LabelFor(m => m.AAAssociationsId, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.AAAssociationsId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewAbuserAssociations { Id = 0, Description = " AA Associations" } }.Union(Model.caselookup.listofAbuserAssociations), "Id", "Description", Model.AAAssociationsId), new { @class = "form-control", @style = "width:50%" })
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="row nextline">
+                            <div id="IfPaidCareTaker">
+                                <div class="col-md-3" style="padding-top: 20px">
+                                    @Html.LabelFor(model => model.IsAgingEmployee)<br />
+                                    @Html.RadioButtonFor(model => model.IsAgingEmployee, "y", new { @id = "ISAgeYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsAgingEmployee, "n", new { @id = "ISAgeno" }) No
+                                    @Html.RadioButtonFor(model => model.IsAgingEmployee, "u", new { @id = "ISAgeUN" }) Unknown
+                                </div>
+
+                                <div class="col-md-3" style="padding-top: 20px">
+                                    @Html.LabelFor(model => model.IsDHSNetworkEmployee)<br />
+                                    @Html.RadioButtonFor(model => model.IsDHSNetworkEmployee, "y", new { @id = "ISDHSYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsDHSNetworkEmployee, "n", new { @id = "ISDHSNo" }) No
+                                    @Html.RadioButtonFor(model => model.IsDHSNetworkEmployee, "u", new { @id = "ISDHSUn" }) Unknown
+                                </div>
+                            </div>
+                            <div id="alertAA" class="col-md-3 alert alert-info">
+                                <b>Reminder(If Yes): AA must be interviewed</b>
+                            </div>
+
+
+                        </div>
+
+
+
+
+                        <div class="row nextline">
+                            <div class="col-md-3" style="padding-top: 20px">
+                                @Html.LabelFor(model => model.IsHealthOfAAAffectClient)<br />
+                                @Html.RadioButtonFor(model => model.IsHealthOfAAAffectClient, "y") Yes
+                                @Html.RadioButtonFor(model => model.IsHealthOfAAAffectClient, "n") No
+                                @Html.RadioButtonFor(model => model.IsHealthOfAAAffectClient, "u") Unknown
+                            </div>
+
+                        </div>
+
+                        <div class="row nextline">
+                            <div class="col-md-3">
+                                <b>Medical History </b>
+                                <br />
+                                @for (int idx = 0; idx < Model.MedicalHistory.Count; idx++)
+                                {
+                                    @Html.HiddenFor(x => Model.MedicalHistory[idx].Id)
+                                    @Html.CheckBoxFor(x => Model.MedicalHistory[idx].IsChecked) @Html.DisplayFor(x => Model.MedicalHistory[idx].Description) <br />
+                                    @Html.HiddenFor(x => Model.MedicalHistory[idx].Description)
+                                }
+
+                                <div id="OtherMedicalHistory" class="col-md-6">
+                                    @Html.LabelFor(m => m.MedicalHistoryOther, new { @class = "control-label" })
+                                    <div>
+                                        @Html.TextBoxFor(model => model.MedicalHistoryOther, new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+
+
+    }
+
+
+</div>
+
+
+
+
+
+@section scripts
+   {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

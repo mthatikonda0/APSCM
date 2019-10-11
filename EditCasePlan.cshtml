@@ -1,0 +1,1215 @@
+﻿@model AGE.CMS.Data.Models.Case.viewCasePlan
+
+@{
+    ViewBag.Title = "Case Plan";
+}
+
+@*<script src="~/Assets/Basic/Scripts/CMS/Case/EditCasePlan.js"></script>*@
+<script>
+    $(document).ready(function () {
+
+        $("#cancelCasePlan").click(function () {
+            //window.location.href = window.location.href = $("#hiddenRootUrl").val() + '/' + $("#hiddenApplication").val() + '/' + $("#hiddenInstance").val() + '/CaseIntake/ListClientIntake/' + $("#ClientId").val();
+            window.history.back();
+        });
+
+        $('.risk').hide();
+        $('.Goals').hide();
+        $(".goal").each(function () {
+            $(this).find('.interventionbutton').not(":last").hide();
+        });
+        $(".WholeRisk").each(function () {
+            $(this).find('.addgoalbutton').not(":last").hide();
+        });
+        $("button[id*='Delete'][id$='0']").hide();
+
+        $("input[id^='ListCasePlanTime_'][classtype='caseplantime'][type = 'checkbox']").each(function () {
+            if ($(this).prop('checked') == true) {
+                $(this).parentsUntil('.row').next('div').show();
+              
+            }
+        });
+        $("input[id^='ListCasePlanTime_'][classtype='caseplantime'][type = 'checkbox']").click(function (e) {
+            if ($(this).prop('checked') == true) {
+                $(this).parentsUntil('.row').next('div').slideDown("slow");
+            }
+            else {
+                $(this).parentsUntil('.row').next('div').slideUp("slow");
+                $(this).parentsUntil('.row').next('div').find('.validate').removeClass("validate");
+                $(this).parentsUntil('.row').next('div').find('input:text, input:password, select, textarea').val('');
+                $(this).parentsUntil('.row').next('div').find('input:radio, input:checkbox').prop('checked', false);
+            }
+        });
+
+        $("input[id*='__Risk_'][type = 'checkbox']").each(function () {
+
+            if ($(this).prop('checked') == true) {
+                $(this).parent().parent().find('div.Goals').show();
+                $(this).parent().parent().find('button.Goals').show();
+                $(this).parent().parent().find('div.Goals').find("input[id*='_DateDiscussed']").addClass("validate");
+                $(this).parent().parent().find('div.Goals').find("textarea[id*='__ExplainGoal']").addClass("validate");
+                $(this).parent().parent().find('div.Goals').find("textarea[id*='_ExplainIntervention']").addClass("validate");
+            }
+        });
+        $("input[id*='__Risk_'][type = 'checkbox']").click(function (e) {
+            if ($(this).prop('checked') == true) {
+                $(this).parent().parent().find('div.Goals').find("input[id*='_DateDiscussed']").addClass("validate");
+                $(this).parent().parent().find('div.Goals').find("textarea[id*='__ExplainGoal']").addClass("validate");
+                $(this).parent().parent().find('div.Goals').find("textarea[id*='_ExplainIntervention']").addClass("validate");
+                $(this).parent().parent().find('button.Goals').show();
+                $(this).parent().parent().find('div.Goals').slideDown("slow");
+
+            }
+            else {
+                $(this).parent().parent().find('button.Goals').slideUp();
+                $(this).parent().parent().find('div.Goals').slideUp("slow");
+                $(this).parent().parent().find('div.Goals').find('.validate').removeClass("validate");
+                $(this).parent().parent().find('div.Goals').find('input:text, input:password, select, textarea').val('');
+                $(this).parent().parent().find('div.Goals').find('input:radio, input:checkbox').prop('checked', false);
+            }
+        });
+
+
+
+
+        $('.datepicker').datepicker({
+            format: 'mm-dd-yyyy',
+            changeMonth: true,
+            changeYear: true,
+            maxDate: new Date
+        });
+
+
+        $("form").submit(function (e) {
+            var cnt = 0;
+            $(".validate").each(function () {
+                if ($(this).val() == "") {
+                    $(this).focus();
+                    $(this).parent().css("color", "red")
+
+                    cnt++;
+                    //alert("please select any classicications")
+                }
+
+            });
+
+            if (cnt > 0) {
+                e.preventDefault();
+                noti("<b>Please fill all required fields</b> ", "info")
+
+
+            }
+
+
+        });
+
+
+
+
+        $(document).on('click', '.delete-goal', function () {
+
+            if (confirm('Are you sure want to delete record?\nOnce deleted, Changes cannot be undone.')) {
+                $(this).closest("div[id*='Goal_']").find('.validate').removeClass("validate");
+                $(this).closest("div[id*='Goal_']").find('input:text, input:password, select, textarea').val('');
+                $(this).closest("div[id*='Goal_']").find('input:radio, input:checkbox').prop('checked', false);
+                $(this).closest("div[id*='Goal_']").css('display', 'none');
+
+            }
+        });
+
+        $(document).on('click', '.delete-intervention', function () {
+            if (confirm('Are you sure want to delete record?\nOnce deleted, Changes cannot be undone.')) {
+                //   $(this).closest("div[id*='Intervention_']").find("input[name *= 'Deleted']").val(true);
+                $(this).closest("div[id*='Intervention_']").find('.validate').removeClass("validate");
+                $(this).closest("div[id*='Intervention_']").find('input:text, input:password, select, textarea').val('');
+                $(this).closest("div[id*='Intervention_']").find('input:radio, input:checkbox').prop('checked', false);
+                $(this).parentsUntil('.intervention').last('div.well').hide();
+
+            }
+        });
+
+
+
+        //$('.addgoalbutton').on('click', function (e) {
+
+
+        //    var idx = parseInt($(this).attr('data-transfer1'));
+        //    var i = parseInt($(this).attr('data-transfer2'));
+        //    var m = parseInt($(this).attr('data-transfer3'));
+
+        //    add(idx, i, m);
+
+        //});
+
+        $(document).on('click', '.addgoalbutton', function () {
+            nextGoalElement($(this).parentsUntil('.WholeRisk').find('.goal:last'));
+            //$(".addgoalbutton").click(function (index) {
+            //    $(this).each(function () {
+            //        nextGoalElement($(this).parentsUntil('.WholeRisk').find('.goal:last'));
+            //    });
+            //})
+        });
+
+        $(document).on('click', '.interventionbutton', function () {
+            nextInterventionElement($(this).parentsUntil('.WholeIntervention').find('.intervention:last'));
+            //$('.interventionbutton').click(function (e) {
+            //    $(this).each(function () {
+            //        nextInterventionElement($(this).parentsUntil('.WholeIntervention').find('.intervention:last'));
+            //    });
+            //})
+        });
+    });
+
+    //function add(idx, i, m)
+    //{
+    //    $(".demogoal").clone().insertAfter("div#Goal_" + idx + i + m);
+    //}
+
+    var current_id = 0;
+
+    var Interventioncurrent_id = 0;
+
+
+    function nextGoalElement(element) {
+        var newElement = element.clone();
+        var id = current_id + 1;
+        current_id = id;
+        //if (id < 10) id = "0" + id;
+        //newElement.attr("id", element.attr("id").split("_")[0] + "_" + id);
+        //var field = $('input', newElement).attr("id");
+        //$('input', newElement).attr("id", field.split("_")[0] + "_" + id);
+
+
+
+        // var count = $("div.goal").length;
+
+        //var template = $('#Goal_' + idx + i + m).clone();
+        var template = element.clone();
+
+        var idx = parseInt(template.find('input[type=hidden][name=idx]').val());
+        var i = parseInt(template.find('input[type=hidden][name=i]').val());
+        var m = parseInt(template.find('input[type=hidden][name=m]').val());
+        var n = 0;
+        var count = m + 1;
+        //alert(count);
+        template.attr('id', 'Goal_' + idx + i + count);
+        template.find('input[type=text]').val(null);
+        template.find('input[type=button]').attr('style', '');
+        template.find('button[type=button]').attr('style', '');
+        template.find('input[type=number]').val(null);
+        template.find('input[type=radio]').val(null);
+        template.find('textarea').val(null);
+        template.find('input[type=hidden]').val(0);
+        template.find('input[type=datetime]').val(null);
+        template.find('input[type=checkbox]').prop('checked', false);
+        template.find('select').prop('selected', false);
+        template.find('div').hasClass('.intervention');
+        template.find('button[type=button]').hasClass('.interventionbutton');;
+        template.find('input[type=button]').attr('onclick');
+
+        $.each(template.find('input[type=number]'), function () {
+            var name = $(this).attr('name');
+            name = name.replace('Goals[' + m + ']', 'Goals[' + count + ']');
+            $(this).attr('name', name);
+
+            var id = $(this).attr('id');
+            id = id.replace('Goals_' + m + '_', 'Goals_' + count + '_');
+            $(this).attr('id', id);
+        });
+
+        $.each(template.find('.intervention').not(':first').remove(), function () { });
+        //$.each(template.find('button[type=button]'), function () {
+        //     var id = $(this).attr('id');
+        //     id = id.replace('AddIntervention' + idx + i, 'AddIntervention' + idx + count );
+        //     $(this).attr('id', id);
+        // });
+
+        $.each(template.find('input[type=checkbox]'), function () {
+            var name = $(this).attr('name');
+            name = name.replace('Goals[' + m + ']', 'Goals[' + count + ']');
+            $(this).attr('name', name);
+
+            var id = $(this).attr('id');
+            id = id.replace('Goals_' + m + '_', 'Goals_' + count + '_');
+            $(this).attr('id', id);
+        });
+
+
+        $.each(template.find('input[type=radio]'), function () {
+            var name = $(this).attr('name');
+            name = name.replace('Goals[' + m + ']', 'Goals[' + count + ']');
+            $(this).attr('name', name);
+
+            var id = $(this).attr('id');
+            id = id.replace('Goals_' + m + '_', 'Goals_' + count + '_');
+            $(this).attr('id', id);
+
+
+
+            if ($(this).hasClass('IsClientAgreedGoalYes')) {
+                $(this).val('y')
+            }
+
+            if ($(this).hasClass('IsClientAgreedGoalNo')) {
+                $(this).val('n')
+            }
+
+            if ($(this).hasClass('IsClientAgreedGoalBestInterest')) {
+                $(this).val('o')
+            }
+
+            if ($(this).hasClass('GoalMetYes')) {
+                $(this).val('y')
+            }
+
+            if ($(this).hasClass('GoalMetNo')) {
+                $(this).val('n')
+            }
+
+
+            if ($(this).hasClass('IsClientAgreedInterventionYes')) {
+                $(this).val('y')
+            }
+
+            if ($(this).hasClass('IsClientAgreedInterventionNo')) {
+                $(this).val('n')
+            }
+
+            if ($(this).hasClass('IsClientAgreedInterventionBestInterest')) {
+                $(this).val('o')
+            }
+
+            if ($(this).hasClass('InterventionMetYes')) {
+                $(this).val('y')
+            }
+
+            if ($(this).hasClass('InterventionMetNo')) {
+                $(this).val('n')
+            }
+
+            $(this).prop('checked', false);
+
+        });
+
+        $.each(template.find('input[type=text]'), function () {
+            var name = $(this).attr('name');
+            name = name.replace('Goals[' + m + ']', 'Goals[' + count + ']');
+            $(this).attr('name', name);
+
+            var id = $(this).attr('id');
+            id = id.replace('Goals_' + m + '_', 'Goals_' + count + '_');
+            $(this).attr('id', id);
+        });
+
+        $.each(template.find('select'), function () {
+            var name = $(this).attr('name');
+            name = name.replace('Goals[' + m + ']', 'Goals[' + count + ']');
+            $(this).attr('name', name);
+
+            var id = $(this).attr('id');
+            id = id.replace('Goals_' + m + '_', 'Goals_' + count + '_');
+            $(this).attr('id', id);
+        });
+
+        $.each(template.find('textarea'), function () {
+            var name = $(this).attr('name');
+            name = name.replace('Goals[' + m + ']', 'Goals[' + count + ']');
+            $(this).attr('name', name);
+
+            var id = $(this).attr('id');
+            id = id.replace('Goals_' + m + '_', 'Goals_' + count + '_');
+            $(this).attr('id', id);
+        });
+
+        $.each(template.find('.intervention'), function () {
+            var id = $(this).attr('id');
+            id = id.replace('Intervention_' + idx + i + m + n, 'Intervention_' + idx + i + count + n);
+            $(this).attr('id', id);
+        });
+
+        $.each(template.find('.interventionbutton'), function () {
+            var id = $(this).attr('id');
+            //id = id.replace('Intervention_' + idx + i + m + n, 'Intervention_' + idx + i + count + n);
+            id = id.replace('AddIntervention_' + idx + i + m, 'AddIntervention_' + idx + i + count);
+            $(this).attr('id', id);
+
+            //var onclick = $(this).attr('onclick');
+            //onclick = onclick.replace('(' + idx + ',' + i + ',' + m + ',' + n + ')', '(' + idx + ',' + i + ',' + count + ',' + n + ')');
+            //$(this).attr('onclick', onclick);
+        });
+
+        $.each(template.find('input[type=button]'), function () {
+            var id = $(this).attr('onclick');
+            id = id.replace('(' + idx + ',' + i + ',' + m + ',' + n + ')', '(' + idx + ',' + i + ',' + count + ',' + n + ')');
+            $(this).attr('onclick', id);
+
+        });
+
+        $.each(template.find('.delete-goal'), function () {
+            var id = $(this).attr('id');
+            id = id.replace('DeleteGoal_' + idx + i + m, 'DeleteGoal_' + idx + i + count);
+            $(this).attr('id', id);
+
+        });
+
+        $.each(template.find('.Interventions'), function () {
+            var id = $(this).attr('id');
+            id = id.replace('Interventions_' + idx + i + m, 'Interventions_' + idx + i + count);
+            $(this).attr('id', id);
+        });
+
+        $.each(template.find('.delete-intervention'), function () {
+            var id = $(this).attr('id');
+            id = id.replace('DeleteIntervention_' + idx + i + m + n, 'DeleteIntervention_' + idx + i + count + n);
+            $(this).attr('id', id);
+
+        });
+
+        //$('#AddGoal_' + idx + i + m).hide();
+        //   $('#AddIntervention_' + idx + i + m + n).hide();
+
+        $.each(template.find('.addgoalbutton'), function () {
+            var id = $(this).attr('id');
+            id = id.replace('AddGoal_' + idx + i + m, 'AddGoal_' + idx + i + count);
+            $(this).attr('id', id);
+
+            var onclick = $(this).attr('onclick');
+            onclick = onclick.replace('(' + idx + ',' + i + ',' + m + ')', '(' + idx + ',' + i + ',' + count + ')');
+            $(this).attr('onclick', onclick);
+        });
+
+        template.find(".delete-intervention").removeAttr("style");
+
+        $.each(template.find("[id ^='DeleteIntervention_'][id $='0']"), function () {
+            $(this).hide();
+
+        });
+
+        template.find("input[name $='DateDiscussed']").removeClass('hasDatepicker').datepicker();
+        template.find("input[name $='DateDiscussed']").datepicker({
+            format: 'mm-dd-yyyy',
+            changeMonth: true,
+            changeYear: true,
+            maxDate: new Date
+        });
+
+        template.find("input[name $='DateGoalMet']").removeClass('hasDatepicker').datepicker();
+        template.find("input[name $='DateGoalMet']").datepicker({
+            format: 'mm-dd-yyyy',
+            changeMonth: true,
+            changeYear: true,
+            maxDate: new Date
+        });
+
+        template.find("input[name $='DateInterventionMet']").removeClass('hasDatepicker').datepicker();
+        template.find("input[name $='DateInterventionMet']").datepicker({
+            format: 'mm-dd-yyyy',
+            changeMonth: true,
+            changeYear: true,
+            maxDate: new Date
+        });
+
+
+        template.find("input[name *= '.Deleted']").val('False');
+
+        template.find('input[type=hidden][name=idx]').val(idx)
+        template.find('input[type=hidden][name=i]').val(i)
+        template.find('input[type=hidden][name=m]').val(count)
+
+        template.attr('style', '');
+
+        //$("[id ^='DeleteIntervention_0'][id $='0']").each(function () {
+        //    $(this).hide();
+
+        //});
+
+        template.find(".cke_skin_kama").remove();
+        var id = template.find(".ckeditor").attr("id");
+        template.find('#' + id).removeClass('ckeditor').removeAttr('style');
+
+        //$('#Goal_' + idx + i + m).append(template);
+
+        //$('#Goals' + idx + i).prepend(template);
+
+
+
+
+
+
+        //newElement.appendTo($('#Goals' + idx + i));
+        template.appendTo($('#Goals' + idx + i));
+
+
+
+
+
+    }
+
+    function nextInterventionElement(element) {
+        var newElement = element.clone();
+        var id = Interventioncurrent_id + 1;
+        Interventioncurrent_id = id;
+        //if (id < 10) id = "0" + id;
+        //newElement.attr("id", element.attr("id").split("_")[0] + "_" + id);
+        //var field = $('input', newElement).attr("id");
+        //$('input', newElement).attr("id", field.split("_")[0] + "_" + id);
+
+
+
+        // var count = $("div.goal").length;
+
+        //var template = $('#Goal_' + idx + i + m).clone();
+        var template = element.clone();
+
+        var idx = parseInt(template.find('input[type=hidden][name=idx]').val());
+        var i = parseInt(template.find('input[type=hidden][name=i]').val());
+        var m = parseInt(template.find('input[type=hidden][name=m]').val());
+        var n = parseInt(template.find('input[type=hidden][name=n]').val());
+        var count = n + 1;
+
+
+        template.attr('id', 'Intervention_' + idx + i + m + count);
+        template.find('input[type=text]').val(null);
+        template.find('textarea').val(null);
+        template.find('input[type=radio]').val(null);
+        template.find('div').hasClass('.Interventions');
+
+        //$('#AddIntervention_' + idx + i + m + n).hide();
+
+        $.each(template.find('input[type=radio]'), function () {
+            var name = $(this).attr('name');
+            name = name.replace('Interventions[' + n + ']', 'Interventions[' + count + ']');
+            $(this).attr('name', name);
+
+            var id = $(this).attr('id');
+            id = id.replace('__Interventions_' + n + '__', '__Interventions_' + count + '__');
+            $(this).attr('id', id);
+
+
+            if ($(this).hasClass('IsClientAgreedInterventionYes')) {
+                $(this).val('y')
+            }
+
+            if ($(this).hasClass('IsClientAgreedInterventionNo')) {
+                $(this).val('n')
+            }
+
+            if ($(this).hasClass('IsClientAgreedInterventionBestInterest')) {
+                $(this).val('o')
+            }
+
+            if ($(this).hasClass('InterventionMetYes')) {
+                $(this).val('y')
+            }
+
+            if ($(this).hasClass('InterventionMetNo')) {
+                $(this).val('n')
+            }
+
+
+
+
+            $(this).prop('checked', false);
+        });
+
+        $.each(template.find('input[type=text]'), function () {
+            var name = $(this).attr('name');
+            name = name.replace('Interventions[' + n + ']', 'Interventions[' + count + ']');
+            $(this).attr('name', name);
+
+            var id = $(this).attr('id');
+            id = id.replace('__Interventions_' + n + '__', '__Interventions_' + count + '__');
+            $(this).attr('id', id);
+        });
+
+        $.each(template.find('textarea'), function () {
+            var name = $(this).attr('name');
+            name = name.replace('Interventions[' + n + ']', 'Interventions[' + count + ']');
+            $(this).attr('name', name);
+
+            var id = $(this).attr('id');
+            id = id.replace('__Interventions_' + n + '__', '__Interventions_' + count + '__');
+            $(this).attr('id', id);
+        });
+
+        $.each(template.find('.delete-intervention'), function () {
+            var id = $(this).attr('id');
+            //id = id.replace('Intervention_' + idx + i + m + n, 'Intervention_' + idx + i + count + n);
+            id = id.replace('DeleteIntervention_' + idx + i + m + n, 'DeleteIntervention_' + idx + i + m + count);
+            $(this).attr('id', id);
+
+        });
+
+        template.find("input[name $='DateDiscussed']").removeClass('hasDatepicker').datepicker();
+        template.find("input[name $='DateDiscussed']").datepicker({
+            format: 'mm-dd-yyyy',
+            changeMonth: true,
+            changeYear: true,
+            maxDate: new Date
+        });
+
+        template.find("input[name $='DateInterventionMet']").removeClass('hasDatepicker').datepicker();
+        template.find("input[name $='DateInterventionMet']").datepicker({
+            format: 'mm-dd-yyyy',
+            changeMonth: true,
+            changeYear: true,
+            maxDate: new Date
+        });
+
+
+        template.find('input[type=hidden][name=idx]').val(idx)
+        template.find('input[type=hidden][name=i]').val(i)
+        template.find('input[type=hidden][name=m]').val(m)
+        template.find('input[type=hidden][name=n]').val(count)
+
+        template.find(".delete-intervention").removeAttr("style");
+
+        template.find("input[name *= '.Deleted']").val('False');
+
+        $.each(template.find('.interventionbutton'), function () {
+            var id = $(this).attr('id');
+            id = id.replace('AddIntervention_' + idx + i + m + n, 'AddIntervention_' + idx + i + m + count);
+            $(this).attr('id', id);
+
+            //var onclick = $(this).attr('onclick');
+            //onclick = onclick.replace('(' + idx + ',' + i + ',' + m + ',' + n + ')', '(' + idx + ',' + i + ',' + m + ',' + count + ')');
+            //$(this).attr('onclick', onclick);
+        });
+
+        //$('#Interventions_' + idx + i + m).append(template);
+        //$('#Intervention_' + idx + i + m + count).children('.well').show();
+
+
+
+
+        template.appendTo($('#Interventions_' + idx + i + m));
+    }
+
+
+
+
+</script>
+
+<div class="container">
+    <div class="panel panel-warning">
+
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="titletextbegin">
+                    <span class="glyphicon glyphicon-edit"></span><span class="textspace">
+                        <text>Case Plan</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+
+        <div class="panel-body">
+            @using (Html.BeginForm("SaveCasePlan", "Case", FormMethod.Post))
+            {
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.IntakeId)
+                @Html.HiddenFor(model => model.DateIntake)
+
+
+                <div class="row">
+                    <div class="col-lg-12 pull-right">
+                        <div class="btn-group pull-right" style="margin-right: 10px;">
+                            <button id="SaveCasePlan" rel="tooltip" type="submit" class="btn btn-success btn-md btn-outline" onclick="return confirm('Be sure to document whether the client has met his/her goals and interventions. Has the caseworker done due diligence by discussing client goals and offering interventions at this time?')" title=" Save & Close ">Save & Close</button>
+                            <a id="cancelCasePlan" rel="tooltip" class="btn btn-default btn-md" title=" Cancel " href='@Url.Action("ManageCase", "Case", new { CaseheaderId = @Model.viewIntake.CaseheaderId})'>Cancel</a>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <p class="alert alert-info">
+                    This form should be completed for only those cases which are substantiated with the client consents to services. The Case Plan should be completed at substantiation and then reviewed at a minimum when each Risk Assessment is completed. Goals/Interventions should reflect the needs identified in Risk Assessments. Goals would be set for major areas of concern and reflect the overall purpose of the intervention. Interventions are concrete actions to be done. Document discussion with the client of goals and interventions in Case Recording.
+                </p>
+                <div class="row nextline" style="margin: 1px">
+                    @Html.Partial("_ViewClientCMS", Model.viewIntake.viewCaseHeader.Client)
+                </div>
+
+                <form id="CaseplanForm" class="form-horizontal">
+                    <div class="well" style="background-color: #fff">
+                        <div class="row nextline ">
+                            <br />
+                            @for (int idx = 0; idx < Model.ListCasePlanTime.Count; idx++)
+                            {
+                                <div class="col-lg-12 caseplantime" id="caseplantime@(idx)">
+
+                                    @Html.HiddenFor(x => Model.ListCasePlanTime[idx].Id)
+                                    @Html.HiddenFor(x => Model.ListCasePlanTime[idx].Code)
+                                    <label>@Html.CheckBoxFor(x => Model.ListCasePlanTime[idx].IsChecked, new { classtype = "caseplantime" }) @if (idx >= 7)
+                                    {<b>(Approved By Waiver)</b> }   @Html.DisplayFor(x => Model.ListCasePlanTime[idx].Description) </label>
+                                    <br />
+
+                                    @Html.HiddenFor(x => Model.ListCasePlanTime[idx].Description)
+                                </div>
+
+                                <div class="col-lg-12 risk well" id="@("risk" + idx)" style="background-color:#f7f6dd;border :2px solid #949382;">
+                                    @for (int i = 0; i < Model.ListCasePlanTime[idx].Risk.Count; i++)
+                                        {
+                                        <div class="WholeRisk">
+                                            @Html.HiddenFor(x => Model.ListCasePlanTime[idx].Risk[i].Id)
+                                            @Html.HiddenFor(x => Model.ListCasePlanTime[idx].Risk[i].Code)
+                                            <b>@Html.CheckBoxFor(x => Model.ListCasePlanTime[idx].Risk[i].IsChecked) @Html.DisplayFor(x => Model.ListCasePlanTime[idx].Risk[i].Description)</b>
+                                            <br />
+
+                                            @Html.HiddenFor(x => Model.ListCasePlanTime[idx].Risk[i].Description)
+
+
+
+                                            <div class="Goals" id="@("Goals" + idx + i)">
+
+                                                @*Lindsey addition*@
+
+                                                @if(Model.ListCasePlanTime[idx].Risk[i].IsChecked == true )
+                                                    {
+                                                    for (var m = 0; m < Model.ListCasePlanTime[idx].Risk[i].Goals.Count; m++)
+                                                    {
+                                                       if(Model.ListCasePlanTime[idx].Risk[i].Goals[m].DateDiscussed != null && Model.ListCasePlanTime[idx].Risk[i].Goals[m].ExplainGoal != null) {
+
+                                                    <div class="row next-line">
+                                                        <div class="col-md-2" style="padding-left: 95%">
+                                                            <button type="button" id=@("AddGoal_" + idx + i + m) value=" plus" class="btn btn-primary zero-Zindex addgoalbutton" data-toggle="tooltip" title="Click to add multiple goals for this risk">
+                                                                <span class="glyphicon glyphicon-plus" style="color: white"></span>
+                                                            </button>
+
+                                                        </div>
+                                                    </div>
+                                                    <div id=@("Goal_" + idx + i + m) class="goal">
+
+                                                        @Html.Hidden("idx", idx)
+                                                        @Html.Hidden("i", i)
+                                                        @Html.Hidden("m", m)
+
+                                                        <div class="well container" style="border: 1px solid #000; max-width: 90%; background-color: #fff">
+                                                            <div class="row nextline">
+                                                                <div class="col-lg-2" style="padding-left: 90%">
+                                                                    <button type="button" class="btn delete-goal btn-danger zero-Zindex" id=@("DeleteGoal_" + idx + i + m) data-toggle="tooltip" title="Delete">
+                                                                        <span class="glyphicon glyphicon-remove" style="color: #fff"></span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row nextline">
+
+
+                                                                <div class="col-md-6">
+                                                                    @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsClientAgreedGoal, htmlAttributes: new { @class = "" })
+                                                                    <br />
+                                                                    @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsClientAgreedGoal, "y", new { @class = "IsClientAgreedGoalYes" }) Yes client agreed with goal
+
+                                                                    @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsClientAgreedGoal, "n", new { @class = "IsClientAgreedGoalNo" }) No client disagreed with goal
+
+                                                                    @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsClientAgreedGoal, "o", new { @class = "IsClientAgreedGoalBestInterest" }) Working in client's best interest
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].DateDiscussed, htmlAttributes: new { @class = "" })
+                                                                    <br />
+                                                                    @Html.TextBoxFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].DateDiscussed, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker ", placeholder = "Date Discussed" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="row nextline"></div>
+                                                            <div class="row nextline">
+
+                                                                <div class="col-md-2">
+                                                                    @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsGoalMet, htmlAttributes: new { @class = "" })
+                                                                    <br />
+                                                                    @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsGoalMet, "y", new { @class = "GoalMetYes"}) Met
+
+                                                                    @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsGoalMet, "n", new { @class = "GoalMetNo"}) Not Met
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].DateGoalMet, htmlAttributes: new { @class = "" })
+                                                                    <br />
+                                                                    @Html.TextBoxFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].DateGoalMet, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", placeholder = "Date Goal Met" })
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].ExplainGoal, htmlAttributes: new { @class = "" })
+                                                                    <br />
+                                                                    @Html.TextAreaFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].ExplainGoal, new { @class = "form-control zero-Zindex " })
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row WholeIntervention">
+                                                                <div class="Interventions container" id="@("Interventions_" + idx + i + m)">
+
+                                                                    @for (var n = 0; n < Model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions.Count; n++)
+                                                                        {
+                                                                            if (Model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].DateDiscussed != null && Model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].ExplainIntervention != null)
+                                                                            {
+
+                                                                        <div class="row next-line">
+                                                                            <div class="col-md-2 " style="padding-left: 95%">
+                                                                                <button type="button" id=@("AddIntervention_" + idx + i + m + n) value="plus" class="btn btn-default zero-Zindex interventionbutton" data-toggle="tooltip" title="Click to add multiple interventions for this goal">
+                                                                                    <span class="glyphicon glyphicon-plus" style="color: blue"></span>
+                                                                                </button>
+
+                                                                            </div>
+                                                                        </div>
+                                                                        <div id=@("Intervention_" + idx + i + m + n) class="intervention">
+
+                                                                            <div class="well container" style="border: 1px solid #000">
+                                                                                @Html.Hidden("idx", idx)
+                                                                                @Html.Hidden("i", i)
+                                                                                @Html.Hidden("m", m)
+                                                                                @Html.Hidden("n", n)
+                                                                                <div class="row">
+                                                                                    <div class="col-md-8">
+                                                                                        @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsClientAgreedIntervention, htmlAttributes: new { @class = "" })
+                                                                                        <br />
+                                                                                        @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsClientAgreedIntervention, "y", new { @class = "IsClientAgreedInterventionYes" }) Yes client agreed with intervention
+
+                                                                                        @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsClientAgreedIntervention, "n", new { @class = "IsClientAgreedInterventionNo" }) No client disagreed with intervention
+
+                                                                                        @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsClientAgreedIntervention, "o", new { @class = "IsClientAgreedInterventionBestInterest" }) Working in client's best interest
+                                                                                    </div>
+                                                                                    <div class="col-md-2 DateDiscussed">
+                                                                                        @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].DateDiscussed, htmlAttributes: new { @class = "" })
+                                                                                        <br />
+                                                                                        @Html.TextBoxFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].DateDiscussed, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker ", placeholder = "Date Discussed" })
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="row nextline">
+
+                                                                                    <div class="col-md-2">
+                                                                                        @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsInterventionMet, htmlAttributes: new { @class = "" })
+                                                                                        <br />
+                                                                                        @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsInterventionMet, "y", new { @class = "InterventionMetYes"}) Met
+
+                                                                                        @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsInterventionMet, "n", new { @class = "InterventionMetNo"}) Not Met
+                                                                                    </div>
+                                                                                    <div class="col-md-2">
+                                                                                        @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].DateInterventionMet, htmlAttributes: new { @class = "", @value = "" })
+                                                                                        <br />
+                                                                                        @Html.TextBoxFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].DateInterventionMet, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", placeholder = "Date Intervention Met" })
+                                                                                    </div>
+                                                                                    <div class="col-md-6">
+                                                                                        @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].ExplainIntervention, htmlAttributes: new { @class = "" })
+                                                                                        <br />
+                                                                                        @Html.TextAreaFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].ExplainIntervention, new { @class = "form-control zero-Zindex " })
+                                                                                    </div>
+                                                                                    <div class="col-lg-2" style="padding-left: 10%; padding-top: 25px">
+                                                                                        <button type="button" class="btn delete-intervention btn-default zero-Zindex" id=@("DeleteIntervention_" + idx + i + m + n) data-toggle="tooltip" title="Delete">
+                                                                                            <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        }
+                                                                        }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                        }
+                                                    @*start section added by Lindsey*@
+                                                    } else {
+                                                        int m = 0;
+                                                    <div class="row next-line">
+                                                        <div class="col-md-2" style="padding-left: 95%">
+                                                            <button type="button" id=@("AddGoal_" + idx + i + m) value=" plus" class="btn btn-primary zero-Zindex addgoalbutton" data-toggle="tooltip" title="Click to add multiple goals for this risk">
+                                                                <span class="glyphicon glyphicon-plus" style="color: white"></span>
+                                                            </button>
+
+                                                        </div>
+                                                    </div>
+                                                    <div id=@("Goal_" + idx + i + m) class="goal">
+
+                                                        @Html.Hidden("idx", idx)
+                                                        @Html.Hidden("i", i)
+                                                        @Html.Hidden("m", m)
+                                                       
+                                                        <div class="well container" style="border: 1px solid #000; max-width: 90%; background-color: #fff">
+                                                            <div class="row nextline">
+                                                                <div class="col-lg-2" style="padding-left: 90%">
+                                                                    <button type="button" class="btn delete-goal btn-danger zero-Zindex" id=@("DeleteGoal_" + idx + i + m) data-toggle="tooltip" title="Delete">
+                                                                        <span class="glyphicon glyphicon-remove" style="color: #fff"></span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row nextline">
+
+
+                                                                <div class="col-md-6">
+                                                                    @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsClientAgreedGoal, htmlAttributes: new { @class = "" })
+                                                                    <br />
+                                                                    @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsClientAgreedGoal, "y", new { @class = "IsClientAgreedGoalYes" }) Yes client agreed with goal
+
+                                                                    @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsClientAgreedGoal, "n", new { @class = "IsClientAgreedGoalNo" }) No client disagreed with goal
+
+                                                                    @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsClientAgreedGoal, "o", new { @class = "IsClientAgreedGoalBestInterest" }) Working in client's best interest
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].DateDiscussed, htmlAttributes: new { @class = "" })
+                                                                    <br />
+                                                                    @Html.TextBoxFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].DateDiscussed, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker ", placeholder = "Date Discussed" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="row nextline"></div>
+                                                            <div class="row nextline">
+
+                                                                <div class="col-md-2">
+                                                                    @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsGoalMet, htmlAttributes: new { @class = "" })
+                                                                    <br />
+                                                                    @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsGoalMet, "y", new { @class = "GoalMetYes"}) Met
+
+                                                                    @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsGoalMet, "n", new { @class = "GoalMetNo"}) Not Met
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].DateGoalMet, htmlAttributes: new { @class = "" })
+                                                                    <br />
+                                                                    @Html.TextBoxFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].DateGoalMet, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", placeholder = "Date Goal Met" })
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].ExplainGoal, htmlAttributes: new { @class = "" })
+                                                                    <br />
+                                                                    @Html.TextAreaFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].ExplainGoal, new { @class = "form-control zero-Zindex " })
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row WholeIntervention">
+                                                                <div class="Interventions container" id="@("Interventions_" + idx + i + m)">
+
+                                                                    @for (var n = 0; n <1 ; n++)
+                                                                        {
+                                                                            //if (Model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].DateDiscussed != null && Model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].ExplainIntervention != null)
+                                                                            //{
+
+                                                                        <div class="row next-line">
+                                                                            <div class="col-md-2 " style="padding-left: 95%">
+                                                                                <button type="button" id=@("AddIntervention_" + idx + i + m + n) value="plus" class="btn btn-default zero-Zindex interventionbutton" data-toggle="tooltip" title="Add">
+                                                                                    <span class="glyphicon glyphicon-plus" style="color: blue"></span>
+                                                                                </button>
+
+                                                                            </div>
+                                                                        </div>
+                                                                        <div id=@("Intervention_" + idx + i + m + n) class="intervention">
+
+                                                                            <div class="well container" style="border: 1px solid #000">
+                                                                                @Html.Hidden("idx", idx)
+                                                                                @Html.Hidden("i", i)
+                                                                                @Html.Hidden("m", m)
+                                                                                @Html.Hidden("n", n)
+                                                                                <div class="row">
+                                                                                    <div class="col-md-8">
+                                                                                        @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsClientAgreedIntervention, htmlAttributes: new { @class = "" })
+                                                                                        <br />
+                                                                                        @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsClientAgreedIntervention, "y", new { @class = "IsClientAgreedInterventionYes" }) Yes client agreed with intervention
+
+                                                                                        @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsClientAgreedIntervention, "n", new { @class = "IsClientAgreedInterventionNo" }) No client disagreed with intervention
+
+                                                                                        @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsClientAgreedIntervention, "o", new { @class = "IsClientAgreedInterventionBestInterest" }) Working in client's best interest
+                                                                                    </div>
+                                                                                    <div class="col-md-2 DateDiscussed">
+                                                                                        @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].DateDiscussed, htmlAttributes: new { @class = "" })
+                                                                                        <br />
+                                                                                        @Html.TextBoxFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].DateDiscussed, "{0:MM/dd/yyyy}", new { @class = "form-control  datepicker", placeholder = "Date Discussed" })
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="row nextline">
+
+                                                                                    <div class="col-md-2">
+                                                                                        @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsInterventionMet, htmlAttributes: new { @class = "" })
+                                                                                        <br />
+                                                                                        @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsInterventionMet, "y", new { @class = "InterventionMetYes"}) Met
+
+                                                                                        @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsInterventionMet, "n", new { @class = "InterventionMetNo"}) Not Met
+                                                                                    </div>
+                                                                                    <div class="col-md-2">
+                                                                                        @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].DateInterventionMet, htmlAttributes: new { @class = "", @value = "" })
+                                                                                        <br />
+                                                                                        @Html.TextBoxFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].DateInterventionMet, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", placeholder = "Date Intervention Met" })
+                                                                                    </div>
+                                                                                    <div class="col-md-6">
+                                                                                        @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].ExplainIntervention, htmlAttributes: new { @class = "" })
+                                                                                        <br />
+                                                                                        @Html.TextAreaFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].ExplainIntervention, new { @class = "form-control zero-Zindex " })
+                                                                                    </div>
+                                                                                    <div class="col-lg-2" style="padding-left: 10%; padding-top: 25px">
+                                                                                        <button type="button" class="btn delete-intervention btn-default zero-Zindex" id=@("DeleteIntervention_" + idx + i + m + n) data-toggle="tooltip" title="Delete">
+                                                                                            <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    } @*End section added by Lindsey*@
+                                                </div>
+                                            </div>
+                                        }
+
+                                    <div class="well row nextline">
+
+                                        <div class="col-lg-7">
+                                            @Html.LabelFor(m => Model.ListCasePlanTime[idx].EsignatureOfCaseWorker, new { @class = "control-label" })
+
+
+                                        </div>
+                                        <div class="col-lg-3 ">
+
+                                            @Html.TextBoxFor(model => model.ListCasePlanTime[idx].EsignatureOfCaseWorker, new { @class = "form-control", @placeholder = "Enter Name" })
+                                        </div>
+
+
+                                        <div class="col-lg-2">
+
+                                            @Html.TextBoxFor(model => model.ListCasePlanTime[idx].DateOfESignatureByCaseWorker, "{0:MM/dd/yyyy}", new { @class = "form-control  datepicker", placeholder = "Date" })
+
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row nextline"></div>
+                                    <b>I have discussed with and approve the Case Plan developed by the caseworker. All presenting risks have been addressed by the client.</b><br />
+                                    <b>Supervisor Signature & Date:</b>
+                                    <div class="well row nextline">
+                                        <div class="@(User.IsInRole("CMS_Supervisor") || User.IsInRole("CMS_IDOAStaff") ? "enablediv" : "disablediv")" id="SupervisorError">
+                                            <div class="col-lg-7">
+                                                @Html.LabelFor(m => Model.ListCasePlanTime[idx].EsignatureOfSupervisor, new { @class = "control-label" })
+
+
+                                            </div>
+                                            <div class="col-lg-3 ">
+                                                <div id="SupervisorSignError"></div>
+                                                @Html.TextBoxFor(model => model.ListCasePlanTime[idx].EsignatureOfSupervisor, new { @class = "form-control", @placeholder = "Enter Name" })
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div id="SupervisorDateError"></div>
+                                                @Html.TextBoxFor(model => model.ListCasePlanTime[idx].DateOfESignatureBySupervisor, "{0:MM/dd/yyyy}", new { @class = "form-control  datepicker", placeholder = "Date" })
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                              
+                            }
+                        </div>
+
+                        <br />
+
+                    </div>
+                </form>
+                @*<script>
+                        $(document).ready(function () {
+                            $('.risksummary').hide();
+                            //$('.goalsummary').hide();
+                            $('.goalbox').hide();
+                        });
+                        $(document).on('click', '.caseplantime', function () {
+                            if ($(this).prop('checked') == true) {
+                                $(this).parent().siblings('.risksummary').show();
+                            }
+                        });
+                        $(document).on('click', '.caseplanrisk', function () {
+                            if ($(this).prop('checked') == true) {
+                                $(this).parentsUntil('.risksummary').siblings('.goalbox').show();
+                            }
+                        });
+                        $(document).on('click', '.addsummarybutton', function () {
+
+                            var template = $(this).parent().siblings('.summary:last').clone();
+
+                            index = parseInt(template.attr('index'));
+                            count = index + 1;
+
+                            template.attr('index', count);
+
+                            template.find('input[type=text]').val(null);
+
+                            template.find('input[type=radio]').prop('checked', false);
+
+                            template.find('.removebutton').show();
+
+                            $.each(template.find('input[type=text]'), function () {
+                                var name = $(this).attr('name');
+                                name = name.replace('Interventions[' + (count - 1) + ']', 'Interventions[' + count + ']');
+                                $(this).attr('name', name);
+
+                                var id = $(this).attr('id');
+                                id = id.replace('Interventions_' + (count - 1) + '_', 'Interventions_' + count + '_');
+                                $(this).attr('id', id);
+                            });
+
+                            $.each(template.find('input[type=radio]'), function () {
+                                var name = $(this).attr('name');
+                                name = name.replace('Interventions[' + (count - 1) + ']', 'Interventions[' + count + ']');
+                                $(this).attr('name', name);
+
+                                var id = $(this).attr('id');
+                                id = id.replace('Interventions_' + (count - 1) + '_', 'Interventions_' + count + '_');
+                                $(this).attr('id', id);
+                            });
+
+                            template.appendTo($(this).parent().parent());
+                        });
+                        $(document).on('click', '.addgoalsummarybutton', function () {
+
+                            var template = $(this).parent().siblings('.goalsummary:last').clone();
+
+                            index = parseInt(template.attr('index'));
+                            count = index + 1;
+
+                            template.attr('index', count);
+
+                            template.find('input[type=text]').val(null);
+
+                            template.find('input[type=radio]').prop('checked', false);
+
+                            template.find('.summary').not(':first').remove()
+
+                            template.find('.removebutton').show();
+
+                            $.each(template.find('input[type=text]'), function () {
+                                var name = $(this).attr('name');
+                                name = name.replace('Goals[' + (count - 1) + ']', 'Goals[' + count + ']');
+                                $(this).attr('name', name);
+
+                                var id = $(this).attr('id');
+                                id = id.replace('Goals_' + (count - 1) + '_', 'Goals_' + count + '_');
+                                $(this).attr('id', id);
+                            });
+
+                            $.each(template.find('input[type=radio]'), function () {
+                                var name = $(this).attr('name');
+                                name = name.replace('Goals[' + (count - 1) + ']', 'Goals[' + count + ']');
+                                $(this).attr('name', name);
+
+                                var id = $(this).attr('id');
+                                id = id.replace('Goals_' + (count - 1) + '_', 'Goals_' + count + '_');
+                                $(this).attr('id', id);
+                            });
+
+                            template.appendTo($(this).parent().parent());
+                        });
+
+                    </script>
+                                    <div>
+                                        @for (int idx = 0; idx < Model.ListCasePlanTime.Count; idx++)
+                                        {
+                                            <div class="timesummary">
+                                                <label>@Html.CheckBoxFor(x => Model.ListCasePlanTime[idx].IsChecked, new { @class = "caseplantime" })  @Html.DisplayFor(x => Model.ListCasePlanTime[idx].Description) </label><br />
+                                                @for (int i = 0; i < Model.ListCasePlanTime[idx].Risk.Count; i++)
+                                                {
+                                                <div class="risksummary">
+                                                    <b>@Html.CheckBoxFor(x => Model.ListCasePlanTime[idx].Risk[i].IsChecked, new { @class = "caseplanrisk" }) @Html.DisplayFor(x => Model.ListCasePlanTime[idx].Risk[i].Description)</b><br />
+                                                    <div class="goalbox">
+                                                        <div class=" col-md-12 ">
+                                                            <button type="button" value="Plus" class="btn btn-primary zero-Zindex addgoalsummarybutton pull-right" data-toggle="tooltip" title="Add">
+                                                                <span class="glyphicon glyphicon-plus" style="color:#fff"></span>
+                                                            </button>
+
+                                                        </div>
+                                                        @for (var m = 0; m < Model.ListCasePlanTime[idx].Risk[i].Goals.Count; m++)
+                                                        {
+                                                            <div class="goalsummary" style="border:dotted" index="@m">
+                                                                <div class="row nextline">
+                                                                    <div class="col-md-6">
+                                                                        @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsClientAgreedGoal, htmlAttributes: new { @class = "" })
+                                                                        <br />
+                                                                        @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsClientAgreedGoal, "y") Yes client agreed with goal
+
+                                                                        @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsClientAgreedGoal, "n") No client disagreed with goal
+
+                                                                        @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsClientAgreedGoal, "o") Working in client's best interest
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].DateDiscussed, htmlAttributes: new { @class = "" })
+                                                                        <br />
+                                                                        @Html.TextBoxFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].DateDiscussed, new { @class = "form-control datepicker", placeholder = "Date Discussed" })
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row nextline"></div>
+                                                                <div class="row nextline">
+
+                                                                    <div class="col-md-2">
+                                                                        @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsGoalMet, htmlAttributes: new { @class = "" })
+                                                                        <br />
+                                                                        @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsGoalMet, "y") Met
+
+                                                                        @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].IsGoalMet, "n") Not Met
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].DateGoalMet, htmlAttributes: new { @class = "" })
+                                                                        <br />
+                                                                        @Html.TextBoxFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].DateGoalMet, new { @class = "form-control datepicker", placeholder = "Date Goal Met" })
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].ExplainGoal, htmlAttributes: new { @class = "" })
+                                                                        <br />
+                                                                        @Html.TextAreaFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].ExplainGoal, new { @class = "form-control ", @placeholder = "Explain Goal" })<br />
+                                                                    </div>
+                                                                </div>
+                                                                <div class=" col-md-12 ">
+                                                                    <button type="button" value="Plus" class="btn btn-primary zero-Zindex addsummarybutton pull-right" data-toggle="tooltip" title="Add">
+                                                                        <span class="glyphicon glyphicon-plus" style="color:#fff"></span>
+                                                                    </button>
+
+                                                                </div>
+                                                                @for (var n = 0; n < Model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions.Count; n++)
+                                                        {
+                                                        <div class="summary" style="border:thin" index=@n>
+                                                            <div class="row">
+                                                                <div class="col-md-8">
+                                                                    @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsClientAgreedIntervention, htmlAttributes: new { @class = "" })
+                                                                    <br />
+                                                                    @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsClientAgreedIntervention, "y", new { @class = "IsClientAgreedInterventionYes" }) Yes client agreed with intervention
+
+                                                                    @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsClientAgreedIntervention, "n") No client disagreed with intervention
+
+                                                                    @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsClientAgreedIntervention, "o") Working in client's best interest
+                                                                </div>
+                                                                <div class="col-md-2 DateDiscussed">
+                                                                    @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].DateDiscussed, htmlAttributes: new { @class = "" })
+                                                                    <br />
+                                                                    @Html.TextBoxFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].DateDiscussed, new { @class = "form-control datepicker", placeholder = "Date Discussed" })
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row nextline">
+
+                                                                <div class="col-md-2">
+                                                                    @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsInterventionMet, htmlAttributes: new { @class = "" })
+                                                                    <br />
+                                                                    @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsInterventionMet, "y") Met
+
+                                                                    @Html.RadioButtonFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].IsInterventionMet, "n") Not Met
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].DateInterventionMet, htmlAttributes: new { @class = "", @value = "" })
+                                                                    <br />
+                                                                    @Html.TextBoxFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].DateInterventionMet, new { @class = "form-control datepicker", placeholder = "Date Intervention Met" })
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    @Html.LabelFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].ExplainIntervention, htmlAttributes: new { @class = "" })
+                                                                    <br />
+                                                                    @Html.TextAreaFor(model => model.ListCasePlanTime[idx].Risk[i].Goals[m].Interventions[n].ExplainIntervention, new { @class = "form-control zero-Zindex" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        }
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                                }
+                                            </div>
+                                        }
+                                    </div>*@
+
+            }
+
+        </div>
+    </div>
+</div>

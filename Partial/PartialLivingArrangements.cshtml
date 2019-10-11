@@ -1,0 +1,320 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewClientStatus
+
+@{
+    var errorclass = "";
+}
+
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsLivingArrangements)
+{
+    <span class="danger">Please select atleast one under Living arrangements</span><br />
+}
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsDaytimeLocation)
+{
+    <span class="danger">Please select atleast one under Daytime Locations</span><br />
+}
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsDaytimeLocationOther)
+{
+    <span class="danger">Please enter Location</span><br />
+}
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIsOthersInHousehold)
+{
+    <span class="danger">Please select options under Others in Household or enter details</span><br />
+}
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIsOthersNotInHousehold)
+{
+    <span class="danger">Please select options under Others not in Household or enter details</span><br />
+}
+
+<script src="~/Assets/Basic/Scripts/CMS/Case/PartialLivingArrangements.js"></script>
+
+<div class="container well">
+
+@{
+    errorclass = "";
+
+    if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsLivingArrangements)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsDaytimeLocation)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsDaytimeLocationOther)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIsOthersInHousehold)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIsOthersNotInHousehold)
+    {
+        errorclass = "has-error";
+    }
+
+}
+        <legend>Client Living Arrangements and Relationships</legend>
+  
+    <div class="">
+        <div class="well container" style="background-color:#fff">
+           
+                <b style="text-decoration:underline">Choose which living arrangement best describes where the client is currently living:</b><br />
+          
+            <div class="row next-line">
+                <div class="col-lg-3 @errorclass">
+                    
+                    @for (int idx = 0; idx < Model.LivingArrangements.Count; idx++)
+                    {                        
+                        @Html.HiddenFor(x => Model.LivingArrangements[idx].Id)
+                        @Html.CheckBoxFor(x => Model.LivingArrangements[idx].IsChecked, new { @class = "zero-Zindex" })
+                        @Html.DisplayFor(x => Model.LivingArrangements[idx].Description, new { @class = "errorclass" })
+                        @Html.HiddenFor(x => Model.LivingArrangements[idx].Description) 
+                        @Html.HiddenFor(x => Model.LivingArrangements[idx].Code)
+
+                        if (idx == 4)
+                        {
+                        <div id="livingarrangement_numberOfIndividualsOwnHome">
+                            @Html.LabelFor(model => model.LivingArrangements[idx].NoOfIndividualsInOwnHome)
+                            @Html.TextBoxFor(model => model.LivingArrangements[idx].NoOfIndividualsInOwnHome, new { @class = "form-control zero-Zindex" })
+                        </div>
+                            }
+                       
+                        
+                        if (idx == 5)
+                        {  
+                            <div id="livingarrangement_numberOfIndividualsParentsHome">                         
+                                @Html.LabelFor(model => model.LivingArrangements[idx].NoOfIndividualsInParentsHome)
+                            @Html.TextBoxFor(model => model.LivingArrangements[idx].NoOfIndividualsInParentsHome, new { @class = "form-control zero-Zindex" })
+                        </div>
+                            }
+                        
+                      
+                            if (idx == 6)
+                            {
+                                  <div id="livingarrangement_numberOfIndividualsRelativesHome">                                
+                                @Html.LabelFor(model => model.LivingArrangements[idx].NoOfIndividualsInRelativesHome)
+                                @Html.TextBoxFor(model => model.LivingArrangements[idx].NoOfIndividualsInRelativesHome, new { @class = "form-control zero-Zindex" })
+                                       </div>
+                            }
+                       
+                     
+                            if (idx == 7)
+                            {       
+                                   <div id="livingarrangement_numberOfIndividualsNonRelativesHome">                         
+                                @Html.LabelFor(model => model.LivingArrangements[idx].NoOfIndividualsInNonRelativesHome)
+                                @Html.TextBoxFor(model => model.LivingArrangements[idx].NoOfIndividualsInNonRelativesHome, new { @class = "form-control zero-Zindex" })
+                                        </div> 
+                            }
+                       
+                       
+                            if (idx == 12)
+                            {            
+                                 <div id="livingarrangement_numberOfIndividualsOther">                    
+                                @Html.LabelFor(model => model.LivingArrangements[idx].Other)
+                                @Html.TextBoxFor(model => model.LivingArrangements[idx].Other, new { @class = "form-control zero-Zindex" })
+                                      </div> 
+                            }
+                       
+                        <br />
+                    }
+                </div>
+                 <div class="col-lg-3"></div>
+                <div class="col-lg-3 @errorclass">
+                    <b style="text-decoration: underline">Daytime Location:</b><br />
+                    @Html.CheckBoxFor(x => Model.IsDaytimeLocHome, new { @class = "zero-Zindex" })  @Html.LabelFor(x => Model.IsDaytimeLocHome)<br />
+                    @Html.CheckBoxFor(x => Model.IsDaytimeLocWorkShopSite, new { @class = "zero-Zindex" })  @Html.LabelFor(x => Model.IsDaytimeLocWorkShopSite, new { @class = "errorclass" })<br />
+                    <div id="DaytimeWorkShop" class="@errorclass">
+                        @Html.TextBoxFor(model => model.DaytimeLocWorkShopSite, new { @class = "form-control" })<br />
+                    </div>
+                    @Html.CheckBoxFor(x => Model.IsDaytimeLocWork, new { @class = "zero-Zindex" })  @Html.LabelFor(x => Model.IsDaytimeLocWork, new { @class = "errorclass" })<br />
+                    <div id="DaytimeWork" class="@errorclass">
+                        @Html.TextBoxFor(model => model.DaytimeLocWork, new { @class = "form-control" })<br />
+                    </div>
+                    @Html.CheckBoxFor(x => Model.IsDaytimeLocDayTraining, new { @class = "zero-Zindex" })  @Html.LabelFor(x => Model.IsDaytimeLocDayTraining, new { @class = "errorclass" })<br />
+                    <div id="DaytimeTraining" class="@errorclass">
+                        @Html.TextBoxFor(model => model.DaytimeLocDayTraining, new { @class = "form-control" })<br />
+                    </div>
+                    @Html.CheckBoxFor(x => Model.IsDaytimeLocAdultDayService, new { @class = "zero-Zindex" })  @Html.LabelFor(x => Model.IsDaytimeLocAdultDayService, new { @class = "errorclass" })<br />
+                    <div id="DaytimeAdultDayService" class="@errorclass">
+                        @Html.TextBoxFor(model => model.DaytimeLocAdultDayService, new { @class = "form-control" })<br />
+                    </div>
+                    @Html.CheckBoxFor(x => Model.IsDaytimeLocOther, new { @class = "zero-Zindex" })  @Html.LabelFor(x => Model.IsDaytimeLocOther)<br />
+                    <div id="DaytimeOther" class="@errorclass">
+                        @Html.TextBoxFor(model => model.DaytimeLocOther, new { @class = "form-control" })<br />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+ 
+    <div class="">
+        <div class="">
+           
+                <div class="well container" style="background-color:#fff">
+                    <div id="DetailOthersInHousehold">
+                        <legend>Others in Household</legend>
+                        <div class="row nextline">
+                            <div class="col-md-3 @errorclass">
+                                @Html.LabelFor(model => model.IsOthersInHousehold, htmlAttributes: new { @class = "errorclass" })
+
+                                @Html.RadioButtonFor(model => model.IsOthersInHousehold, "n") None
+                
+                            @Html.RadioButtonFor(model => model.IsOthersInHousehold, "u") Unknown
+                            </div>
+                            <div class="col-lg-9 " >
+                                <button type="button" id="AddOtherInHousehold" value="Plus" class="btn btn-primary zero-Zindex pull-right" data-toggle="tooltip" title="Add">
+                                    <span class="glyphicon glyphicon-plus" style="color: white"></span>
+                                </button>
+                               
+
+                            </div>
+                        </div>
+                    
+
+
+                        @for (int i = 0; i < Model.ListOthersInHousehold.Count; i++)
+                        {
+                            <div id=@("OtherInHousehold_" + i) class="otherInHousehold">
+                                <div class="well container">
+                                    <div class="row nextline">
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(model => model.ListOthersInHousehold[i].OthersName, htmlAttributes: new { @class = "" })
+                                            <br />
+                                            @Html.TextBoxFor(model => model.ListOthersInHousehold[i].OthersName, new { @class = "form-control" })
+                                        </div>                                       
+                                        <div class="col-md-2">
+                                            @Html.LabelFor(model => model.ListOthersInHousehold[i].OthersPhone, htmlAttributes: new { @class = "" })
+                                            <br />
+                                            @Html.TextBoxFor(model => model.ListOthersInHousehold[i].OthersPhone, new { @class = "form-control phonenumber" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(model => model.ListOthersInHousehold[i].RelationTypeId, htmlAttributes: new { @class = "" })
+                                            @*@Html.Hidden("Type_" + i, Model.ListOthersInHousehold[i].RelationTypeId, new { @class = "ddlValue" })*@
+                                            <br />
+                                            @*@Html.DropDownListFor(model => model.ListOthersInHousehold[i].RelationTypeId, (List<SelectListItem>)ViewBag.Relations, "Select", new { @class = "form-control ddlType zero-Zindex" })*@
+                                            @Html.DropDownListFor(model => model.ListOthersInHousehold[i].RelationTypeId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewRelation { Id = 0, Description = " Select Relation" } }.Union(Model.caselookup.listofrelations.OrderBy(s => s.Code)), "Id", "Description", Model.ListOthersInHousehold[i].RelationTypeId), new { @class = "form-control zero-Zindex" })
+                                        </div>
+                                        <div class="col-md-4">
+                                            @Html.LabelFor(model => model.ListOthersInHousehold[i].IsROI, htmlAttributes: new { @class = "" })
+                                            <br />
+                                            @Html.RadioButtonFor(model => model.ListOthersInHousehold[i].IsROI, "y") Yes
+
+                                            @Html.RadioButtonFor(model => model.ListOthersInHousehold[i].IsROI, "n") No
+                                        </div>
+                                        <div class="col-md-2 othersverbal" style="padding-top: 25px">
+                                            @Html.CheckBoxFor(model => model.ListOthersInHousehold[i].IsROIVerbal, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListOthersInHousehold[i].IsROIVerbal, htmlAttributes: new { @class = "" })
+                                            @Html.CheckBoxFor(model => model.ListOthersInHousehold[i].IsROIWritten, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListOthersInHousehold[i].IsROIWritten, htmlAttributes: new { @class = "" })
+                                            <br />
+                                        </div>
+                                        <div class="col-lg-2 pull-right" style="padding-left: 175px; padding-top: 10px">
+                                            <button type="button" id="OtherHouseHoldRemove_@(i)" class="btn delete-inHousehold btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                                                <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                    }
+
+                    </div>
+                </div>
+          
+
+            <div class="">
+                <div class="well container" style="background-color:#fff">
+                    <div id="DetailOthersNotInHousehold">
+                        <legend>Others Not in Household</legend>
+
+                        <div class="row nextline">
+                            <div class="col-md-3 @errorclass">
+                                @Html.LabelFor(model => model.IsOthersNotInHousehold, htmlAttributes: new { @class = "errorclass" })
+
+                                @Html.RadioButtonFor(model => model.IsOthersNotInHousehold, "n") None
+
+                                @Html.RadioButtonFor(model => model.IsOthersNotInHousehold, "u") Unknown
+                            </div>
+                               <div class="col-lg-9 " >
+                                   <button type="button" id="AddOtherNotInHousehold" value="Plus" class="btn btn-primary zero-Zindex pull-right" data-toggle="tooltip" title="Add">
+                                       <span class="glyphicon glyphicon-plus" style="color: white"></span>
+                                   </button>
+
+                        </div>
+                        </div>
+
+                        @for (int i = 0; i < Model.ListOthersNotInHousehold.Count; i++)
+                        {
+                            <div id=@("OtherNotInHousehold_" + i) class="otherNotInHousehold">
+                               
+                                <div class="well container">
+                                    <div class="row nextline">
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(model => model.ListOthersNotInHousehold[i].OthersName, htmlAttributes: new { @class = "" })
+                                            <br />
+                                            @Html.TextBoxFor(model => model.ListOthersNotInHousehold[i].OthersName, new { @class = "form-control zero-Zindex" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(model => model.ListOthersNotInHousehold[i].OthersAddressLine1, htmlAttributes: new { @class = "" })
+                                            <br />
+                                            @Html.TextBoxFor(model => model.ListOthersNotInHousehold[i].OthersAddressLine1, new { @class = "form-control" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(model => model.ListOthersNotInHousehold[i].OthersAddressLine2, htmlAttributes: new { @class = "" })
+                                            <br />
+                                            @Html.TextBoxFor(model => model.ListOthersNotInHousehold[i].OthersAddressLine2, new { @class = "form-control" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(model => model.ListOthersNotInHousehold[i].OthersCity, htmlAttributes: new { @class = "" })
+                                            <br />
+                                            @Html.TextBoxFor(model => model.ListOthersNotInHousehold[i].OthersCity, new { @class = "form-control" })
+                                        </div>
+                                        <div class="col-lg-3">
+                                            @Html.LabelFor(model => model.ListOthersNotInHousehold[i].OthersStateId)
+                                            <br />
+                                            @Html.DropDownListFor(model => model.ListOthersNotInHousehold[i].OthersStateId, new SelectList(new[] { new PersonProfile.Data.Entities.dtoStateType { Id = 14, Description = " Select State " } }.Union(Model.caselookup.listofstates.OrderBy(s => s.Description)), "Id", "Description", Model.ListOthersNotInHousehold[i].OthersStateId), new { @class = "form-control" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(model => model.ListOthersNotInHousehold[i].OthersPhone, htmlAttributes: new { @class = "" })
+                                            <br />
+                                            @Html.TextBoxFor(model => model.ListOthersNotInHousehold[i].OthersPhone, new { @class = "form-control phonenumber" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(model => model.ListOthersNotInHousehold[i].RelationTypeId, htmlAttributes: new { @class = "" })
+                                            <br />
+                                            @*@Html.DropDownListFor(model => model.ListOthersNotInHousehold[i].RelationTypeId, (List<SelectListItem>)ViewBag.Relations, "Select", new { @class = "form-control ddlType zero-Zindex" })*@
+                                            @Html.DropDownListFor(model => model.ListOthersNotInHousehold[i].RelationTypeId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewRelation { Id = 0, Description = " Select Relation" } }.Union(Model.caselookup.listofrelations.OrderBy(s => s.Code)), "Id", "Description", Model.ListOthersNotInHousehold[i].RelationTypeId), new { @class = "form-control zero-Zindex" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(model => model.ListOthersNotInHousehold[i].IsROI, htmlAttributes: new { @class = "" })
+                                            <br />
+                                            @Html.RadioButtonFor(model => model.ListOthersNotInHousehold[i].IsROI, "y") Yes
+
+                                            @Html.RadioButtonFor(model => model.ListOthersNotInHousehold[i].IsROI, "n") No
+                                        </div>
+                                        <div class="col-md-3 othersnotverbal" style="padding-top: 25px">
+                                            @Html.CheckBoxFor(model => model.ListOthersNotInHousehold[i].IsROIVerbal, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListOthersNotInHousehold[i].IsROIVerbal, htmlAttributes: new { @class = "" })
+                                            @Html.CheckBoxFor(model => model.ListOthersNotInHousehold[i].IsROIWritten, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListOthersNotInHousehold[i].IsROIWritten, htmlAttributes: new { @class = "" })
+                                            <br />
+                                        </div>
+                                        <div class="col-lg-2 pull-right" style="padding-left: 175px;padding-top:10px">
+                                            <button type="button" id="OtherNotRemove_@(i)" class="btn delete-notinHousehold btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                                                <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    }
+
+                    </div>
+
+                    <div class="row next-line">
+                     
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+      </div>

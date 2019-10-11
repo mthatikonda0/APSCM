@@ -1,0 +1,422 @@
+﻿@model AGE.CMS.Data.Models.Referral.viewDHSReferral
+
+@{
+    ViewBag.Title = "Referral";
+}
+
+<script>
+    $(document).ready(function () {
+        $("#validationtext").hide();
+        $('.disablediv').find("select, input, textarea").attr("disabled", "disabled")
+        $("form").submit(function (e) {
+            var countrue = 0;
+            var countfalse = 0;
+            $('.isdhs').each(function () {
+                if ($(this).is(":checked") == false) {
+                    countfalse++;
+                }
+                else {
+                    countrue++;
+                }
+            });
+            if (countfalse >= 3) {
+                $("#validationtext").show();
+                e.preventDefault();
+            }
+
+
+        });
+
+
+        $('#SaveAndCloseReferral').click(function (e) {
+            e.preventDefault();
+            var getData = $('#alldiv').find('select, textarea, input').serialize();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveReferrals", "Case")',
+            dataType: "json",
+            data: getData,
+            success: function (data) {
+                //$.each(data, function (i, val) { });
+
+                notification("DHS Referral saved!");
+
+                window.location.href = data;
+            }
+        });
+
+     });
+
+
+
+        $('.datepicker').datepicker({
+            format: 'mm-dd-yyyy',
+            changeMonth: true,
+            changeYear: true,
+            maxDate: new Date
+        });
+
+
+
+        var num = $('#ssn').html();
+        var gem = num.replace(/(\d{3})\-?(\d{2})\-?(\d{4})/, '$1-$2-$3');
+        $('#ssn').html(gem);
+
+        var gum = $('#phone').html();
+        var jum = gum.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3');
+        $('#phone').html(jum);
+
+
+    });
+
+
+
+
+
+
+</script>
+
+<div id="alldiv">
+    @using (Html.BeginForm("SubmitReferrals", "Case", FormMethod.Post))
+    {
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.CaseheaderId)
+        @Html.HiddenFor(model => model.ContractId)
+        @Html.HiddenFor(model => model.DateCreated)
+        @Html.HiddenFor(model => model.StatusId)
+        @Html.ValidationSummary()
+        <div class="container">
+            <div class="panel panel-warning">
+
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        <span class="titletextbegin">
+                            <span class="glyphicon glyphicon-edit"></span><span class="textspace">
+                                <text>DHS Referrals</text>
+                            </span>
+                        </span>
+                    </h2>
+                </div>
+
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-md-12 pull-right">
+                            <div class="btn-group pull-right" style="margin-right: 10px;">
+                                <a id="SaveAndCloseReferral" rel="tooltip" title=" Save & Close " class="btn btn-success btn-md btn-outline">Save & Close</a>
+                                <button id="SaveReferrals" rel="tooltip" type="submit" class="btn btn-primary btn-md" title=" Save ">Submit</button>
+                                <a id="cancelReferrals" rel="tooltip" class="btn btn-default btn-md" title=" Cancel " href='@Url.Action("ManageCase", "Case", new { CaseheaderId = @Model.CaseheaderId})'>Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <p class="alert alert-info">
+                        Use this form to notify the Illinois Department of Human Services (DHS)  when it is believed an eligible adult may qualify for services through DHS and the AV is NOT a current DHS client.<br />
+                        <u>First determine if the AV needs DHS services and what kind:</u> <br />Division of Developmental Disabilities = the client must have a long-term disability present prior to their 22nd birthday.<br />
+                        Division of Rehabilitation Services = significant disability lasting 12 months or longer with imminent risk of long-term care placement.<br />
+                        Division of Mental Health Services = services include treatment, outpatient counseling, medications, employment, housing, case management, etc. <br />
+                        DHS will contact the client to schedule completion of an application, assessment, and (if eligible) develop a service plan
+                    </p>
+
+                    <div class="well container">
+                        <div class="container">
+                            <div class="row nextline" style="background-color: #fff">
+                                <div id="check" class="col-md-12">
+                                    <b id="validationtext" style="color:red">Please Select Atleast one of the following</b>
+                                    <br />
+                                    @Html.CheckBoxFor(m => m.IsDRS, new { @class = "isdhs" })&nbsp;@Html.LabelFor(m => m.IsDRS)<br />
+                                    @Html.CheckBoxFor(m => m.IsDDD, new { @class = "isdhs" })&nbsp;@Html.LabelFor(m => m.IsDDD)<br />
+                                    @Html.CheckBoxFor(m => m.IsDMH, new { @class = "isdhs" })&nbsp;@Html.LabelFor(m => m.IsDMH)<br />
+                                </div>
+                            </div>
+                            <div class="row nextline well" style="background-color: #fff">
+                                <table class="table table-bordered well">
+
+                                    <b>Client Information</b>
+
+                                    <tr>
+                                        <th>Name:   &nbsp;</th>
+                                        <td>@Html.DisplayFor(model => model.viewCaseHeader.Client.Person.FirstName, new { @class = "control-label" }) @Html.DisplayFor(model => model.viewCaseHeader.Client.Person.LastName, new { @class = "control-label" })</td>
+
+                                    </tr>
+                                    <tr>
+                                        <th>Address:   &nbsp; </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.viewCaseHeader.Client.Person.Address.AddressLine1, new { @class = "control-label" }) &nbsp;
+
+                                            @if (Model.viewCaseHeader.Client.Person.Address.AddressLine2 != null)
+                                            {
+                                                @Html.DisplayFor(model => model.viewCaseHeader.Client.Person.Address.AddressLine2, new { @class = "control-label" })
+
+                                            }
+
+                                            , @Html.DisplayFor(model => model.viewCaseHeader.Client.Person.Address.City, new { @class = "control-label" }) &nbsp;,
+
+                                            @Html.DisplayFor(model => model.viewCaseHeader.Client.Person.Address.Zip5, new { @class = "control-label" }) - @Html.DisplayFor(model => model.viewCaseHeader.Client.Person.Address.Zip4, new { @class = "control-label" })
+                                        </td>
+
+                                    </tr>
+
+
+                                    <tr>
+                                        <th>Phone:   &nbsp; </th>
+
+                                        <td id="phone">@Html.DisplayFor(model => model.viewCaseHeader.Client.Person.Phone.PhoneNumber, new { @class = "control-label phonenumber" })</td>
+
+
+                                    </tr>
+
+
+                                    <tr>
+
+                                        <th>SSN: &nbsp; </th>
+                                        <td id="ssn">@Html.DisplayFor(model => model.viewCaseHeader.Client.Person.SSN, new { @class = "control-label ssn" })</td>
+
+
+                                    </tr>
+
+                                    <tr>
+                                        <th>Date Of Birth: &nbsp; </th>
+                                        <td>@Html.DisplayFor(model => model.viewCaseHeader.Client.Person.DOB, new { @class = "control-label" })</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Gender: &nbsp;</th>
+                                        <td>@Html.DisplayFor(model => model.viewCaseHeader.Client.Person.Demographic.GenderType.Description, new { @class = "control-label" })</td>
+                                    </tr>
+                                    @*<tr>
+                                            <th>RIN: &nbsp;</th>
+                                            <td>@Html.DisplayFor(model => model.viewCaseHeader.Client.Person.Demographic., new { @class = "control-label" })</td>
+                                        </tr>*@
+                                    <tr>
+                                        <th>RIN: &nbsp;</th>
+                                        <td>@Html.DisplayFor(model => model.viewCaseHeader.Client.Person.RIN, new { @class = "control-label" })</td>
+                                    </tr>
+
+                                    @if (Model.viewCaseHeader.Intake.viewClient.IsLimitedEnglishSpeaking == "y")
+                                    {
+                                        <tr>
+                                            <th>Limited English Speaking: &nbsp;</th>
+                                            <td>Yes</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Primary Language: &nbsp;</th>
+                                            <td>@Model.caselookup.listofprimarylanguage.FirstOrDefault(pl => pl.Id == Model.viewCaseHeader.Intake.viewClient.PrimaryLanguageId).Description.ToString() </td>
+
+                                        </tr>
+                                    }
+                                    else if (Model.viewCaseHeader.Intake.viewClient.IsLimitedEnglishSpeaking == "n")
+                                    {
+                                        <tr>
+                                            <th>Limited English Speaking: &nbsp;</th>
+                                            <td>No</td>
+                                        </tr>
+                                    }
+                                    else if (Model.viewCaseHeader.Intake.viewClient.IsLimitedEnglishSpeaking == "u")
+                                    {
+                                        <tr>
+                                            <th>Limited English Speaking: &nbsp;</th>
+                                            <td>Unknown</td>
+                                        </tr>
+                                    }
+
+
+                                </table>
+                            </div>
+                        </div>
+
+
+
+                        <div id="dhs" class=" container well" style="background-color: #fff">
+
+                            <div class="row nextline"></div>
+                            <div class="row nextline"></div>
+                            <div class="row nextline">
+                                <div class="col-md-6">
+                                    @Html.LabelFor(m => m.TypeOfDisAbility)
+                                    <div>
+                                        @Html.TextAreaFor(m => m.TypeOfDisAbility, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.TypeOfDisAbility)
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <div>
+                                        @Html.LabelFor(m => m.StatementOfNeed)
+                                    </div>
+                                    <div>
+                                        @Html.TextAreaFor(m => m.StatementOfNeed, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.StatementOfNeed)
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+
+
+                            <div class="row nextline">
+                                <div class="col-md-6">
+                                    <div>
+                                        @Html.LabelFor(m => m.IncludeInformation)
+                                    </div>
+                                    <div>
+                                        @Html.TextAreaFor(m => m.IncludeInformation, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.IncludeInformation)
+
+
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 form-group ">
+
+                                    @Html.LabelFor(m => m.ContractId, new { @class = "control-label" })
+
+                                    @Html.DropDownListFor(model => model.ContractId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewContract { Id = 0, ContractName = " Select Agency" } }.Union(Model.caselookup.listofallcontracts.OrderBy(s => s.ContractName)), "Id", "ContractName", Model.ContractId), new { @class = "form-control"})
+
+                                </div>
+
+                            </div>
+                            <div class="row nextline"></div>
+                            <div class="row nextline">
+                                <b style="text-decoration: underline">Contact Person Submitting Referral:</b>
+                                <br />
+                                <div class="col-md-3">
+
+                                    <div>
+                                        @Html.LabelFor(m => m.NameSubmittingReferral)
+                                    </div>
+                                    <div>
+                                        @Html.TextBoxFor(m => m.NameSubmittingReferral, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.NameSubmittingReferral)
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-md-3">
+                                    <div>
+                                        @Html.LabelFor(m => m.PhoneSubmittingReferral)
+                                    </div>
+                                    <div>
+                                        @Html.TextBoxFor(m => m.PhoneSubmittingReferral, new { @class = "form-control phonenumber", @placeholder = "Enter Phone Number" })
+                                        @Html.ValidationMessageFor(m => m.PhoneSubmittingReferral)
+
+
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-md-4">
+                                    <div>
+                                        @Html.LabelFor(m => m.EmailSubmittingReferral)
+                                    </div>
+                                    <div>
+                                        @Html.TextBoxFor(m => m.EmailSubmittingReferral, new { @class = "form-control", })
+                                        @Html.ValidationMessageFor(m => m.EmailSubmittingReferral)
+
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-2">
+                                    @Html.Label("Date Of Referral")<br />
+                                    @if (Model.DateSubmitted != null)
+                                    {
+                                        @Model.DateSubmitted
+                                    }
+                                    else
+                                    {
+                                    @Html.DisplayFor(m => m.DateCreated, "{MM/dd/yyyy}")
+                                    }
+
+                                    <br /> <br />
+
+                                    @if (Model.PreviousSubmissions != null && Model.PreviousSubmissions.Count > 0)
+                                    {
+                                        <p><strong>Previous Submissions</strong></p>
+                                        foreach (var p in Model.PreviousSubmissions)
+                                        {
+                                            @p <br />
+                                        }
+                                    }
+                                </div>
+                               
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="row nextline"></div>
+                        <div class="row nextline"></div>
+                        <div class="row nextline"></div>
+
+                        <div class="container well @(@User.IsInRole("CMS_Supervisor") || User.IsInRole("CMS_IDOAStaff") || User.IsInRole("CMS_Caseworker") ? "disablediv" : "enablediv")" id="receiving" style="background-color: #fff">
+                            <h4 style="text-align: center; text-decoration: underline">Response to be completed by the receiving Agency </h4>
+                            <div class="row nextline">
+                                <div class="col-md-3">
+                                    <div>
+                                        @Html.LabelFor(m => m.ReferedAgencyName)
+                                    </div>
+                                    <div>
+                                        @Html.TextBoxFor(m => m.ReferedAgencyName, new { @class = "form-control", @disabled = "disabled" })
+                                    </div>
+
+                                </div>
+                                <div class="col-md-3">
+
+                                    <div>
+                                        @Html.LabelFor(m => m.NameAgencyContactPerson)
+                                    </div>
+                                    <div>
+                                        @Html.TextBoxFor(m => m.NameAgencyContactPerson, new { @class = "form-control", @disabled = "disabled" })
+                                    </div>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <div>
+                                        @Html.LabelFor(m => m.PhoneAgencyContactPerson)
+                                    </div>
+                                    <div>
+                                        @Html.TextBoxFor(m => m.PhoneAgencyContactPerson, new { @class = "form-control phonenumber", @disabled = "disabled" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row nextline">
+                                <div class="col-md-6">
+                                    <div>
+                                        @Html.LabelFor(m => m.OutcomeSummary)
+                                    </div>
+                                    <div>
+                                        @Html.TextAreaFor(m => m.OutcomeSummary, new { @class = "form-control", @disabled = "disabled" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div>
+                                        @Html.LabelFor(m => m.ResponseDate)
+                                    </div>
+                                    <div>
+                                        @Html.TextBoxFor(m => m.ResponseDate, new { @class = "form-control datepicker", @disabled = "disabled" })
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    }
+</div>

@@ -1,0 +1,1607 @@
+﻿@model AGE.CMS.Data.Models.ClientAssessment.viewClientAssesssment
+
+@{
+    var errorclass = "";
+}
+
+@*@Html.ValidationSummary(true)*@
+@{
+    errorclass = "";
+
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsDateDecesionMade)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsPhysicalCaseClosureReasonId)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsSexualCaseClosureReasonId)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsEmotionalCaseClosureReasonId)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsConfinementCaseClosureReasonId)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsPassiveNeglectCaseClosureReasonId)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsWillfulDeprivationCaseClosureReasonId)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsFinancialExploitationCaseClosureReasonId)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsGeneralBehaviourCaseClosureReasonId)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsSelfNeglectCaseClosureReasonId)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsClientReceivesServices)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsCaseClosureReasonId)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsEsignatureOfCaseWorker)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsDateOfESignatureByCaseWorker)
+    {
+        errorclass = "has-error";
+    }
+    //if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsEsignatureOfSupervisor)
+    //{
+    //    errorclass = "has-error";
+    //}
+    //if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsDateOfESignatureBySupervisor)
+    //{
+    //    errorclass = "has-error";
+    //}
+
+    if (Model.viewReportSubstantiation.InCompleteErrors.ErrorsInReportOfSubstantiation && Model.viewReportSubstantiation.InCompleteErrors.HasErrorsIsMedicaid)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.viewReportSubstantiation.InCompleteErrors.ErrorsInReportOfSubstantiation && Model.viewReportSubstantiation.InCompleteErrors.HasErrorsClassificationId)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.viewReportSubstantiation.InCompleteErrors.ErrorsInReportOfSubstantiation && Model.viewReportSubstantiation.InCompleteErrors.HasErrorsDateofSubstantiation)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.viewReportSubstantiation.InCompleteErrors.ErrorsInReportOfSubstantiation && Model.viewReportSubstantiation.InCompleteErrors.HasErrorsCompletedBy)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.viewReportSubstantiation.InCompleteErrors.ErrorsInReportOfSubstantiation && Model.viewReportSubstantiation.InCompleteErrors.HasErrorsEmail)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.viewReportSubstantiation.InCompleteErrors.ErrorsInReportOfSubstantiation && Model.viewReportSubstantiation.InCompleteErrors.HasErrorsAgencyName)
+    {
+        errorclass = "has-error";
+    }
+}
+
+
+@Html.HiddenFor(model => model.Id)
+@*@Html.HiddenFor(m => m.Person.Address)
+    @Html.HiddenFor(m => m.Person.Phone)*@
+@Html.HiddenFor(model => model.IntakeId)
+@Html.HiddenFor(model => model.viewAssessmentStatus.Id)
+@*@Html.HiddenFor(model => model.listofabusers)*@
+
+
+<script src="~/Assets/Basic/Scripts/CMS/Case/PartialAssessmentStatus.js"></script>
+
+
+<div class="panel-heading" style="border: groove; background-color: #efeed6; margin: 10px;">
+    <h3>Assessment Status and Substantiation Decision  </h3>
+    Record the status of the client at the close of the assessment period. Do NOT record any status that is likely to occur in the future.
+    <br />
+    <div class="row nextline"></div>
+    <div class="row nextline"></div>
+    <div style="text-decoration: underline">Indicate whether the type of ANE/SN is one of the following: </div>
+    <br />
+
+    Unable to Substantiate = unable due to one of the circumstances noted in the drop-down menu
+    Not reported or suspected
+    <br />
+    Substantiated Verified = there is clear and convincing evidence the harm was result of ANE/SN (75%+ degree of certainty)
+    <br />
+    Substantiated Some Indication = there is a preponderance of the evidence the harm was result of ANE/SN (51-74% degree of certainty)
+    <br />
+    Unsubstantiated No Indication = there is lack of credible evidence ANE/SN exists (< 50% degree of certainty)
+    <br />
+</div>
+
+<div class="row nextline">
+    @if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsDateDecesionMade)
+    {
+        <span class="danger">Please enter Date substantiation decision made</span><br />
+    }
+    <div class="col-lg-2 @errorclass">
+        @Html.LabelFor(m => m.viewAssessmentStatus.DateDecesionMade, new { @class = "control-label" })
+        <div>
+            @Html.TextBoxFor(model => model.viewAssessmentStatus.DateDecesionMade, new { @class = "form-control  datepicker", placeholder = "Substantiation Decision Date" })
+        </div>
+    </div>
+
+    <div class="col-lg-9">
+        @Html.LabelFor(m => m.viewAssessmentStatus.IfDecesionMadeExplain, new { @class = "control-label" })
+        <div>
+            @Html.TextAreaFor(model => model.viewAssessmentStatus.IfDecesionMadeExplain, new { @class = "form-control" })
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <div id="physicalassessment">
+        <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Physical Abuse: </h4>
+            </div>
+        </div>
+
+        @if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsPhysicalCaseClosureReasonId)
+        {
+            <span class="danger">Please select reason under Indicators of Physical Abuse</span><br />
+        }
+
+        <div style="border: groove; border-bottom-color: #efeed6;">
+            <div class="container">
+                <div class="row nextline">
+
+                    <div class="col-lg-2 @errorclass">
+                        <br />
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification.Count; idx++)
+                        {
+                            // if (Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].Id == 4)
+                            if (idx == 3)
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.CheckBoxFor(x => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].IsChecked) @Html.DisplayFor(x => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].Description) <br />
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                            else
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                        }
+                    </div>
+
+
+                    <div id="case1" class="col-lg-3 @errorclass">
+                        @Html.LabelFor(m => m.viewAssessmentStatus.PhysicalAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                        <div>
+                            @Html.DropDownListFor(model => model.viewAssessmentStatus.PhysicalAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.PhysicalAssessementStatus.CaseClosureReasonId), new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div id="abuserlist1">
+                    <div class="row nextline">
+                        <br />
+                        <div class="col-lg-2" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Abuser&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+                        <div class="col-lg-3" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Classification&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+
+                    </div>
+                    <div class="row nextline">
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfAbusers.Count; idx++)
+                        {
+                            <div class="col-lg-2">
+                                <div style="padding-top: 9px">
+                                    @Html.HiddenFor(model => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfAbusers[idx].Id)
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfAbusers[idx].LastName)
+                                </div>
+
+                            </div>
+                            <div class="Classifications col-lg-3">
+                                @Html.DropDownListFor(model => model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control" })
+                            </div>
+
+
+
+                            <div class="row nextline"></div>
+                            <br />
+
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row nextline"></div>
+    <div class="row nextline"></div>
+
+    <div id="SexualAssessement">
+        <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Sexual Abuse: </h4>
+            </div>
+        </div>
+        @if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsSexualCaseClosureReasonId)
+        {
+            <span class="danger">Please select reason under Indicators of Sexual Abuse</span><br />
+        }
+        <div style="border: groove; border-bottom-color: #efeed6;">
+            <div class="container">
+                <div class="row nextline">
+
+                    <div class="col-lg-2">
+                        <br />
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification.Count; idx++)
+                        {
+                            //   if (Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].Id == 4)
+                            if (idx == 3)
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.CheckBoxFor(x => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].IsChecked) @Html.DisplayFor(x => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].Description) <br />
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                            else
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                        }
+                    </div>
+
+
+                    <div id="case2" class="col-lg-3 @errorclass">
+                        @Html.LabelFor(m => m.viewAssessmentStatus.SexualAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                        <div>
+                            @Html.DropDownListFor(model => model.viewAssessmentStatus.SexualAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.SexualAssessementStatus.CaseClosureReasonId), new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div id="abuserlist2">
+                    <div class="row nextline">
+                        <br />
+                        <div class="col-lg-2" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Abuser&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+                        <div class="col-lg-3" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Classification&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+
+                    </div>
+                    <div class="row nextline">
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.SexualAssessementStatus.ListOfAbusers.Count; idx++)
+                        {
+                            <div class="col-lg-2">
+                                <div style="padding-top: 9px">
+                                    @Html.HiddenFor(model => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfAbusers[idx].Id)
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfAbusers[idx].LastName)
+                                </div>
+
+                            </div>
+                            <div class="Classifications col-lg-3">
+                                @Html.DropDownListFor(model => model.viewAssessmentStatus.SexualAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.SexualAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control" })
+                            </div>
+
+
+
+                            <div class="row nextline"></div>
+                            <br />
+
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row nextline"></div>
+    <div class="row nextline"></div>
+
+    <div id="EmotionalAssessement">
+        <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Emotional Abuse: </h4>
+            </div>
+        </div>
+
+        @if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsEmotionalCaseClosureReasonId)
+        {
+            <span class="danger">Please select reason under Indicators of Emotional Abuse</span><br />
+        }
+
+        <div style="border: groove; border-bottom-color: #efeed6;">
+            <div class="container">
+                <div class="row nextline">
+
+                    <div class="col-lg-2">
+                        <br />
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification.Count; idx++)
+                        {
+                            //if (Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].Id == 4)
+                            if (idx == 3)
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.CheckBoxFor(x => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].IsChecked) @Html.DisplayFor(x => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].Description) <br />
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                            else
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                        }
+
+                    </div>
+
+
+                    <div id="case3" class="col-lg-3 @errorclass">
+                        @Html.LabelFor(m => m.viewAssessmentStatus.EmotionalAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                        <div>
+                            @Html.DropDownListFor(model => model.viewAssessmentStatus.EmotionalAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.EmotionalAssessementStatus.CaseClosureReasonId), new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div id="abuserlist3">
+                    <div class="row nextline">
+                        <br />
+                        <div class="col-lg-2" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Abuser&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+                        <div class="col-lg-3" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Classification&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+
+                    </div>
+                    <div class="row nextline">
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfAbusers.Count; idx++)
+                        {
+                            <div class="col-lg-2">
+                                <div style="padding-top: 9px">
+                                    @Html.HiddenFor(model => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfAbusers[idx].Id)
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfAbusers[idx].LastName)
+                                </div>
+
+                            </div>
+                            <div class="Classifications col-lg-3">
+                                @Html.DropDownListFor(model => model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control" })
+                            </div>
+
+
+
+                            <div class="row nextline"></div>
+                            <br />
+
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row nextline"></div>
+    <div class="row nextline"></div>
+
+    <div id="ConfinementAssessementStatus">
+        <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Confinement: </h4>
+            </div>
+        </div>
+
+        @if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsConfinementCaseClosureReasonId)
+        {
+            <span class="danger">Please select reason under Indicators of Confinement</span><br />
+        }
+
+        <div style="border: groove; border-bottom-color: #efeed6;">
+            <div class="container">
+                <div class="row nextline">
+
+                    <div class="col-lg-2">
+                        <br />
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification.Count; idx++)
+                        {
+                            //if (Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].Id == 4)
+                            if (idx == 3)
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.CheckBoxFor(x => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].IsChecked) @Html.DisplayFor(x => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].Description) <br />
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                            else
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                        }
+                    </div>
+
+
+                    <div id="case4" class="col-lg-3 @errorclass">
+                        @Html.LabelFor(m => m.viewAssessmentStatus.ConfinementAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                        <div>
+                            @Html.DropDownListFor(model => model.viewAssessmentStatus.ConfinementAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.ConfinementAssessementStatus.CaseClosureReasonId), new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div id="abuserlist4">
+                    <div class="row nextline">
+                        <br />
+                        <div class="col-lg-2" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Abuser&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+                        <div class="col-lg-3" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Classification&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+
+                    </div>
+                    <div class="row nextline">
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfAbusers.Count; idx++)
+                        {
+                            <div class="col-lg-2">
+                                <div style="padding-top: 9px">
+                                    @Html.HiddenFor(model => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfAbusers[idx].Id)
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfAbusers[idx].LastName)
+                                </div>
+
+                            </div>
+                            <div class="Classifications col-lg-3">
+                                @Html.DropDownListFor(model => model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control" })
+                            </div>
+
+
+                            <div class="row nextline"></div>
+                            <br />
+
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row nextline"></div>
+    <div class="row nextline"></div>
+
+    <div id="PassiveNeglectAssessementStatus">
+        <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Passive Neglect: </h4>
+            </div>
+        </div>
+
+        @if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsPassiveNeglectCaseClosureReasonId)
+        {
+            <span class="danger">Please select reason under Indicators of Passive Neglect</span><br />
+        }
+
+        <div style="border: groove; border-bottom-color: #efeed6;">
+            <div class="container">
+                <div class="row nextline">
+
+                    <div class="col-lg-2">
+                        <br />
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification.Count; idx++)
+                        {
+                            //if (Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].Id == 4)
+                            if (idx == 3)
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.CheckBoxFor(x => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].IsChecked) @Html.DisplayFor(x => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].Description) <br />
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                            else
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].Description)
+
+                            }
+                        }
+                    </div>
+
+
+                    <div id="case5" class="col-lg-3 @errorclass">
+                        @Html.LabelFor(m => m.viewAssessmentStatus.PassiveNeglectAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                        <div>
+                            @Html.DropDownListFor(model => model.viewAssessmentStatus.PassiveNeglectAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.CaseClosureReasonId), new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div id="abuserlist5">
+                    <div class="row nextline">
+                        <br />
+                        <div class="col-lg-2" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Abuser&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+                        <div class="col-lg-3" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Classification&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+
+                    </div>
+                    <div class="row nextline">
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfAbusers.Count; idx++)
+                        {
+                            <div class="col-lg-2">
+                                <div style="padding-top: 9px">
+                                    @Html.HiddenFor(model => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfAbusers[idx].Id)
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfAbusers[idx].LastName)
+                                </div>
+
+                            </div>
+                            <div class="Classifications col-lg-3">
+                                @Html.DropDownListFor(model => model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control" })
+                            </div>
+
+
+
+                            <div class="row nextline"></div>
+                            <br />
+
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row nextline"></div>
+    <div class="row nextline"></div>
+
+    <div id="WillfulDeprivationNeglectAssessementStatus">
+        <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Willful Deprivation: </h4>
+            </div>
+        </div>
+
+        @if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsWillfulDeprivationCaseClosureReasonId)
+        {
+            <span class="danger">Please select reason under Indicators of Willful Deprivation</span><br />
+        }
+
+        <div style="border: groove; border-bottom-color: #efeed6;">
+            <div class="container">
+                <div class="row nextline">
+
+                    <div class="col-lg-2">
+                        <br />
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification.Count; idx++)
+                        {
+                            //if (Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].Id == 4)
+                            if (idx == 3)
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.CheckBoxFor(x => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].IsChecked) @Html.DisplayFor(x => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].Description) <br />
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                            else
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                        }
+                    </div>
+
+
+                    <div id="case6" class="col-lg-3 @errorclass">
+                        @Html.LabelFor(m => m.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                        <div>
+                            @Html.DropDownListFor(model => model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.CaseClosureReasonId), new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div id="abuserlist6">
+                    <div class="row nextline">
+                        <br />
+                        <div class="col-lg-2" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Abuser&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+                        <div class="col-lg-3" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Classification&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+
+                    </div>
+                    <div class="row nextline">
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfAbusers.Count; idx++)
+                        {
+                            <div class="col-lg-2">
+                                <div style="padding-top: 9px">
+                                    @Html.HiddenFor(model => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfAbusers[idx].Id)
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfAbusers[idx].LastName)
+                                </div>
+
+                            </div>
+                            <div class="Classifications col-lg-3">
+                                @Html.DropDownListFor(model => model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control" })
+                            </div>
+
+
+
+                            <div class="row nextline"></div>
+                            <br />
+
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row nextline"></div>
+    <div class="row nextline"></div>
+
+    <div id="FinancialExploitationNeglectAssessementStatus">
+        <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Financial Exploitation: </h4>
+            </div>
+        </div>
+
+        @if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsFinancialExploitationCaseClosureReasonId)
+        {
+            <span class="danger">Please select reason under Indicators of Financial Exploitation</span><br />
+        }
+
+        <div style="border: groove; border-bottom-color: #efeed6;">
+            <div class="container">
+                <div class="row nextline">
+
+                    <div class="col-lg-2">
+                        <br />
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification.Count; idx++)
+                        {
+                            //if (Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].Id == 4)
+                            if (idx == 3)
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.CheckBoxFor(x => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].IsChecked) @Html.DisplayFor(x => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].Description) <br />
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                            else
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                        }
+                    </div>
+
+
+                    <div id="case7" class="col-lg-3 @errorclass">
+                        @Html.LabelFor(m => m.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                        <div>
+                            @Html.DropDownListFor(model => model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.CaseClosureReasonId), new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div id="abuserlist7">
+                    <div class="row nextline">
+                        <br />
+                        <div class="col-lg-2" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Abuser&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+                        <div class="col-lg-3" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Classification&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+
+                    </div>
+                    <div class="row nextline">
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfAbusers.Count; idx++)
+                        {
+                            <div class="col-lg-2">
+                                <div style="padding-top: 9px">
+                                    @Html.HiddenFor(model => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfAbusers[idx].Id)
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfAbusers[idx].LastName)
+                                </div>
+
+                            </div>
+                            <div class="Classifications col-lg-3">
+                                @Html.DropDownListFor(model => model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control" })
+                            </div>
+
+
+                            <div class="row nextline"></div>
+                            <br />
+
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row nextline"></div>
+    <div class="row nextline"></div>
+
+    <div id="GeneralBehaviorNeglectAssessementStatus">
+        <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">General Behaviour Indicators: </h4>
+            </div>
+        </div>
+
+        @if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsGeneralBehaviourCaseClosureReasonId)
+        {
+            <span class="danger">Please select reason under General Behavior Indicators</span><br />
+        }
+
+        <div style="border: groove; border-bottom-color: #efeed6;">
+            <div class="container">
+                <div class="row nextline">
+
+                    <div class="col-lg-2">
+                        <br />
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification.Count; idx++)
+                        {
+                            //if (Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].Id == 4)
+                            if (idx == 3)
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.CheckBoxFor(x => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].IsChecked) @Html.DisplayFor(x => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].Description) <br />
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                            else
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                        }
+                    </div>
+
+
+                    <div id="case8" class="col-lg-3 @errorclass">
+                        @Html.LabelFor(m => m.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                        <div>
+                            @Html.DropDownListFor(model => model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.CaseClosureReasonId), new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div id="abuserlist8">
+                    <div class="row nextline">
+                        <br />
+                        <div class="col-lg-2" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Abuser&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+                        <div class="col-lg-3" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Classification&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+
+                    </div>
+                    <div class="row nextline">
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfAbusers.Count; idx++)
+                        {
+                            <div class="col-lg-2">
+                                <div style="padding-top: 9px">
+                                    @Html.HiddenFor(model => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfAbusers[idx].Id)
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfAbusers[idx].LastName)
+                                </div>
+
+                            </div>
+                            <div class="Classifications col-lg-3">
+                                @Html.DropDownListFor(model => model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control" })
+                            </div>
+
+
+
+                            <div class="row nextline"></div>
+                            <br />
+
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row nextline"></div>
+    <div class="row nextline"></div>
+
+    <div id="SelfNeglectNeglectAssessementStatus">
+        <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">Indicators Of Self-Neglect: </h4>
+            </div>
+        </div>
+
+        @if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsSelfNeglectCaseClosureReasonId)
+        {
+            <span class="danger">Please select reason under Indicators of Self Neglect</span><br />
+        }
+
+        <div style="border: groove; border-bottom-color: #efeed6;">
+            <div class="container">
+                <div class="row nextline">
+
+                    <div class="col-lg-2">
+                        <br />
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification.Count; idx++)
+                        {
+                            //if (Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].Id == 4)
+                            if (idx == 3)
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.CheckBoxFor(x => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].IsChecked) @Html.DisplayFor(x => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].Description) <br />
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                            else
+                            {
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                @Html.HiddenFor(x => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].Description)
+                            }
+                        }
+                    </div>
+
+
+                    <div id="case9" class="col-lg-3 @errorclass">
+                        @Html.LabelFor(m => m.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                        <div>
+                            @Html.DropDownListFor(model => model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.CaseClosureReasonId), new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div id="abuserlist9">
+                    <div class="row nextline">
+                        <br />
+                        <div class="col-lg-2" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Abuser&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+                        <div class="col-lg-3" style="text-decoration: underline; letter-spacing: 1.5px; font-weight: 500">
+                            <b>Classification&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                        </div>
+
+                    </div>
+                    <div class="row nextline">
+                        @for (int idx = 0; idx < Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfAbusers.Count; idx++)
+                        {
+                            <div class="col-lg-2">
+                                <div style="padding-top: 9px">
+                                    @Html.HiddenFor(model => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfAbusers[idx].Id)
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                    @Html.DisplayFor(model => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfAbusers[idx].LastName)
+                                </div>
+
+                            </div>
+                            <div class="Classifications col-lg-3">
+                                @Html.DropDownListFor(model => model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control" })
+                            </div>
+
+
+                            <div class="row nextline"></div>
+                            <br />
+
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="row nextline"></div>
+<div class="row nextline"></div>
+
+
+
+
+
+@if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsClientReceivesServices)
+{
+    <span class="danger">Please select at least one under Client receiving services through</span><br />
+}
+
+
+<div class="row nextline">
+    <div class="col-lg-3 @errorclass" data-toggle="modal" data-target="myModal">
+        <b class="@errorclass">This client receives services through: </b>
+        <button id="edit" type="button" data-toggle="modal" data-target="myModal" class="glyphicon glyphicon-modal-window"></button>
+        <br />
+        @for (int idx = 0; idx < Model.viewAssessmentStatus.ClientReceivesServices.Count; idx++)
+        {
+            @Html.HiddenFor(x => Model.viewAssessmentStatus.ClientReceivesServices[idx].Id)
+            @Html.HiddenFor(x => Model.viewAssessmentStatus.ClientReceivesServices[idx].Code)
+            <span class="@errorclass">@Html.CheckBoxFor(x => Model.viewAssessmentStatus.ClientReceivesServices[idx].IsChecked, new { @class = "ClientReceivesServices" })@Html.DisplayFor(x => Model.viewAssessmentStatus.ClientReceivesServices[idx].Description)</span> <br />
+            @Html.HiddenFor(x => Model.viewAssessmentStatus.ClientReceivesServices[idx].Description)
+        }
+    </div>
+    <div class=" col-lg-3" style="padding-top: 5%">
+        @Html.DropDownListFor(model => model.viewAssessmentStatus.MCOId, new SelectList(new[] { new AGE.CMS.Data.Models.LookupModels.viewMCO { Id = null, Name = " Select MCO" } }.Union(Model.viewAssessmentStatus.ListMCOs.OrderBy(s => s.Name)), "Id", "Name", Model.viewAssessmentStatus.MCOId), new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="row nextline"></div>
+
+<script src="~/Scripts/bootstrap-notify.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#ckeckabusetype").hide();
+        $("#medicaidradio").hide();
+        $("#report").hide();
+        $(".ClientReceivesServices").each(function () {
+            if ($(this).is(':checked') == true) {
+                $("#report").show();
+            }
+        });
+
+        $('#viewClientAssessment_viewAssessmentStatus_MCOId').change(function () {
+            $('#viewReportSubstantiation_MCOId').val(this.value);
+        });
+
+        ClientReceives = 0;
+        $('#viewAssessmentStatus_MCOId').hide();
+        var ids = {};
+        $(".ClientReceivesServices").on('click', function () {
+            ids.checked = [];
+            ids.notchecked = [];
+            $(".ClientReceivesServices").each(function () {
+                if ($(this).is(":checked") == true && this.id != "viewAssessmentStatus_ClientReceivesServices_5__IsChecked") {
+                    ids.checked.push(this.id);
+                    ClientReceives++;
+                }
+                else {
+                    ids.notchecked.push(this.id);
+                }
+            });
+            maketrue();
+            displayreport();
+        });
+        function maketrue() {
+            $.each(ids.checked, function (index, value) {
+                if (value == "viewAssessmentStatus_ClientReceivesServices_0__IsChecked") {
+                    $('#viewReportSubstantiation_IsCCP').val(true);
+                }
+                if (value == "viewAssessmentStatus_ClientReceivesServices_1__IsChecked") {
+                    $('#viewReportSubstantiation_IsDRS').val(true);
+                }
+                if (value == "viewAssessmentStatus_ClientReceivesServices_2__IsChecked") {
+                    $('#viewReportSubstantiation_IsDDD').val(true);
+                }
+                if (value == "viewAssessmentStatus_ClientReceivesServices_3__IsChecked") {
+                    $('#viewReportSubstantiation_IsMCO').val(true);
+                    $('#viewAssessmentStatus_MCOId').show("slow");
+                }
+                if (value == "viewAssessmentStatus_ClientReceivesServices_4__IsChecked") {
+                    $('#viewReportSubstantiation_IsDSCC').val(true);
+                }
+
+            });
+            $.each(ids.notchecked, function (index, value) {
+                if (value == "viewAssessmentStatus_ClientReceivesServices_0__IsChecked") {
+                    $('#viewReportSubstantiation_IsCCP').val(false);
+                }
+                if (value == "viewAssessmentStatus_ClientReceivesServices_1__IsChecked") {
+                    $('#viewReportSubstantiation_IsDRS').val(false);
+                }
+                if (value == "viewAssessmentStatus_ClientReceivesServices_2__IsChecked") {
+                    $('#viewReportSubstantiation_IsDDD').val(false);
+                }
+                if (value == "viewAssessmentStatus_ClientReceivesServices_3__IsChecked") {
+                    $('#viewReportSubstantiation_IsMCO').val(false);
+                    $('#viewAssessmentStatus_MCOId').hide("slow");
+                }
+                if (value == "viewAssessmentStatus_ClientReceivesServices_4__IsChecked") {
+                    $('#viewReportSubstantiation_IsDSCC').val(false);
+                }
+
+            });
+        };
+        function displayreport() {
+            if (ClientReceives <= 0) {
+                $('#report').slideUp();
+                ClientReceives = 0;
+            }
+            else {
+                $('#report').slideDown();
+                ClientReceives = 0;
+            }
+        };
+
+
+
+
+        $('select option:selected').each(function () {
+            if ($(this).val() != 0) {
+                $(this).closest('.has-error').removeClass("has-error");
+            }
+        });
+        $('input').each(function () {
+            if ($(this).val() != '') {
+                $(this).closest('.has-error').removeClass("has-error");
+            }
+        });
+
+        $('textarea').each(function () {
+            if ($(this).val() != '') {
+                $(this).closest('.has-error').removeClass("has-error");
+            }
+        });
+
+        $('input').on("change paste keyup", function () {
+            $(this).closest('.has-error').removeClass("has-error");
+            // $(this).css('border-color', '#000');
+            //$(this).closest('div').addClass("form-control");
+        });
+
+        $('select').on("change", function () {
+            $(this).closest('.has-error').removeClass("has-error");
+            //$(this).closest('div').addClass("form-control");
+        });
+
+        $('textarea').on("change paste keyup", function () {
+            $(this).closest('.has-error').removeClass("has-error");
+            $(this).css('border-color', '#000');
+
+            //$(this).closest('div').addClass("form-control");
+        });
+
+        function isabusertypechecked() {
+            var isabusechecked = false;
+            $(".abusertypes").each(function () {
+                if ($(this).is(':checked') == false) {
+                    $("#ckeckabusetype").show();
+
+                    //isabusechecked = false;
+                    //console.log("not checked")
+                }
+                else {
+                    $("#ckeckabusetype").hide();
+                    isabusechecked = true;
+                    return false;
+                }
+            });
+            return isabusechecked;
+        };
+
+
+        function ismedicaid() {
+            var ismeidcaischecked = false;
+            $('.IsMedicaid').each(function () {
+                if ($(this).is(':checked') == false) {
+                    $("#medicaidradio").show();
+
+                }
+                else {
+                    $("#medicaidradio").hide();
+                    ismeidcaischecked = true;
+                    return false;
+                }
+            });
+            return ismeidcaischecked;
+        };
+
+        $("#SubmitReport").click(function () {
+            ismedicaid();
+            isabusertypechecked();
+            var count = 0;
+            if ($('#viewReportSubstantiation_AgencyName').val() == "") {
+                $('#viewReportSubstantiation_AgencyName').parent().addClass("has-error");
+                count = 1;
+            }
+            if ($('#viewReportSubstantiation_Summary').val() == "") {
+                $('#viewReportSubstantiation_Summary').parent().parent().addClass("has-error");
+                count = 1;
+            }
+            if ($('#viewReportSubstantiation_CompletedBy').val() == "") {
+                $('#viewReportSubstantiation_CompletedBy').parent().addClass("has-error");
+                count = 1;
+            }
+            if ($('#viewReportSubstantiation_Email').val() == "") {
+                $('#viewReportSubstantiation_Email').parent().addClass("has-error");
+                count = 1;
+            }
+            if ($('#viewReportSubstantiation_ClassificationId').val() == "0") {
+                $('#viewReportSubstantiation_ClassificationId').parent().parent().addClass("has-error");
+                count = 1;
+            }
+
+            if ($('#viewReportSubstantiation_DateofSubstantiation').val() == "") {
+                $('#viewReportSubstantiation_DateofSubstantiation').parent().addClass("has-error");
+                count = 1;
+            }
+
+            if (count != 0 || isabusertypechecked() == false || ismedicaid() == false) {
+                console.log('not sub')
+            }
+            else {
+                bootbox.confirm({
+                    title: "Submittal electronically notifies DHS of Notice.",
+                    message: "Confirm Submission? This cannot be undone if submitted",
+                    buttons: {
+                        cancel: {
+                            label: '<i class="fa fa-times"></i> Cancel'
+                        },
+                        confirm: {
+                            label: '<i class="fa fa-check"></i> Confirm'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '@Url.Action("SubmitReportOfSubstantiation", "Case")',
+                                dataType: "json",
+                                data: $('#report').find('select, textarea, input').serialize(),
+                                success: function (data) {
+                                    console.log(data);
+                                    $('#viewReportSubstantiation_Id').val(data);
+                                    notification("Submitted !");
+                                    $("#SaveReport").hide();
+
+                                }
+                            });
+
+                        };
+
+                    }
+
+                });
+            }
+        });
+
+
+
+
+
+        $("#SaveReport").click(function () {
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveReportOfSubstantiationAjax", "Case")',
+                dataType: "json",
+                data: $('#report').find('select, textarea, input').serialize(),
+                success: function (data) {
+                    console.log(data);
+                    $('#viewReportSubstantiation_Id').val(data);
+                    notification("saved !");
+                }
+
+
+            });
+            return false;
+        });
+
+
+
+
+
+
+
+
+        function notification(message) {
+            var notify = $.notify({ message: '<strong>Saving</strong> ...' }, {
+                allow_dismiss: false,
+                offset: {
+                    X: 0,
+                    y: 0
+                },
+                z_index: 10000000,
+                showProgressbar: true,
+                placement: {
+                    from: "top",
+                    align: "center"
+                },
+                delay: 100
+            });
+
+
+            setTimeout(function () {
+                notify.update({ 'type': 'success', 'message': '<strong>Success</strong> Report of Substantiation has been ' + message, 'progress': 10 });
+            }, 1800);
+        };
+
+
+
+
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+<div id="report" class="container" style="border: groove; width: 60%; margin: auto">
+
+    @Html.HiddenFor(model => model.viewReportSubstantiation.Id)
+    @Html.HiddenFor(model => model.viewReportSubstantiation.ClientAssessmentId)
+    @Html.HiddenFor(m => m.viewReportSubstantiation.IsCCP)
+    @Html.HiddenFor(m => m.viewReportSubstantiation.IsDRS)
+    @Html.HiddenFor(m => m.viewReportSubstantiation.IsDDD)
+    @Html.HiddenFor(m => m.viewReportSubstantiation.IsMCO)
+    @Html.HiddenFor(m => m.viewReportSubstantiation.IsDSCC)
+    @Html.HiddenFor(m => m.viewReportSubstantiation.MCOId)
+    @Html.HiddenFor(m => m.viewReportSubstantiation.DateOfIntake)
+    @Html.HiddenFor(m => m.Id)
+    <div class="container">
+
+        <div class="row nextline" style="border-bottom: 2px solid #e5e5e5">
+
+
+            <h2 style="text-align: center">Report Of Substantiation</h2>
+            <div class="row nextline"></div>
+
+            <div class="col-lg-2">
+                <b>Name:</b>
+            </div>
+            <div class="col-lg-2">
+                @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.FirstName, new { @class = "control-label" })
+
+                @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.LastName, new { @class = "control-label" })
+
+            </div>
+        </div>
+        <div class="row nextline" style="border-bottom: 2px solid #e5e5e5">
+            <div class="col-lg-2">
+                <b>Address:</b>
+            </div>
+            <div class="col-lg-2">
+                @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.Address.AddressLine1, new { @class = "control-label" })
+                <br />
+                @if (Model.viewIntake.viewCaseHeader.Client.Person.Address.AddressLine2 != null)
+                {
+                    @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.Address.AddressLine2, new { @class = "control-label" })
+                    <br />
+                }
+                @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.Address.City, new { @class = "control-label" })
+                <br />
+                @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.Address.Zip5, new { @class = "control-label" })  @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.Address.Zip4, new { @class = "control-label" })
+            </div>
+        </div>
+        <div class="row nextline" style="border-bottom: 2px solid #e5e5e5">
+            <div class="col-lg-2">
+                <b>Phone:</b>
+            </div>
+            <div class="col-lg-3">
+                @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.Phone.PhoneNumber, new { @class = "control-label" })
+            </div>
+            <br />
+        </div>
+
+
+        <div class="row nextline" style="border-bottom: 2px solid #e5e5e5">
+            <div class="col-lg-2">
+                <b>SSN:</b>
+            </div>
+            <div class="col-lg-3">
+                @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.SSN, new { @class = "control-label" })
+            </div>
+        </div>
+        <div class="row nextline" style="border-bottom: 2px solid #e5e5e5">
+            <div class="col-lg-2">
+                <b>Date of Birth:</b>
+            </div>
+            <div class="col-lg-3">
+                @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.DOB, new { @class = "control-label" })
+            </div>
+
+        </div>
+
+        @if (Model.viewReportSubstantiation.InCompleteErrors.ErrorsInReportOfSubstantiation && Model.viewReportSubstantiation.InCompleteErrors.HasErrorsIsMedicaid)
+        {
+            <span class="danger">Please select whether Medicaid/Non-Medicaid/Unknown</span><br />
+        }
+        <div class="row nextline">
+            <div class="col-lg-4 @errorclass" style="padding-top: 20px">
+                <b>Choose one of the following:</b>
+                <br />
+                <b id="medicaidradio" style="color:#a94442">Please Choose one </b>
+                <br />
+                @Html.RadioButtonFor(model => model.viewReportSubstantiation.IsMedicaid, "y", new { @class = "IsMedicaid" }) Medicaid
+                <br />
+                @Html.RadioButtonFor(model => model.viewReportSubstantiation.IsMedicaid, "n", new { @class = "IsMedicaid" }) Non-Medicaid
+                <br />
+                @Html.RadioButtonFor(model => model.viewReportSubstantiation.IsMedicaid, "u", new { @class = "IsMedicaid" }) Unknown
+            </div>
+        </div>
+
+
+        <div class="row nextline">
+            @if (Model.viewReportSubstantiation.InCompleteErrors.ErrorsInReportOfSubstantiation && Model.viewReportSubstantiation.InCompleteErrors.HasErrorsClassificationId)
+            {
+                <span class="danger">Please select Substantiation Decision</span><br />
+            }
+            <div class="col-lg-4 @errorclass">
+                @Html.LabelFor(m => m.viewReportSubstantiation.ClassificationId, new { @class = "control-label" })
+                <div>
+                    @Html.DropDownListFor(model => model.viewReportSubstantiation.ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select Decesion" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewReportSubstantiation.ClassificationId), new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-lg-4 @errorclass" id="unable">
+                @Html.LabelFor(m => m.viewReportSubstantiation.IfUnableToSubstantiateId, new { @class = "control-label" })
+                <div>@Html.DropDownListFor(model => model.viewReportSubstantiation.IfUnableToSubstantiateId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewReportSubstantiation.IfUnableToSubstantiateId), new { @class = "form-control" })</div>
+            </div>
+        </div>
+
+
+
+        <div class="row nextline">
+            <div class="col-lg-4">
+                @Html.LabelFor(m => m.IntakeDate, new { @class = "control-label" })
+
+                <div style="border: 2px solid #e5e5e5">@Html.DisplayFor(model => model.viewReportSubstantiation.DateOfIntake)</div>
+            </div>
+
+
+            @if (Model.viewReportSubstantiation.InCompleteErrors.ErrorsInReportOfSubstantiation && Model.viewReportSubstantiation.InCompleteErrors.HasErrorsDateofSubstantiation)
+            {
+                <span class="danger">Please select Date of Substantiation Decision</span><br />
+            }
+            <div class="col-lg-4 @errorclass">
+                @Html.LabelFor(m => m.viewReportSubstantiation.DateofSubstantiation, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.viewReportSubstantiation.DateofSubstantiation, new { @class = "form-control  datepicker", placeholder = "Date" })
+            </div>
+
+        </div>
+
+        <div class="row nextline" style="padding-left: 20px">
+            <b>Type(s) of Abuse Substantiated: </b>
+            <br />
+            <b id="ckeckabusetype" style="color:#a94442">Please check any abuse type</b>
+            <br />
+            @for (int idx = 0; idx < Model.viewReportSubstantiation.ListOfAbuseTypes.Count; idx++)
+            {
+                if(Model.viewReportSubstantiation.ListOfAbuseTypes[idx].Description.ToString() != "Behavior Indicators"){
+
+
+                @Html.HiddenFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].Id)
+                @Html.HiddenFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].Code)
+                @Html.CheckBoxFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].IsChecked, new { @class = "abusertypes" }) @Html.DisplayFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].Description)
+                @Html.HiddenFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].Description)
+
+
+                <div id="abusers@(idx)" style="border:groove; ">
+                    @for (int i = 0; i < Model.viewReportSubstantiation.ListOfAbuseTypes[idx].ListofAbusers.Count; i++)
+                    {
+
+                        <div class="container" style="background-color: #f2f1d8">
+                            @Html.HiddenFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].ListofAbusers[i].Id)
+                            @Html.CheckBoxFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].ListofAbusers[i].IsChecked, new { @class = "abusernames" }) @Html.DisplayFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].ListofAbusers[i].FirstName)   @Html.DisplayFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].ListofAbusers[i].LastName)<div style="float: right; display: inline; width: 49%;">&nbsp; @Html.DisplayFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].ListofAbusers[i].RelationDescription) </div>
+
+
+
+                            @Html.HiddenFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].ListofAbusers[i].RelationId)
+
+                        </div>
+
+
+                    }
+                </div>
+                <br />
+            }
+            }
+
+
+        </div>
+
+
+
+        <div class="row nextline">
+            <div class="col-lg-12">
+                @Html.LabelFor(m => m.viewReportSubstantiation.Summary, new { @class = "control-label" })
+                @Html.TextAreaFor(m => m.viewReportSubstantiation.Summary, new { @class = "form-control" })
+            </div>
+        </div>
+
+
+
+        <div class="row nextline">
+            <div class="col-lg-4 @errorclass">
+                @if (Model.viewReportSubstantiation.InCompleteErrors.ErrorsInReportOfSubstantiation && Model.viewReportSubstantiation.InCompleteErrors.HasErrorsAgencyName)
+                {
+                    <span class="danger">Please select enter APS PA</span><br />
+                }
+                @Html.LabelFor(m => m.viewReportSubstantiation.AgencyName, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.viewReportSubstantiation.AgencyName, new { @class = "form-control" })
+            </div>
+
+            <div class="col-lg-4 @errorclass">
+                @if (Model.viewReportSubstantiation.InCompleteErrors.ErrorsInReportOfSubstantiation && Model.viewReportSubstantiation.InCompleteErrors.HasErrorsCompletedBy)
+                {
+                    <span class="danger">Please enter who completed the Report of Substantiation</span><br />
+                }
+                @Html.LabelFor(m => m.viewReportSubstantiation.CompletedBy, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.viewReportSubstantiation.CompletedBy, new { @class = "form-control" })
+            </div>
+
+            <div class="col-lg-4 @errorclass">
+                @if (Model.viewReportSubstantiation.InCompleteErrors.ErrorsInReportOfSubstantiation && Model.viewReportSubstantiation.InCompleteErrors.HasErrorsEmail)
+                {
+                    <span class="danger">Please enter email</span><br />
+                }
+                @Html.LabelFor(m => m.viewReportSubstantiation.Email, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.viewReportSubstantiation.Email, new { @class = "form-control" })
+            </div>
+
+        </div>
+        <br />
+        <div class="modal-footer">
+            <button type="button" id="SaveReport" class="btn btn-primary">Save</button>
+            <button type="button" id="SubmitReport" class="btn btn-primary">Submit</button>
+        </div>
+
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="row nextline"></div>
+<div class="row nextline">
+    @if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsCaseClosureReasonId)
+    {
+        <span class="danger">Please select Report Status</span><br />
+    }
+    <div class="col-lg-3 @errorclass">
+        @Html.LabelFor(m => m.viewAssessmentStatus.CaseClosureReasonId, new { @class = "control-label" })
+        @Html.DropDownListFor(model => Model.viewAssessmentStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsAble), "Id", "Description", Model.viewAssessmentStatus.CaseClosureReasonId), new { @class = "form-control" })
+    </div>
+</div>
+
+<div class="row nextline"></div>
+
+<div class="row nextline">
+
+    <div class="col-lg-5">
+        @Html.LabelFor(m => m.viewAssessmentStatus.EsignatureOfCaseWorker, new { @class = "control-label" })
+
+
+    </div>
+    <div class="col-lg-3 @errorclass">
+        @if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsEsignatureOfCaseWorker)
+        {
+            <span class="danger">Please sign</span><br />
+        }
+        @Html.TextBoxFor(model => model.viewAssessmentStatus.EsignatureOfCaseWorker, new { @class = "form-control" })
+    </div>
+
+
+    <div class="col-lg-3 @errorclass">
+        @if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsDateOfESignatureByCaseWorker)
+        {
+            <span class="danger">Please enter date</span><br />
+        }
+        @Html.TextBoxFor(model => model.viewAssessmentStatus.DateOfESignatureByCaseWorker, new { @class = "form-control  datepicker", placeholder = "Date" })
+
+    </div>
+
+
+</div>
+
+
+<br />
+
+<div class="row nextline"></div>
+
+@if (Model.StatusDescription == "Submitted")
+{
+    <div class="row nextline">
+        <div id="SupervisorError"></div>
+        <div class="col-lg-6">
+            @Html.LabelFor(m => m.viewAssessmentStatus.EsignatureOfSupervisor, new { @class = "control-label" })
+
+
+        </div>
+        <div class="col-lg-3 @errorclass">
+            <div id="SupervisorSignError"></div>
+            @Html.TextBoxFor(model => model.viewAssessmentStatus.EsignatureOfSupervisor, new { @class = "form-control", Name = "SupervisorSign" })
+        </div>
+        <div class="col-lg-3 @errorclass">
+            <div id="SupervisorDateError"></div>
+            @Html.TextBoxFor(model => model.viewAssessmentStatus.DateOfESignatureBySupervisor, new { @class = "form-control  datepicker", placeholder = "Date", Name = "SupervisorSignDate" })
+
+        </div>
+
+
+    </div>
+}

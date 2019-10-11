@@ -1,0 +1,169 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewAbuserInformation
+
+@{
+    ViewBag.Title = "Search Abuser";
+}
+
+@*<script>
+        function filterGlobal() {
+            $('#example').DataTable().search(
+                $('#global_filter').val(),
+                $('#global_regex').prop('checked'),
+                $('#global_smart').prop('checked')
+            ).draw();
+        }
+
+        function filterColumn(i) {
+            $('#example').DataTable().column(i).search(
+                $('#col' + i + '_filter').val(),
+                $('#col' + i + '_regex').prop('checked'),
+                $('#col' + i + '_smart').prop('checked')
+            ).draw();
+        }
+
+        $(document).ready(function () {
+
+            $('#tbody').hide();
+
+            // Setup - add a text input to each footer cell
+            $('#example tfoot th').each(function () {
+                var title = $(this).text();
+                $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            });
+            //$('#example').DataTable();
+
+            var table = $('#example').DataTable({
+                "bLengthChange": false,
+                "ordering": false,
+                "info": false,
+                bFilter: false, bInfo: false, "bPaginate": false
+            });
+
+            // Apply the search
+            table.columns().every(function () {
+                var that = this;
+
+                $('input', this.footer()).on('keyup change', function () {
+                    if (that.search() !== this.value) {
+                        $('#tbody').show();
+                        that
+                            .search(this.value)
+                            .draw();
+                    }
+                });
+                //$('input', this.footer()).on('keyup change', function () {
+                //    if (that.search() !== this.value) {
+                //        $('#tbody').show();
+                //        that
+                //            .search(this.value)
+                //            .draw();
+                //    }
+                //    if (this.value == "") {
+                //        $('#tbody').hide();
+                //    }
+                //});
+
+            });
+
+
+
+        });
+    </script>*@
+
+<script>
+    $(document).ready(function () {
+        var table = $('#example').DataTable();              
+
+        $('#example tfoot th').each(function () {
+            var title = $(this).text();
+            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+        });
+
+        table.columns().every(function () {
+            var that = this;
+
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+    });
+</script>
+
+<div class="container">
+
+    @if (Model.ListOfAbusers != null && Model.ListOfAbusers.Any())
+    {
+        <table class="table table-striped table-hover" id="example">
+            <caption style="display: none">List of Abusers</caption>
+            <tfoot>
+                <tr>
+                    <th class="col-lg-1">Abuser Name</th>
+                    <th class="col-lg-1">SSN</th>
+                    <th class="col-lg-1">Age</th>
+                    <th class="col-lg-1">Gender</th>
+                    <th class="col-lg-1">Relationship</th>
+                    <th class="col-lg-2">Address</th>
+                </tr>
+            </tfoot>
+            <thead>
+                <tr>
+                    <th class="col-lg-1">Abuser Name</th>
+                    <th class="col-lg-1">SSN</th>
+                    <th class="col-lg-1">Age</th>
+                    <th class="col-lg-1">Gender</th>
+                    <th class="col-lg-1">Relationship</th>
+                    <th class="col-lg-2">Address</th>
+                </tr>
+            </thead>
+
+            <tbody id="tbody">
+
+                @foreach (var item in Model.ListOfAbusers)
+                {
+                    <tr class="">
+                        <td>
+                            @if (item.FirstName != null)
+                            {
+                                @item.FirstName
+                            }
+                            @if (item.LastName != null)
+                            {
+                                @item.LastName
+                            }
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.SocialSecurityNumber)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Age)</td>
+                        <td>@Html.DisplayFor(modelItem => item.GenderTypeDescription)</td>
+                        <td>@Html.DisplayFor(modelItem => item.RelationDescription)</td>
+                        <td>
+                            @if (item.AddressLine1 != null)
+                            {
+                                @item.AddressLine1
+                                if (@item.AddressLine2 != null)
+                                {
+                                    <p> @item.AddressLine2</p>
+                                }
+                                if (@item.City != null)
+                                {
+                                    <p> @item.City </p>
+                                } if (@item.Zip5 != null)
+                                {
+                                    <p>-@item.Zip5</p>
+                                }
+                            }
+                            else
+                            {
+
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+</div>

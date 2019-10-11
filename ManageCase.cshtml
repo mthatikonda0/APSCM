@@ -1,0 +1,79 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewCaseHeader
+@{
+    ViewBag.Title = "ManageCase";
+}
+
+<script>
+    $(document).ready(function () {
+
+        if ($("#StatusId").val() == 4 || $("#StatusId").val() == 5) {
+            $(".closable").hide();
+        }
+
+    });
+</script>
+
+@if (User.IsInRole("CMS_RAAAdmin") || User.IsInRole("CMS_IDOAStaff"))
+{
+    <script>
+        $(document).ready(function () {
+                $(".closable").hide();
+        });
+    </script>
+
+}
+
+<div class="container">
+    <div class="panel panel-warning">
+
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="titletextbegin">
+                    <span class="glyphicon glyphicon-th-large"></span><span class="textspace">
+                        <text>Manage Case</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+        @Html.HiddenFor(m=>m.StatusId)
+        @if (Model.UserContractIds != null && !Model.UserContractIds.Contains(Model.ContractId))
+        {
+            <script>
+                $(document).ready(function () {
+                    $(".closable").hide();
+                });
+            </script>
+        }
+        <div class="panel-body">
+            <div id="viewclient">
+                @Html.Partial("_viewClientCMS", Model.Client)
+            </div>
+            <div class="row nextline">
+                <div class="panel panel-default nextline">
+                    <div class="panel-body">
+                        <div id="content">
+                            <ul id="tabs" class="navl nav nav-tabs" data-tabs="tabs">
+                                <li class="active"><a href="#tabs-A" data-toggle="tab">Intakes and Respective Forms</a></li>
+                                <li><a href="#tabs-B" data-toggle="tab">Case Forms</a></li>   
+                                @if (Model.ClosureAtAssessment == false)
+                                {
+                                    <li><a href="#" data-toggle="tab" style="color:red">Please make a Closure entry in Case Recording Form and Submit case for billing before closing.</a></li>
+                                }                            
+                            </ul>
+
+                            <div id="managecontent" class="tab-content">
+                                <div id="tabs-A" class="tab-pane active">
+                                    @Html.Partial("PartialListIntake", Model)
+                                </div>
+                                <div id="tabs-B" class="tab-pane fade">
+                                    @Html.Partial("PartialCaseForms", Model)
+                                </div>                               
+                            </div>                          
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </div>

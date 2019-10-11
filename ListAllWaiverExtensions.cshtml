@@ -1,0 +1,206 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewWaiverExtension
+
+@{
+    Layout = null;
+}
+<script>
+    $(document).ready(function () {
+        $('#waivertable').DataTable();
+    });
+</script>
+
+
+@if (User.IsInRole("CMS_IDOAStaff"))
+{
+    <div>
+        <b>Awaiting For Approval</b>
+        @if (Model.ListWaiverExtensions != null && Model.ListWaiverExtensions.Any())
+        {
+            <table class="table table-striped table-hover ">
+                <caption style="display: none">List of Waivers</caption>
+                <thead>
+                    <tr>
+                        <th class="col-md-1">&nbsp;</th>
+                        <th class="col-md-1">Client</th>
+                        <th class="col-md-2">Agency</th>
+                        <th class="col-md-1">Waiver Type</th>
+                        <th class="col-md-1">Date Created</th>
+                        <th class="col-md-1">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ListWaiverExtensions.Where(i => i.IDoADecision == null && i.WaiverType == "EIS" && (bool)i.IsGreaterThan2000))
+                    {
+                        <tr class="">
+                            <td>
+                                <div class="btn-group">
+                                    <a rel="tooltip" class="btn btn-default btn-sm" title="Edit Waiver " href='@Url.Action("EditWaiverExtension", "Case", new { Id = item.Id, IntakeId = item.IntakeId, mode = "Waiver" })'><span class="glyphicon glyphicon-edit"></span></a>
+                                </div>
+                            </td>
+                            <td>@item.viewIntake.viewCaseHeader.Client.Person.LastName, @item.viewIntake.viewCaseHeader.Client.Person.FirstName</td>
+                            <td>@item.viewIntake.viewCaseHeader.ContractDescription</td>
+                            <td>@Html.DisplayFor(modelItem => item.WaiverType)</td>
+                            @if (@item.DateCreated == null)
+                            {
+                                <td>@item.DateCreated</td>
+                            }
+                            else
+                            {
+                                <td>@item.DateCreated.Value.ToShortDateString()</td>
+                            }
+                            <td>@Html.DisplayFor(modelItem => item.StatusDescription)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+    <div class="row nextline"></div>
+    <div>
+        <b>Waivers</b>
+        @if (Model.ListWaiverExtensions != null && Model.ListWaiverExtensions.Any())
+        {
+            <table class="table table-striped table-hover " id="waivertable">
+                <caption style="display: none">List of Waivers</caption>
+                <thead>
+                    <tr>
+                        <th class="col-md-1">&nbsp;</th>
+                        <th class="col-md-1">Client</th>
+                        <th class="col-md-2">Agency</th>
+                        <th class="col-md-1">Waiver Type</th>
+                        <th class="col-md-1">Date Created</th>
+                        <th class="col-md-1">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ListWaiverExtensions.Where(i => i.StatusDescription != "Submitted" && i.WaiverType != "AssessmentDelay" && i.IDoADecision != null))
+                    {
+
+                        <tr class="">
+                            <td>
+                                <div class="btn-group">
+                                    @*<a rel="tooltip" class="btn btn-default btn-sm" title="Edit Waiver " href='@Url.Action("EditWaiverExtension", "Case", new { Id = item.Id, IntakeId = item.IntakeId })'><span class="glyphicon glyphicon-edit"></span></a>*@
+                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Waiver " href='@Url.Action("ViewWaiverExtension", "Case", new { Id = item.Id, mode = "Waiver" })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                </div>
+                            </td>
+                            <td>@item.viewIntake.viewCaseHeader.Client.Person.LastName, @item.viewIntake.viewCaseHeader.Client.Person.FirstName</td>
+                            <td>@item.viewIntake.viewCaseHeader.ContractDescription</td>
+                            <td>@Html.DisplayFor(modelItem => item.WaiverType)</td>
+                           @if (@item.DateCreated == null)
+                           {
+                            <td>@item.DateCreated</td>
+                           }
+                           else
+                           {
+                            <td>@item.DateCreated.Value.ToShortDateString()</td>
+                           }
+                            <td>@Html.DisplayFor(modelItem => item.StatusDescription)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+}
+
+@if (User.IsInRole("CMS_RAAAdmin"))
+{
+    <div>
+        <b>Awaiting For Approval</b>
+        @if (Model.ListWaiverExtensions != null && Model.ListWaiverExtensions.Any())
+        {
+            <table class="table table-striped table-hover ">
+                <caption style="display: none">List of Waivers</caption>
+                <thead>
+                    <tr>
+                        <th class="col-md-1">&nbsp;</th>
+                        <th class="col-md-1">Client</th>
+                        <th class="col-md-2">Agency</th>
+                        <th class="col-md-1">Waiver Type</th>
+                        <th class="col-md-1">Date Created</th>
+                        <th class="col-md-1">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ListWaiverExtensions.Where(i => i.RAADecision == null && i.WaiverType == "EIS" && i.IsGreaterThan1000 == true))
+                    {
+
+                        <tr class="">
+                            <td>
+                                <div class="btn-group">
+                                    <a rel="tooltip" class="btn btn-default btn-sm" title="Edit Waiver " href='@Url.Action("EditWaiverExtension", "Case", new { Id = item.Id, IntakeId = item.IntakeId, mode = "Waiver" })'><span class="glyphicon glyphicon-edit"></span></a>
+                                </div>
+                            </td>
+                            <td>@item.viewIntake.viewCaseHeader.Client.Person.LastName, @item.viewIntake.viewCaseHeader.Client.Person.FirstName</td>
+                            <td>@item.viewIntake.viewCaseHeader.ContractDescription</td>
+                            <td>@Html.DisplayFor(modelItem => item.WaiverType)</td>
+                          @if (@item.DateCreated == null)
+                          {
+                            <td>@item.DateCreated</td>
+                          }
+                          else
+                          {
+                            <td>@item.DateCreated.Value.ToShortDateString()</td>
+                          }
+                            <td>@Html.DisplayFor(modelItem => item.StatusDescription)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>None here!!</p>
+        }
+    </div>
+    <div class="row nextline"></div>
+    <div>
+        <b>Waivers</b>
+        @if (Model.ListWaiverExtensions != null && Model.ListWaiverExtensions.Any())
+        {
+            <table class="table table-striped table-hover " id="waivertable">
+                <caption style="display: none">List of Waivers</caption>
+                <thead>
+                    <tr>
+                        <th class="col-md-1">&nbsp;</th>
+                        <th class="col-md-1">Client</th>
+                        <th class="col-md-2">Agency</th>
+                        <th class="col-md-1">Waiver Type</th>
+                        <th class="col-md-1">Date Created</th>
+                        <th class="col-md-1">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ListWaiverExtensions.Where(i => i.StatusDescription != "Submitted" && i.WaiverType == "EIS" && i.RAADecision != null))
+                    {
+
+                        <tr class="">
+                            <td>
+                                <div class="btn-group">
+                                    @*<a rel="tooltip" class="btn btn-default btn-sm" title="Edit Waiver " href='@Url.Action("EditWaiverExtension", "Case", new { Id = item.Id, IntakeId = item.IntakeId })'><span class="glyphicon glyphicon-edit"></span></a>*@
+                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Waiver " href='@Url.Action("ViewWaiverExtension", "Case", new { Id = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                </div>
+                            </td>
+                            <td>@item.viewIntake.viewCaseHeader.Client.Person.LastName, @item.viewIntake.viewCaseHeader.Client.Person.FirstName</td>
+                            <td>@item.viewIntake.viewCaseHeader.ContractDescription</td>
+                            <td>@Html.DisplayFor(modelItem => item.WaiverType)</td>
+                           @if (@item.DateCreated == null)
+                           {
+                            <td>@item.DateCreated</td>
+                           }
+                           else
+                           {
+                            <td>@item.DateCreated.Value.ToShortDateString()</td>
+                           }
+                            <td>@Html.DisplayFor(modelItem => item.StatusDescription)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>None here!!</p>
+        }
+    </div>
+}

@@ -1,0 +1,35 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewClientCMS
+
+@Html.HiddenFor(model => model.Id)
+<div class="panel-body">
+
+    <div class="row">
+        <div class="panel panel-default nextline">
+            <div class="panel-body ">
+                <div id="content">
+                    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                        <li class="active"><a href="#tabs-m" data-toggle="tab">Inital Risk Assessment</a></li>
+                        <li><a href="#tabs-n" data-toggle="tab">Substantiated Risk Assessment</a></li>
+                        <li><a href="#tabs-o" data-toggle="tab">Risk Assessment Update</a></li>
+                        <li><a href="#tabs-p" data-toggle="tab">Summary</a></li>
+                    </ul>
+
+                    <div id="managecontent1" class="tab-content">
+                        <div id="tabs-m" class="tab-pane active">
+                            @Html.Partial("PartialListOIRA", Model)
+                        </div>
+                        <div id="tabs-n" class="tab-pane fade">
+                            @Html.Partial("PartialListOSRA", Model)
+                        </div>
+                        <div id="tabs-o" class="tab-pane fade">
+                            @Html.Partial("PartialListORA", Model)
+                        </div>
+                        <div id="tabs-p" class="tab-pane fade">
+                            @Html.Action("GetRiskSummary", Model.Id)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewCaseHeader
+
+<script>
+    $body = $("body");
+    $(document).on({
+        ajaxStart: function () { $body.addClass("loading"); },
+        ajaxStop: function () { $body.removeClass("loading"); }
+    });
+
+    $(document).ready(function () {
+        $("#uploadRedactedRelease").click(function () {
+            debugger;
+            var data = new FormData();
+
+            //Add the Multiple selected files into the data object
+            var files = $("#redactedfiles").get(0).files;
+            for (i = 0; i < files.length; i++) {
+                data.append("redactedfiles" + i, files[i]);
+            }
+
+            var caseheaderid = $('#Id').val();
+            data.append("caseheaderid", caseheaderid);
+
+            //var intakeid = $('#IntakeId').val();
+            //data.append("intakeid", intakeid);
+
+            //Post the data (files) to the server
+            if (files.length > 0) {
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("UploadRedactedReleases", "Case")",
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert("Successfully Uploaded!");
+                        window.location.href = data.Url;
+                    },
+                    error: function () {
+                        alert("An error occurred!");
+                    },
+                });
+            }
+        });
+    });
+</script>
+
+
+@Html.HiddenFor(model => model.Id)
+<div class="well">
+    <div class="row">
+        <b>Select File to Upload</b>
+    </div>
+
+    <div class="row nextline">
+        <div class="col-lg-8 form-group">
+            @Html.TextBoxFor(c => c.redacteddocument.File, new { type = "file", multiple = "true", @id = "redactedfiles" })
+        </div>
+
+        <div class="col-lg-3 form-group">
+            <button type="submit" class=" btn btn-primary btn-outline" id="uploadRedactedRelease" value="upload"><span class="glyphicon glyphicon-upload"></span>Upload</button>
+        </div>
+
+    </div>
+
+
+</div>
+

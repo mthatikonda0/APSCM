@@ -1,0 +1,197 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewClientCMS
+
+<script>
+
+    $(document).ready(function () {
+    
+
+        $('#AddGoal').on('click', function () {
+
+            var count = $("div.goal").length;
+            var template = $('#Goal_0').clone();
+            //alert(count);
+            template.attr('id', 'Goal_' + count);
+            template.find('input[type=text]').val(null);
+            template.find('input[type=button]').attr('style', '');
+            template.find('input[type=number]').val(null);
+            template.find('textarea').val(null);
+            template.find('input[type=hidden]').val(0);
+            template.find('input[type=datetime]').val(null);
+            template.find('input[type=checkbox]').prop('checked', false);
+            template.find('.invoice-case').attr('disabled', 'true');
+
+            $.each(template.find('input[type=number]'), function () {
+                var name = $(this).attr('name');
+                name = name.replace('0', count);
+                $(this).attr('name', name);
+
+                var id = $(this).attr('id');
+                id = id.replace('0', count);
+                $(this).attr('id', id);
+            });
+
+            $.each(template.find('input[type=checkbox]'), function () {
+                var name = $(this).attr('name');
+                name = name.replace('0', count);
+                $(this).attr('name', name);
+
+                var id = $(this).attr('id');
+                id = id.replace('0', count);
+                $(this).attr('id', id);
+            });
+
+            $.each(template.find('input[type=hidden]'), function () {
+                var name = $(this).attr('name');
+                name = name.replace('0', count);
+                $(this).attr('name', name);
+
+                var id = $(this).attr('id');
+                id = id.replace('0', count);
+                $(this).attr('id', id);
+            });
+            $.each(template.find('input[type=radio]'), function () {
+                var name = $(this).attr('name');
+                name = name.replace('0', count);
+                $(this).attr('name', name);
+
+                var id = $(this).attr('id');
+                id = id.replace('0', count);
+                $(this).attr('id', id);
+            });
+
+            $.each(template.find('input[type=text]'), function () {
+                var name = $(this).attr('name');
+                name = name.replace('0', count);
+                $(this).attr('name', name);
+
+                var id = $(this).attr('id');
+                id = id.replace('0', count);
+                $(this).attr('id', id);
+            });
+
+            $.each(template.find('select'), function () {
+                var name = $(this).attr('name');
+                name = name.replace('0', count);
+                $(this).attr('name', name);
+
+                var id = $(this).attr('id');
+                id = id.replace('0', count);
+                $(this).attr('id', id);
+            });
+
+            $.each(template.find('textarea'), function () {
+                var name = $(this).attr('name');
+                name = name.replace('0', count);
+                $(this).attr('name', name);
+
+                var id = $(this).attr('id');
+                id = id.replace('0', count);
+                $(this).attr('id', id);
+            });
+
+            template.find("input[name *= '.Deleted']").val('False');
+
+            template.find(".cke_skin_kama").remove();
+            var id = template.find(".ckeditor").attr("id");
+            template.find('#' + id).removeClass('ckeditor').removeAttr('style');
+
+            $('#Goals').append(template);
+        });
+
+        $(document).on('click', '.delete-goal', function () {
+
+            if (confirm('Are you sure want to delete record?\nOnce deleted, Changes cannot be undone.')) {
+                $(this).closest("div[id*='Goal_']").find("input[name *= 'Deleted']").val(true);
+                $(this).closest("div[id*='Goal_']").css('display', 'none');
+            }
+        });
+ });
+
+</script>
+
+
+ <div class="well">
+           <div class="row">
+               <div class="col-lg-12 pull-right">
+                   <div class="btn-group pull-right" style="margin-right: 10px;">
+                       <button id="SaveClientassessement" rel="tooltip" type="submit" class="btn btn-success btn-md" title=" Save ">Save</button>
+                       <a id="cancel" rel="tooltip" class="btn btn-default btn-md" title=" Cancel ">Cancel</a>
+                   </div>
+               </div>
+           </div>
+
+           <div class="row nextline">
+               @Html.Partial("_ViewClientCMS", Model)
+           </div>
+
+           <div class="row nextline ">
+               <b>Time Case Plan Completed </b>
+               <br />
+               @*   @Html.EditorFor(m => m.viewcaseplan.ListCasePlanTime, "CasePlanTimes")*@
+               @for (int idx = 0; idx < Model.viewcaseplan.ListOfCasePlanTimesChecked.Count; idx++)
+               {   
+                   <div >
+
+                       @Html.HiddenFor(x => Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].Id)
+                       @Html.HiddenFor(x => Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].Code)
+                       @Html.CheckBoxFor(x => Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].IsChecked) @Html.DisplayFor(x => Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].Description)
+                       <br />
+
+                       @Html.HiddenFor(x => Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].Description)
+                   </div>
+                   <div>
+                       @for (int i = 0; i < Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].ListRisk.Count; i++)
+                       {        
+                                  
+                           @Html.HiddenFor(x => Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].ListRisk[i].Id)
+                           @Html.HiddenFor(x => Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].ListRisk[i].Code)
+                           @Html.CheckBoxFor(x => Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].ListRisk[i].IsChecked) @Html.DisplayFor(x => Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].ListRisk[i].Description)
+                           <br />
+
+                           @Html.HiddenFor(x => Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].ListRisk[i].Description)     
+                           
+                           <div>
+                               @for (int m = 0; m < Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].ListRisk[i].Goals.Count; m++)
+                               {
+                                     <div id=@("Goal_" + m) class="goal">
+                                       <div class="row">
+                                           <div class="col-lg-2 pull-right">
+                                               <button type="button" class="btn delete-goal btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                                                   <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                               </button>
+                                           </div>
+                                       </div>
+                                       <div class="row">
+                                           <div class="col-md-2">
+                                               @Html.LabelFor(model => model.viewcaseplan.ListOfCasePlanTimesChecked[idx].ListRisk[i].Goals[m].ExplainGoal, htmlAttributes: new { @class = "" })
+                                               <br />
+                                               @Html.TextBoxFor(model => model.viewcaseplan.ListOfCasePlanTimesChecked[idx].ListRisk[i].Goals[m].ExplainGoal, new { @class = "form-control zero-Zindex", @style = "width:50%" })
+                                           </div>
+                                       </div>
+                                   </div>
+                               }
+
+                               <div class="row next-line">
+                               <div class="col-md-2 pull-right">
+                                   <button type="button" id="AddGoal" value="Plus" class="btn btn-default zero-Zindex" data-toggle="tooltip" title="Add">
+                                       <span class="glyphicon glyphicon-plus" style="color: blue"></span>
+                                   </button>
+
+                               </div>
+                           </div>
+                           </div>                     
+
+                       }  
+                   </div>                       
+               }
+
+              @* @Html.Partial("partialCasePlanRisk", Model)*@
+
+
+
+               <button type="submit" name="Next">Next</button>
+           </div>
+
+               <br />
+        
+                 </div>

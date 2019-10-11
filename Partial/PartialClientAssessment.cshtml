@@ -1,0 +1,151 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewClientCMS
+
+<script>
+    $(document).ready(function () {
+        $('#TableAssessement').DataTable();
+        $('#myclientassessmentModal1').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var Id = button.data('transfer')
+            var modal = $(this)            
+            modal.find('.modal-body #id').val(Id)           
+        })
+
+        var myClientAssessmentArray = [];
+
+        @foreach (var d in Model.ListClientAssessment)
+        {
+            @:myClientAssessmentArray.push("@d.StatusDescription");
+        }        
+
+        var i ;
+        for (i = 0; i < myClientAssessmentArray.length; i++)
+        {
+            if (myClientAssessmentArray[i] == "Incomplete") {
+                $('#newClientAssessment').hide();
+            }           
+        }
+    });
+</script>
+
+<div class="container">  
+ 
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.IntakeId)
+    @Html.HiddenFor(model => model.IntakeDate)
+    @Html.HiddenFor(model => model.Person.FirstName)
+    @Html.HiddenFor(model => model.Person.LastName)
+    @Html.HiddenFor(model => model.Person.DOB)
+    <p>
+
+        <a id="newClientAssessment" class="btn btn-success create" type="button" data-toggle="modal" data-target="#myclientassessmentModal1">
+            <span class="glyphicon glyphicon-plus"></span><span style="margin-left: 5px;">
+                <text>New Client Assessment</text>
+            </span>
+        </a>
+
+        @if (Model.ListClientAssessment != null && Model.ListClientAssessment.Any())
+        {
+           
+            <table class="table table-striped table-hover" id="TableAssessement">             
+                <thead>
+                    <tr>
+                        <th class ="col-md-1">&nbsp;</th>
+                        <th class="col-md-1">Id</th>
+                        <th class="col-md-1">Client Id</th>
+                        <th class="col-md-1">Status</th>
+                        <th class="col-md-1">Date Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ListClientAssessment)
+                    {
+
+                    <tr class="">
+                        <td>
+                            <div class="btn-group">
+
+
+                                @if (item.StatusDescription == "Incomplete")
+                                {
+                                    <a rel="tooltip" class="btn btn-default btn-sm" title="Edit Client Assessement " href='@Url.Action("EditClientAssessement", "Case", new { Id = Model.Id, CaseheaderId = Model.CaseheaderId, assessmentId = item.Id, IntakeDate = item.IntakeDate, mode = "summary" })'><span class="glyphicon glyphicon-edit"></span></a>
+                                }
+                                else if (item.StatusDescription == "Submitted")
+                                {
+                                    if (User.IsInRole("Supervisor") || User.IsInRole("IDOAStaff"))
+                                    {
+                                        <a rel="tooltip" class="btn btn-default btn-sm" title="Approve Client Assessement " href='@Url.Action("ApproveClientAssessement", "Case", new { Id = item.Id, ClientId = Model.Id})'><span class="glyphicon glyphicon-ok"></span></a>
+                                    }
+                                    else
+                                    {
+                                        <a rel="tooltip" class="btn btn-default btn-sm" title="View Client Assessement " href='@Url.Action("ViewClientAssessement", "Case", new { Id = item.Id, ClientId = Model.Id})'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                    }
+                                }
+                                else
+                                {                                    
+                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Client Assessement " href='@Url.Action("ViewClientAssessement", "Case", new { Id = item.Id, ClientId = Model.Id})'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                }                                                                                                  
+                            </div>
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ClientId)</td>
+                        <td>@Html.DisplayFor(modelItem => item.StatusDescription)</td>
+                        <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>    
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        }  
+    </p>
+
+
+    <div class="modal fade" id="myclientassessmentModal1" tabindex="-1" role="dialog" aria-labelledby="clientassessmentModalLabel">
+        <div class="modal-dialog" role="document" style="padding-top:300px">
+            @Html.HiddenFor(model => model.Id)
+            <!-- Modal content -->
+            <div class="modal-content">
+
+
+                <div class="modal-header">
+                    <h4 class="modal-title" id="clientassessmentModalLabel">Select Intake</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="selectintake">
+                        @if (Model.listofintakes != null && Model.listofintakes.Any())
+                        {
+                            <table class="table table-striped table-hover ">
+                                <caption style="display: none">List of Intakes</caption>
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-1">Id</th>
+                                        <th class="col-md-1">Date Intake</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model.listofintakes)
+                                    {
+
+                                        <tr class="">
+                                            <td><a href='@Url.Action("EditClientAssessement", "Case", new { Id = Model.Id, CaseheaderId = Model.CaseheaderId, assessmentId = 0, IntakeDate = item.DateIntake })'>@Html.DisplayFor(modelItem => item.Id)</a></td>
+                                            <td><a href='@Url.Action("EditClientAssessement", "Case", new { Id = Model.Id, CaseheaderId = Model.CaseheaderId, assessmentId = 0, IntakeDate = item.DateIntake })'>@Html.DisplayFor(modelItem => item.DateIntake)</a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    
+
+</div>
+
+

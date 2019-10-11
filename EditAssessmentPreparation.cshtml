@@ -1,0 +1,1314 @@
+﻿@model AGE.CMS.Data.Models.ClientPreparation.AssessmentPreparationModel
+@using System.Configuration
+@using AGE.CMS.Data.Models.ENums;
+@{
+    ViewBag.Title = "Assessment Preparation";
+    var errorclass = "";
+
+    bool isNotCaseworker = !User.IsInRole("Caseworker");
+
+    var disable = isNotCaseworker ? false : true;
+
+
+    var logoimage = "/" + ConfigurationManager.AppSettings["_DOArelAssetsPath"] + ConfigurationManager.AppSettings["_DOAThemeName"] + "/" + ConfigurationManager.AppSettings["_DOArelImagesPath"] + "/Latest_aginglogo.png";
+
+}
+
+<style>
+    @@media only screen and (max-width:1680px) {
+        #logoidoaasp, #logo1asp {
+            height: 60px !important;
+            width: 140px !important;
+        }
+    }
+
+    @@media only screen and (max-width:1650px) {
+        #logoidoaasp, #logo1asp {
+            height: 50px !important;
+            width: 120px !important;
+        }
+    }
+
+    @@media only screen and (max-width:1500px) {
+        #logoidoaasp, #logo1asp {
+            height: 40px !important;
+            width: 100px !important;
+        }
+    }
+
+    @@media only screen and (max-width:1200px) {
+        #logoidoaasp, #logo1asp {
+            display: none;
+        }
+    }
+</style>
+
+<script src="~/Assets/Basic/Scripts/CMS/Case/EditAssessmentPreparation.js"></script>
+<script>
+
+
+    $(document).ready(function () {
+        $("#MCO").hide();
+        $("#loading").hide();
+        $("#Allegation_7").hide();
+        $('.disablediv').find("select, input, textarea").attr("disabled", "disabled")
+
+
+        $("#collateralyes").click(function () {
+
+
+            noti("Explain further in the <b>Case Recording</b> form.", "info")
+
+
+
+        });
+
+
+        // $("#SubmitNotice").hide();
+        $("[name='IsMCO']").each(function () {
+            if (this.value == 'y' && $(this).is(':checked'))
+                $("#MCO").show();
+        });
+
+        $("input[disable='True']").each(function () {
+            $(this).prop('disabled', true);
+        });
+
+        $("[name='IsMCO']").click(function () {
+            var vl = this.value;
+            if (vl == "y") {
+                $("#MCO").slideDown();
+            }
+            else {
+                $("#MCO").slideUp();
+                $("#MCO").find('input').val("");
+            }
+        });
+
+        $(".specify").hide();
+        $("input[id*='NOI_ListAllegations_'][id$='__IsSelected'][type = 'checkbox']").each(function () {
+            if ($(this).prop('checked') == true) {
+                $(this).parent().next('div.specify:first').show();
+            }
+
+        });
+        $("input[id*='NOI_ListAllegations_'][id$='__IsSelected'][type = 'checkbox']").click(function (e) {
+            if ($(this).prop('checked') == true) {
+                $(this).parent().next('div.specify:first').slideDown("slow");
+            }
+            else {
+                $(this).parent().next('div.specify:first').slideUp("slow");
+                $(this).parent().next('div.specify:first').find('input:text, input:password, select, textarea').val('');
+                $(this).parent().next('div.specify:first').find('input:radio, input:checkbox').prop('checked', false);
+            }
+        });
+
+        $(".otherrelation").hide();
+        $("input[id*='ListOfAllegedAbuserRelationship'][id$='4__IsChecked'][type = 'checkbox']").each(function () {
+            if ($(this).prop('checked') == true) {
+                debugger;
+                $(this).parent().find('div.otherrelation').show();
+            }
+
+        });
+        $("input[id*='ListOfAllegedAbuserRelationship'][id$='4__IsChecked'][type = 'checkbox']").click(function (e) {
+            if ($(this).prop('checked') == true) {
+                $(this).parent().find('div.otherrelation').slideDown();
+            }
+            else {
+                $(this).parent().find('div.otherrelation').slideUp("slow");
+                $(this).parent().find('div.otherrelation').find('input:text, input:password, select, textarea').val('');
+                $(this).parent().find('div.otherrelation').find('input:radio, input:checkbox').prop('checked', false);
+            }
+        });
+        $("input[id*='ListOfAllegedAbuserRelationship'][id$='3__IsChecked'][type = 'checkbox']").each(function () {
+            if ($(this).prop('checked') == true) {
+                debugger;
+                $(this).parent().find('div.otherrelation').show();
+            }
+
+        });
+        $("input[id*='ListOfAllegedAbuserRelationship'][id$='3__IsChecked'][type = 'checkbox']").click(function (e) {
+            if ($(this).prop('checked') == true) {
+                $(this).parent().find('div.otherrelation').slideDown();
+            }
+            else {
+                $(this).parent().find('div.otherrelation').slideUp("slow");
+                $(this).parent().find('div.otherrelation').find('input:text, input:password, select, textarea').val('');
+                $(this).parent().find('div.otherrelation').find('input:radio, input:checkbox').prop('checked', false);
+            }
+        });
+
+
+        $('.alert').hide();
+        $("#clickfornotice").hide();
+        $(".DDD").each(function () {
+            if ($(this).prop('checked') == true && this.value == 'y') {
+                $("#clickfornotice").show();
+                $('.alert').show();
+                $('#NOI_IsDDD').val(true);
+            }
+
+        });
+        $(".DDD").click(function (e) {
+            if (this.value == "y") {
+                $("#clickfornotice").show();
+                $('#NoticeofInvestigationModal').modal('show');
+                $('.alert').show();
+                $('#NOI_IsDDD').val(true);
+            }
+            else {
+
+                $('#NOI_IsDDD').val(false);
+
+            }
+        });
+
+      //  $("#clickfornotice").hide();
+        $(".DRS").each(function () {
+            if ($(this).prop('checked') == true && this.value == 'y') {
+                $("#clickfornotice").show();
+                $('.alert').show();
+                $('#NOI_IsDRS').val(true);
+            }
+
+        });
+        $(".DRS").click(function (e) {
+            if (this.value == "y") {
+                $("#clickfornotice").show();
+                $('#NoticeofInvestigationModal').modal('show');
+                $('.alert').show();
+                $('#NOI_IsDRS').val(true);
+            }
+            else {
+
+                $('#NOI_IsDRS').val(false);
+
+            }
+        });
+
+
+        $('select option:selected').each(function () {
+            if ($(this).val() != 0) {
+                $(this).closest('.has-error').removeClass("has-error");
+            }
+        });
+
+        $('input').each(function () {
+            if ($(this).val() != '') {
+                $(this).closest('.has-error').removeClass("has-error");
+            }
+        });
+
+        $('textarea').each(function () {
+            if ($(this).val() != '') {
+                $(this).closest('.has-error').removeClass("has-error");
+            }
+        });
+
+        $('input').on("change paste keyup", function () {
+            $(this).closest('.has-error').removeClass("has-error");
+            $(this).css('border-color', '#000');
+            //$(this).closest('div').addClass("form-control");
+        });
+
+        $('select').on("change", function () {
+            $(this).closest('.has-error').removeClass("has-error");
+            //$(this).closest('div').addClass("form-control");
+        });
+
+        $('textarea').on("change paste keyup", function () {
+            $(this).closest('.has-error').removeClass("has-error");
+            $(this).css('border-color', '#000');
+
+            //$(this).closest('div').addClass("form-control");
+        });
+
+
+        $('#ANERelated').on("change paste keyup", function () {
+            $("#ANERelated b").css('color', 'black');
+        });
+
+
+        $('form').submit(function () {
+            $('#supervisorpart').find("select, input, textarea").removeAttr("disabled");
+        });
+
+
+        $("#submitPrep").click(function (e) {
+            e.preventDefault();
+            $("#Issubmitasp").val(true);
+            $('#supervisorpart').find("select, input, textarea").removeAttr("disabled");
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SubmitNoticeOfInvestigation", "Case")',
+                dataType: "json",
+                data: $('#AssessementPreparationform').find('select, textarea, input').serialize(),
+                success: function (data) {
+                    console.log(data);
+                    $('#Id').val(data.Id);
+                    $("#Issubmitasp").val(false);
+                    notification("<strong>Success</strong> Submited!     Wait for the Supervisor Approval");
+                    window.location.href = data.url;
+                }
+
+            });
+
+        });
+
+
+
+        $("#ApprovePrep").click(function (e) {
+            e.preventDefault();
+            if ($("#AssignedSupervisor").val() != "" || $("#DateSupervisor").val() != "") {
+                $("#IsApproveasp").val(true);
+                $('#supervisorpart').find("select, input, textarea").removeAttr("disabled");
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ApproveAssessmentPreparation", "Case")',
+                    dataType: "json",
+                    data: $('#AssessementPreparationform').find('select, textarea, input').serialize(),
+                    success: function (data) {
+
+                        if (data.NOIStatusID == 24 || data.NOIStatusID == 29 || data.NOIStatusID == null) {
+                            $('#NOI_SaveNOI').val(false);
+                        }
+                        else {
+                            $('#NOI_SaveNOI').val(true);
+                        }
+                        console.log(data);
+                        $('#Id').val(data.Id);
+                        $('#CaseheaderId').val(data.CHID);
+
+                        $("#IsApproveasp").val(false);
+                        notification("<strong>Success</strong> Approved!!");
+
+                    }
+
+                });
+
+
+
+                var CID =  $('#CaseheaderId').val();
+
+                var redirectUrl = "@Url.Action("ManageCase", "Case", new { CaseheaderId = "__CHID__"})";
+
+                window.location.href = redirectUrl.replace('__CHID__', CID);
+
+
+            }
+            else {
+                noti("Please fill <b>Supervisor</b> Part", "info")
+                $(window).scrollTop($('#AssignedSupervisor').offset().top);
+                $('#AssignedSupervisor').focus();
+            }
+
+        });
+
+        $('#NoticeofInvestigationModal').change(function () {
+            $('#NOI_SaveNOI').val(true);
+            console.log('Form change: SaveNOI = ' + $('#NOI_SaveNOI').val());
+        });
+
+    });
+
+    function notification(message) {
+        var notify = $.notify({ message: '<strong>Saving</strong> ...' }, {
+            allow_dismiss: false,
+            offset: {
+                X: 0,
+                y: 180
+            },
+            z_index: 10000000,
+            showProgressbar: true,
+            placement: {
+                from: "top",
+                align: "center"
+            },
+            delay: 100
+        });
+
+
+        setTimeout(function () {
+            notify.update({ 'type': 'success', 'message': message, 'progress': 10 });
+        }, 1800);
+    };
+
+
+
+
+    function SubmitNoticeForm() {
+
+        var count = 0;
+
+        if ($('#APSPAName').val() == "") {
+            $('#APSPAName').parent().addClass("has-error");
+            count = 1;
+        }
+        if ($('#APSPAContactName').val() == "") {
+            $('#APSPAContactName').parent().addClass("has-error");
+            count = 1;
+        }
+        if ($('#APSPAContactPhone').val() == "") {
+            $('#APSPAContactPhone').parent().addClass("has-error");
+            count = 1;
+        }
+        if ($('#APSPAEmail').val() == "") {
+            $('#APSPAEmail').parent().addClass("has-error");
+            count = 1;
+        }
+        var allegationcount = 0;
+
+        $("#ANERelated [type = 'checkbox']").each(function () {
+            if ($(this).prop('checked') == true) {
+                allegationcount = 1;
+                if ($(this).parent().siblings('.specify').find("textarea").val() == "") {
+                    $(this).parent().siblings('.specify').find("textarea").css('border-color', '#a94442');
+                    count = 1;
+                }
+            }
+            else {
+                //   if ($(this).parentsUntil("[id*='Allegation']").siblings(''));
+
+            }
+
+        });
+
+        if (allegationcount == 0) {
+            $("#ANERelated b").css('color', '#a94442');
+            count = 1;
+
+        }
+        var abusercount = 0
+        $("div [id*='Abuser_']").each(function () {
+            console.log('a');
+
+            $(this).find("[type = 'checkbox']").each(function () {
+                console.log('b');
+                if ($(this).prop('checked') == true) {
+                    abusercount = 1;
+                    if ((this.id.indexOf('4') > 0) && $(this).parent().find(".otherrelation > input[type ='text'] ").val() == "") {
+                        $(this).parent().find(".otherrelation > input[type ='text'] ").css('border-color', '#a94442');
+                        count = 1;
+                    }
+
+                }
+                else {
+
+                }
+
+            });
+            if (abusercount == 0) {
+                $(this).css('color', '#a94442');
+
+                count = 1;
+
+            }
+            abusercount = 0;
+        });
+
+        if (count != 0) {
+            console.log('not sub')
+        }
+        else {
+            bootbox.confirm({
+                title: "Submittal electronically notifies DHS of Notice.",
+                message: "Confirm Submission? This cannot be undone if submitted",
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Cancel'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirm'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        $("#IssubmitNotice").val(true);
+
+
+                        var AId;
+                        var IId;
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '@Url.Action("SubmitNoticeOfInvestigation", "Case")',
+                            dataType: "json",
+                            data: $('#AssessementPreparationform').find('select, textarea, input').serialize(),
+                            success: function (data) {
+                                AId = data.AID;
+                                IId = data.IntId;
+                                $('#Id').val(data.Id);
+                                $("#IssubmitNotice").val(false);
+                                $('#NoticeofInvestigationModal').modal('hide');
+                                console.log($('#NOI_SaveNOI').val());
+                                var PreviousSaveNOI = $('#NOI_SaveNOI').val();
+                                //only show Sent confirmation if the form could have been submitted
+                                if (PreviousSaveNOI== "true") {
+                                    notification("<strong>Success</strong> Notification sent electronically through system.");
+                                    
+                                    //Set the URL to the new Caserecording ID and the CaseHeaderID
+                                    var redirectUrl = "@Url.Action("EditAssessmentPreparation", "Case", new {Id = "__AId__", IntakeId = "__IId__"})".replace('__AId__', AId).replace('__IId__', IId);
+
+                                    //Replace the current URL *note* - Replace() replaces the URL in the browser history so they cannot go back to a blank recording
+                                    window.location.replace(redirectUrl)
+                                }
+                                else {
+                                    noti("This version has already been submitted.");
+                                }
+
+                                $('#NOI_SaveNOI').val(false);
+
+                                // $("#SubmitNotice").hide();
+                                $("#SaveNotice").hide();
+
+
+
+
+                            }
+
+                        });
+                    }
+                }
+            });
+        }
+
+    };
+
+    count = 0;
+
+
+
+    function ParticipantSearch(clientid) {
+        if (count == 0 || count % 2 == 0) {
+            $("#loading").show();
+            $.ajax({
+
+                type: 'POST',
+                url: '@Url.Action("ParticipantSearch", "Case")',
+                dataType: "html",
+                data: { ClientId: clientid },
+                success: function (data) {
+                    $('#pssresults').slideDown();
+                    $('#pssresults').html(data);
+                    $("#loading").hide();
+                }
+            });
+        }
+        else {
+            $('#pssresults').slideUp();
+        }
+        count++;
+        console.log(count);
+    }
+
+
+
+</script>
+
+@if ((User.IsInRole("CMS_Supervisor") || User.IsInRole("CMS_IDOAStaff")))
+{
+
+    <script>
+
+        function SaveNoticeForm(x) {
+            
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveAssessmentPreparationAjax", "Case")',
+                dataType: "json",
+                data: $('#AssessementPreparationform').find('select, textarea, input').serialize(),
+                success: function (data) {
+                    //Set the SaveNOI bool based on the status. 
+                    //If Submitted, NUll, or Opened: do no let them save the Notice unless they make changes
+                    if (data.NOIStatusID == 24 || data.NOIStatusID == 29 || data.NOIStatusID == null) {
+                        $('#NOI_SaveNOI').val(false);
+                    }
+                    else {
+                        $('#NOI_SaveNOI').val(true);
+                    }
+                    console.log('Save NOI: SaveNOI = ' + $('#NOI_SaveNOI').val());
+                    console.log(data);
+                    console.log('Notice ID: ' + data.NOID);
+                    $('#Id').val(data.AID);
+                    $('#NoticeOfInvestigationId').val(data.NOID);
+                    $('#NOI_Id').val(data.NOID);
+                    $('#NoticeofInvestigationModal').modal('hide');
+                    if (x == 'ASP') {
+                        notification("<strong>Success</strong> Assessement Preparation has been saved !");
+                    }
+                    else {
+                        notification("<strong>Success</strong> Notice Of Investigation has been saved !");
+                    }
+                    $("#SubmitNotice").show();
+                }
+
+
+
+            });
+
+            $('#NoticeofInvestigationModal').modal('hide');
+
+        };
+
+
+    </script>
+
+}
+else
+{
+    <script>
+        function SaveNoticeForm(x) {
+            $('#supervisorpart').find("select, input, textarea").removeAttr("disabled");
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveAssessmentPreparationAjax", "Case")',
+                dataType: "json",
+                data: $('#AssessementPreparationform').find('select, textarea, input').serialize(),
+                success: function (data) {
+                    $('#supervisorpart').find("select, input, textarea").attr("disabled", "disabled")
+                    //Set the SaveNOI bool based on the status.
+                    //If Submitted, NUll, or Opened: do no let them save the Notice unless they make changes
+                    if (data.NOIStatusID == 24 || data.NOIStatusID == 29 || data.NOIStatusID == null) {
+                        $('#NOI_SaveNOI').val(false);
+                    }
+                    else {
+                        $('#NOI_SaveNOI').val(true);
+                    }
+                    console.log('Save NOI: SaveNOI = ' + $('#NOI_SaveNOI').val());
+                    console.log(data);
+                    console.log('Notice ID: ' + data.NOID);
+                    $('#Id').val(data.AID);
+                    $('#NoticeOfInvestigationId').val(data.NOID);
+                    $('#NOI_Id').val(data.NOID);
+                    $('#NoticeofInvestigationModal').modal('hide');
+                    if (x == 'ASP') {
+                        notification("<strong>Success</strong> Assessement Preparation has been saved !");
+                    }
+                    else {
+                        notification("<strong>Success</strong> Notice Of Investigation has been saved !");
+                    }
+                    $("#SubmitNotice").show();
+                }
+
+
+
+            });
+
+            $('#NoticeofInvestigationModal').modal('hide');
+            // return false;
+        };
+
+
+    </script>
+
+}
+
+
+@using (Html.BeginForm("SaveAssessmentPreparation", "Case", FormMethod.Post))
+{
+    <div id="AssessementPreparationform" class="container">
+        <div class="alert alert-success alert-dismissible" role="alert">
+            @*<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>*@
+
+            <h4 class="alert-heading">Note</h4>
+            <p>"Reminder to complete the 'Notice of Investigation' when the alleged victim is a Department of Human Services client. The APS PA must also complete a 'Report of Substantiation' related to each 'Notice of Investigation'. The 'Report of Substantiation' can be completed on the 'Assessment' tab. </p>
+        </div>
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <span class="titletextbegin">
+                        <span class="glyphicon glyphicon-edit"></span><span class="textspace">
+                            <text>Assessment Preparation</text>
+                        </span>
+                    </span>
+                </h2>
+            </div>
+
+            <div class="panel-body">
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.IntakeId)
+                @*@Html.HiddenFor(m => m.Issubmitasp)
+                @Html.HiddenFor(m => m.viewIntake.CaseheaderId)
+                @Html.HiddenFor(m => m.IsApproveasp)
+                @Html.HiddenFor(m => m.IssubmitNotice)*@
+
+                @if (Model.InCompleteErrors.ErrorsInAssessmentPrep && Model.InCompleteErrors.HasErrorsInRadios)
+                {
+                    <span class="danger">Answer Yes/No or Unknown/NA if applicable</span><br />
+                }
+                @if (Model.InCompleteErrors.ErrorsInAssessmentPrep && Model.InCompleteErrors.HasErrorsMCO)
+                {
+                    <span class="danger">Please select MCO</span><br />
+                }
+                @if (Model.InCompleteErrors.ErrorsInAssessmentPrep && Model.InCompleteErrors.HasErrorsReportTakerIsCaseWorker)
+                {
+                    <span class="danger">Please select whether Caseworker and Report Taker are same person</span><br />
+                }
+                @if (Model.InCompleteErrors.ErrorsInAssessmentPrep && Model.InCompleteErrors.HasErrorsDateContactedReporter)
+                {
+                    <span class="danger">Please select Exceptions for entering date attempted to contact Reporter</span><br />
+                }
+                @if (Model.InCompleteErrors.ErrorsInAssessmentPrep && Model.InCompleteErrors.HasErrorsConsultedWithSupervisor)
+                {
+                    <span class="danger">Please select whether Caseworker consulted with Supervisor or not</span><br />
+                }
+                @if (Model.InCompleteErrors.ErrorsInAssessmentPrep && Model.InCompleteErrors.HasErrorsExplain)
+                {
+                    <span class="danger">Please explain why Caseworker didn't consult with Supervisor</span><br />
+                }
+                @if (Model.InCompleteErrors.ErrorsInAssessmentPrep && Model.InCompleteErrors.HasErrorsInTopics)
+                {
+                    <span class="danger">You have to discuss all the topics mentioned at the end</span><br />
+                }
+
+                @{
+                errorclass = "";
+
+                if (Model.InCompleteErrors.ErrorsInAssessmentPrep && Model.InCompleteErrors.HasErrorsInRadios)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInAssessmentPrep && Model.InCompleteErrors.HasErrorsMCO)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInAssessmentPrep && Model.InCompleteErrors.HasErrorsReportTakerIsCaseWorker)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInAssessmentPrep && Model.InCompleteErrors.HasErrorsDateContactedReporter)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInAssessmentPrep && Model.InCompleteErrors.HasErrorsConsultedWithSupervisor)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInAssessmentPrep && Model.InCompleteErrors.HasErrorsExplain)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInAssessmentPrep && Model.InCompleteErrors.HasErrorsInTopics)
+                {
+                    errorclass = "has-error";
+                }
+
+                }
+
+                <div class="row nextline">
+                    <div class="col-lg-12 pull-right">
+                        <div class="btn-group pull-right" style="margin-right: 10px;">
+                            <button id="SaveNotice" rel="tooltip" type="button" onclick="SaveNoticeForm('ASP');" class="btn btn-success btn-md" title=" Save ">Save</button>
+
+                            <button id="SaveAndClose" rel="tooltip" type="submit" class="btn btn-success btn-md btn-outline" title=" Save ">Save & Close</button>
+
+                            @*@if (Model.Id > 0 && Model.InCompleteErrors.ErrorsInAssessmentPrep == false)
+                            {
+                                if (User.IsInRole("CMS_Caseworker"))
+                                {
+                                    <button id="submitPrep" rel="tooltip" type="button" class="btn btn-primary btn-md" title=" Submit ">Submit</button>
+                                }
+                                else if (User.IsInRole("CMS_Supervisor"))
+                                {
+                                    if (Model.StatusId != 24)
+                                    {
+                                        <button id="submitPrep" rel="tooltip" type="button" class="btn btn-primary btn-md" title=" Submit ">Submit</button>
+                                    }
+                                }
+                            }*@
+                            @if ((User.IsInRole("CMS_Supervisor") || User.IsInRole("CMS_IDOAStaff")) && Model.StatusId == 3)
+                            {
+                                <button id="ApprovePrep" rel="tooltip" type="button" class="btn btn-primary btn-md btn-outline" title=" Submit ">Approve</button>
+                            }
+                            <a id="cancelPrep" rel="tooltip" type="button" class="btn btn-default btn-md" title=" Cancel " href='@Url.Action("ManageCase", "Case", new { CaseheaderId = @Model.viewIntake.CaseheaderId})'>Cancel</a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row nextline"></div>
+                <div class="row nextline" style="margin: 1px;">
+                    @Html.Partial("_ViewClientCMS", Model.client)
+                </div>
+                @{
+    if (Model.viewIntake.viewCaseHeader.Client.Person.SSN != null)
+    {
+        Model.viewIntake.viewCaseHeader.Client.Person.SSN = Model.viewIntake.viewCaseHeader.Client.Person.SSN.Insert(5, "-").Insert(3, "-");
+    }
+                }
+                @if (Model.viewIntake.viewCaseHeader.Client.Person.SSN != null)
+                {
+                    <div id="clickforPSSResults" class="pull-left">
+                        <button type="button" class="btn btn-default" onclick="ParticipantSearch(@Model.viewIntake.viewCaseHeader.ClientId)"> Click here for Participant Search Results</button> <b id="loading">Loading ...</b>
+                        <div id="pssresults">
+
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <p class="col-lg-3" style="border:groove">Client's SSN required for Participant Search Results</p>
+                }
+                <div id="clickfornotice" class="pull-right">
+                    Click here for <a href="#" data-toggle="modal" data-target="#NoticeofInvestigationModal"><b><u>Notice of Investigation</u></b></a>
+                    <br />
+                    @if (Model.NOI.DateSubmitted != null)
+                    {
+                        <p>Last Submitted Date : @Model.NOI.DateSubmitted</p>
+                    }
+                    else if (Model.NOI.PreviousSubmissionModels.Count != 0)
+                    {
+                        <p>Last Submitted Date : @Model.NOI.PreviousSubmissionModels[Model.NOI.PreviousSubmissionModels.Count - 1].SubmissionDate</p>
+                    }
+
+                </div>
+                <div class="row nextline"></div>
+
+                <div class="form-horizontal">
+
+                    @*<div style="border: 1px solid grey; margin: 10px; padding: 5px;">
+                            <div class="form-group">
+                                <div class="col-md-3 text-right">
+                                    <label for="DateFaceToFaceInitiatedInitial">Date Face To Face Initiated</label>
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.DateFaceToFaceInitiatedInitial, "{0:MM/dd/yyyy HH-mm}", new { @class = "datetimepicker form-control", @value = "", @style = "width:50%" })
+                                </div>
+                                <div class="col-md-3">
+                                @Html.TextBoxFor(model => model.DateFaceToFaceInitiatedInitial, new { @class = "form-control", @value = "", @style = "width:50%" })
+                            </div>
+
+                                <div class="col-md-3">
+                                </div>
+                                <div class="col-md-3">
+                                   @Html.TextBoxFor(model => model.DateFaceToFaceInitiatedSIR, new { @class = "form-control", @value = "", @style = "width:50%" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-2">
+                                    @Html.LabelFor(model => model.AssignedCaseWorker, htmlAttributes: new { @class = "" })
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(model => model.AssignedCaseWorker, new { @class = "form-control ", @style = "width:50%" })
+                                </div>
+                            </div>
+
+                        </div>*@
+
+                    <div style="border: 1px solid grey; margin: 10px; padding: 5px;">
+                        <div class="form-group">
+                            <div class="row" style="margin-left: 0px !important">
+                                <div class="col-md-12">
+                                    <b>Alleged Victim Services </b>(Please note: Caseworker should return here to revise this information if the caseworker learns later in the case of AV services. This is where the Notice of Investigation is completed and submitted.)
+                                </div>
+                            </div>
+                            <br />
+                            @*<div class="row" style="margin-left: 0px !important">
+                                    <div class="col-md-6">
+                                        @Html.LabelFor(model => model.IsHFSSearchCompleted, htmlAttributes: new { @class = "normal-text @errorclass" })
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.RadioButtonFor(model => model.IsHFSSearchCompleted, "y", new { @class = "" }) Yes
+                                        @Html.RadioButtonFor(model => model.IsHFSSearchCompleted, "n", new { @class = "" }) No
+
+                                    </div>
+                                </div>*@
+                            <div class="row" style="margin-left: 0px !important">
+                                <div class="col-md-6">
+                                    @Html.LabelFor(model => model.IsIDoA_OCCS_CCP_Client, htmlAttributes: new { @class = "normal-text @errorclass" })
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.RadioButtonFor(model => model.IsIDoA_OCCS_CCP_Client, "y", new { @class = "" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsIDoA_OCCS_CCP_Client, "n", new { @class = "" }) No
+                                    @Html.RadioButtonFor(model => model.IsIDoA_OCCS_CCP_Client, "u", new { @class = "" }) Unknown
+                                </div>
+                            </div>
+                            <div class="row" style="margin-left: 0px !important">
+                                <div class="col-md-6">
+                                    @Html.LabelFor(model => model.IsDHSorDRSclient, htmlAttributes: new { @class = "normal-text" })
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.RadioButtonFor(model => model.IsDHSorDRSclient, "y", new { @class = "DHSDRS DRS externalage", @id = "drsyes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsDHSorDRSclient, "n", new { @class = "DRS externalage" }) No
+                                    @Html.RadioButtonFor(model => model.IsDHSorDRSclient, "u", new { @class = "DRS externalage" }) Unknown
+                                </div>
+                            </div>
+                            <div class="row" style="margin-left: 0px !important">
+                                <div class="col-md-6">
+                                    @Html.LabelFor(model => model.IsDHS_DDD_Client, htmlAttributes: new { @class = "normal-text" })
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.RadioButtonFor(model => model.IsDHS_DDD_Client, "y", new { @class = "DHSDRS DDD externalage", @id = "dddyes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsDHS_DDD_Client, "n", new { @class = "DDD externalage" }) No
+                                    @Html.RadioButtonFor(model => model.IsDHS_DDD_Client, "u", new { @class = "DDD externalage" }) Unknown
+                                </div>
+                            </div>
+                            <div class="row" style="margin-left: 0px !important">
+                                <div class="col-md-6">
+                                    @Html.LabelFor(model => model.IsMCO, htmlAttributes: new { @class = "normal-text" })
+                                </div>
+                                <div id="isMCO" class="col-md-6 isMCO">
+                                    @Html.RadioButtonFor(model => model.IsMCO, "y", new { }) Yes
+                                    @Html.RadioButtonFor(model => model.IsMCO, "n", new { }) No
+                                    @Html.RadioButtonFor(model => model.IsMCO, "u", new { }) Unknown
+                                    @*  <div class="col-md-6" id="specify MCO">
+                                            @Html.LabelFor(model => model.MCO, htmlAttributes: new { @class = "normal-text" })
+                                            @Html.EditorFor(model => model.MCO, new { htmlAttributes = new { @class = "" } })
+                                        </div>*@
+                                </div>
+                            </div>
+                            <div id="MCO" class="row" style="margin-left: 0px !important">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.MCO, htmlAttributes: new { @class = "normal-text" })
+                                    @*@Html.TextBoxFor(model => model.MCO, htmlAttributes: new { @class = "form-control" })*@
+                                    @*@Html.DropDownListFor(model => model.MCO, new SelectList(new[] { new AGE.CMS.Data.Models.LookupModels.viewMCO { Id = null, Name = " Select MCO" } }.Union(Model.ListMCOs.OrderBy(s => s.Name)), "Id", "Name", Model.MCO), new { @class = "form-control" })*@
+                                   @Html.DropDownListFor(model => model.MCO, new SelectList(Model.ListMCOs, "Id", "Name", Model.MCO), new { @class = "form-control" })    <br />
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-left: 0px !important">
+                                <div class="col-md-6">
+                                    @Html.LabelFor(model => model.IsDSCC_Client, htmlAttributes: new { @class = "normal-text" })
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.RadioButtonFor(model => model.IsDSCC_Client, "y", new { @class = "" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsDSCC_Client, "n", new { @class = "" }) No
+                                    @Html.RadioButtonFor(model => model.IsDSCC_Client, "u", new { @class = "" }) Unknown
+                                </div>
+                            </div>
+                            @* <div class="row" style="margin-left: 0px !important">
+                                    <div class="col-md-6">
+                                        @Html.LabelFor(model => model.IsCCP_HomeServiceClient, htmlAttributes: new { @class = "normal-text" })
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.RadioButtonFor(model => model.IsCCP_HomeServiceClient, "y", new { @class = "" }) Yes
+                                        @Html.RadioButtonFor(model => model.IsCCP_HomeServiceClient, "n", new { @class = "" }) No
+                                        @Html.RadioButtonFor(model => model.IsCCP_HomeServiceClient, "u", new { @class = "" }) Unknown
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-left: 0px !important">
+                                    <div class="col-md-6">
+                                        @Html.LabelFor(model => model.ReceivingMoneyManagementService, htmlAttributes: new { @class = "normal-text" })
+                                    </div>
+                                    <div class="col-md-6">
+                                        @Html.RadioButtonFor(model => model.ReceivingMoneyManagementService, "y", new { @class = "" }) Yes
+                                        @Html.RadioButtonFor(model => model.ReceivingMoneyManagementService, "n", new { @class = "" }) No
+                                        @Html.RadioButtonFor(model => model.ReceivingMoneyManagementService, "u", new { @class = "" }) Unknown
+                                    </div>
+                                </div>*@
+                        </div>
+                    </div>
+                    <div id="caseworkerpart" style="border: 1px solid grey; margin: 10px; padding: 5px;">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.LabelFor(model => model.AssignedCaseWorker, htmlAttributes: new { @class = "" }) :-
+                                @if (Model.AssignedCaseWorker != null)
+                                {
+                                    @Model.AssignedCaseWorker.Remove(0, 9).Replace(".", " ").ToUpperInvariant()
+                                }
+                                else
+                                {
+                                    <p style="color:red"><b>Please assign Caseworker to case</b></p>
+                                }
+                            </div>
+                            @Html.HiddenFor(model => model.AssignedCaseWorker)
+                            @*             <div class="row nextline" style="margin-left: 0px !important">
+                                    <div class="col-lg-2">
+
+                                        @Html.TextBoxFor(m => m.AssignedCaseWorker, new { @class = "form-control" , @placeholder = "Assigned CaseWorker Name"})
+                                    </div>
+                                </div>*@
+
+                            <div class="row nextline" style="margin-left: 0px !important">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.DiscussedWithReportTaker, htmlAttributes: new { @class = "normal-text" })
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.RadioButtonFor(model => model.DiscussedWithReportTaker, "y", new { @id = "DiscussedWithReportTakerYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.DiscussedWithReportTaker, "n", new { @id = "DiscussedWithReportTakerNo" }) No
+                                </div>
+                                <div class="" id="DiscussedWithReportTakerOptions">
+                                    <div class="col-md-3">
+                                        @Html.LabelFor(model => model.ReportTakerIsCaseWorker, htmlAttributes: new { @class = "normal-text" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.RadioButtonFor(model => model.ReportTakerIsCaseWorker, "y") Yes
+                                        @Html.RadioButtonFor(model => model.ReportTakerIsCaseWorker, "n") No
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-left: 0px !important">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.DiscussedWithReporter, htmlAttributes: new { @class = "normal-text" })
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.RadioButtonFor(model => model.DiscussedWithReporter, "y", new { @id = "DiscussedWithReporterYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.DiscussedWithReporter, "n", new { @id = "DiscussedWithReporterNo" }) No
+                                </div>
+
+                            </div>
+                            <div class="row" style="margin-left: 0px !important">
+
+                                <div class="col-md-4">
+                                    @Html.LabelFor(model => model.DateContactedReporter)
+                                    @Html.TextBoxFor(model => model.DateContactedReporter, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", placeholder = "Date Contacted Reporter", @style = "max-width:50%" })
+                                    @Html.ValidationMessageFor(model => model.DateContactedReporter)
+                                </div>
+                                <div class="col-md-8">
+                                    <strong>Exceptions for entering date:</strong><br />
+                                    @Html.CheckBoxFor(model => model.IsUnsafeForAV) @Html.LabelFor(model => model.IsUnsafeForAV, new { @class = "normal-text" }) &nbsp;
+                                    @Html.CheckBoxFor(model => model.IsContactUnwelcome) @Html.LabelFor(model => model.IsContactUnwelcome, new { @class = "normal-text" })
+                                </div>
+                            </div>
+                            <div class="row" style="margin-left: 0px !important">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.CollateralsContacted, htmlAttributes: new { @class = "normal-text" })
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.RadioButtonFor(model => model.CollateralsContacted, "y", new { @Id = "collateralyes" }) Yes
+                                    @Html.RadioButtonFor(model => model.CollateralsContacted, "n") No
+                                </div>
+                            </div>
+                            <div class="row" style="margin-left: 0px !important">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.PreviousReportsReceived, htmlAttributes: new { @class = "normal-text" })
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.RadioButtonFor(model => model.PreviousReportsReceived, "y") Yes
+                                    @Html.RadioButtonFor(model => model.PreviousReportsReceived, "n") No
+                                    @Html.RadioButtonFor(model => model.PreviousReportsReceived, "x") NA
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class=@(User.IsInRole("CMS_Supervisor") ? "enablediv" : "disablediv") style="border: 1px solid grey; margin: 10px; padding: 5px;" id="supervisorpart">
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                @Html.LabelFor(model => model.ConsultedWithSupervisor, htmlAttributes: new { @class = "" })
+                                @Html.RadioButtonFor(model => model.ConsultedWithSupervisor, "y", new { @class = "zero-ConsultedWithSupervisor ", @id = "ConsultedWithSupervisorYes", disable = @disable }) Yes
+                                @Html.RadioButtonFor(model => model.ConsultedWithSupervisor, "n", new { @class = "zero ConsultedWithSupervisor", @id = "ConsultedWithSupervisorNo", disable = @disable }) No
+
+                            </div>
+                            <div class="col-md-11" id="ConsultedWithSupervisorOptions">
+                                @Html.LabelFor(model => model.Explain, htmlAttributes: new { @class = "" })
+                                @Html.TextAreaFor(model => model.Explain, new { @class = "form-control", rows = "5" })
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                <strong>Topics Included</strong><br />
+                                @Html.CheckBoxFor(model => model.Intake, new { @class = "", disable = @disable })
+                                @Html.LabelFor(model => model.Intake, htmlAttributes: new { @class = "normal-text" })
+                                <br />
+                                @Html.CheckBoxFor(model => model.InvestigationStrategies, new { @class = "", disable = @disable })
+                                @Html.LabelFor(model => model.InvestigationStrategies, htmlAttributes: new { @class = "normal-text" })
+                                <br />
+                                @Html.CheckBoxFor(model => model.DangerToClientOrWorker, new { @class = "", disable = @disable })
+                                @Html.LabelFor(model => model.DangerToClientOrWorker, htmlAttributes: new { @class = "normal-text" })
+                                <br />
+                                @Html.CheckBoxFor(model => model.Priority, new { @class = "", disable = @disable })
+                                @Html.LabelFor(model => model.Priority, htmlAttributes: new { @class = "normal-text" })
+                                <br />
+                                @Html.CheckBoxFor(model => model.Resources, new { @class = "", disable = @disable })
+                                @Html.LabelFor(model => model.Resources, htmlAttributes: new { @class = "normal-text" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.AssignedSupervisor, htmlAttributes: new { @class = "" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(model => model.AssignedSupervisor, new { @class = "form-control", @style = "width:50%", disable = @disable })
+                            </div>
+                            <div class="col-md-1 text-right ConsultedDate">
+                                @Html.LabelFor(model => model.DateSupervisor, htmlAttributes: new { @class = "" })
+                            </div>
+                            <div class="col-md-2 ConsultedDate">
+                                @Html.TextBoxFor(model => model.DateSupervisor, "{0:MM/dd/yyyy}", new { @class = "datepicker form-control", @value = "", disable = @disable })
+                            </div>
+                        </div>
+                    </div>
+
+
+                    @using (Html.BeginForm("SaveNoticeOfInvestigation", "Case", FormMethod.Post, new { id= "NOIForm" }))
+                    {
+                        <div id="NoticeofInvestigationModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" style="padding-top: 5%;">
+                            <div class="modal-dialog" style="width: 60%">
+                                @Html.HiddenFor(m => m.NoticeOfInvestigationId)
+                                @Html.HiddenFor(m => m.IntakeId)
+                                @Html.HiddenFor(m => m.NOI.StatusId)
+                                @Html.HiddenFor(m => m.NOI.SaveNOI)
+                                @*//@Html.HiddenFor(m => m.ClientId) *@
+                                @Html.HiddenFor(m => m.CaseheaderId)
+                                @Html.HiddenFor(m => m.NOI.IsDRS)
+                                @Html.HiddenFor(m => m.NOI.IsDDD)
+
+
+                                <!-- Modal content-->
+                                <div class="modal-content well container ">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <div class="row nextline form-group" style="border-bottom: 2px solid #949382; padding-top: 2px; margin: 1px">
+                                            <div class="col-lg-1" id="logoidoaasp">
+                                                <a href="#">
+                                                    <img id="logo1asp" src="@logoimage" style="display: inline; position:sticky; height: 75px; width: 187px" alt="Illinois Department on Aging" />
+                                                </a>
+                                            </div>
+
+                                            <div class="col-lg-10" style="text-align: center; font-size: 18px">
+                                                <span>
+                                                    <span class="textspace" style="font-family: sans-serif; display: inline; position: static; display: inline-block; letter-spacing: 0; left: 420px; font-weight: 500; color: #8b2433">Illinois Department on Aging APS Notice of Investigation - Confidential</span>
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        @Html.HiddenFor(m => Model.NOI.Id)
+                                        <div class="row nextline" style="border-bottom: 2px solid #e5e5e5">
+                                            <h4>Alleged Victim Information</h4>
+                                            <br />
+                                            <div class="row nextline"></div>
+
+                                            <div class="col-lg-2">
+                                                <b>Name:</b>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                @Html.DisplayFor(model => model.client.Person.FirstName, new { @class = "control-label" })
+
+                                                @Html.DisplayFor(model => model.client.Person.LastName, new { @class = "control-label" })
+
+                                            </div>
+                                        </div>
+                                        <div class="row nextline" style="border-bottom: 2px solid #e5e5e5">
+                                            <div class="col-lg-2">
+                                                <b>Address:</b>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                @Html.DisplayFor(model => model.client.Person.Address.AddressLine1, new { @class = "control-label" })
+                                                <br />
+                                                @if (Model.client.Person.Address.AddressLine2 != null)
+                                                {
+                                                    @Html.DisplayFor(model => model.client.Person.Address.AddressLine2, new { @class = "control-label" })
+                                                    <br />
+                                                }
+                                                @Html.DisplayFor(model => model.client.Person.Address.City, new { @class = "control-label" })
+                                                <br />
+                                                @Html.DisplayFor(model => model.client.Person.Address.Zip5, new { @class = "control-label" })  @Html.DisplayFor(model => model.client.Person.Address.Zip4, new { @class = "control-label" })
+                                            </div>
+                                        </div>
+                                        <div class="row nextline" style="border-bottom: 2px solid #e5e5e5">
+                                            <div class="col-lg-2">
+                                                <b>Phone:</b>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                @Html.DisplayFor(model => model.client.Person.Phone.PhoneNumber, new { @class = "control-label " })
+                                            </div>
+                                            <br />
+                                        </div>
+                                        <div class="row nextline" style="border-bottom: 2px solid #e5e5e5">
+                                            <div class="col-lg-2">
+                                                <b>Date of Birth:</b>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                @Html.DisplayFor(model => model.client.Person.DOB, new { @class = "control-label" })
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row nextline" style="border-bottom: 2px solid #e5e5e5">
+                                            <div class="col-lg-2">
+                                                <b>SSN:</b>
+                                            </div>
+                                            <div id="ssnid" class="col-lg-3">
+                                                @Html.DisplayFor(model => model.client.Person.SSN, new { @class = "control-label" })
+                                                @Html.HiddenFor(model => model.client.Person.SSN, new { @class = "control-label" })
+                                            </div>
+
+                                        </div>
+                                        <div class="row nextline" style="border-bottom: 2px solid #e5e5e5">
+                                            <div class="col-lg-2">
+                                                <b>@Html.LabelFor(m => m.viewIntake.DateIntake, new { @class = "control-label" })</b>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                @Html.DisplayFor(model => model.viewIntake.DateIntake)
+                                            </div>
+                                        </div>
+                                        <div class="row nextline">
+                                            @*<h4 class="modal-title">@Model.ClientInfo.ClientName | @displaySSN | DOB @Model.AssessmentPreparation.person.DOB</h4>*@
+                                            <h4>Alleged Abusers Information</h4>
+                                            *Any alleged abusers identified after Intake should be entered on the ‘Alleged Abuser(s)’ tab. Those added will then populate on the ‘Notice of Investigation’.
+                                            @*<div class="modal-body">*@
+                                            <div>
+                                                @*Address1 :- @Model.AssessmentPreparation.person.Address.AddressLine1
+                                                    Address2 :- @Model.AssessmentPreparation.person.Address.AddressLine2
+                                                    City :- @Model.AssessmentPreparation.person.Address.City
+                                                    Zip4 :- @Model.AssessmentPreparation.person.Address.Zip4
+                                                    Zip5 :- @Model.AssessmentPreparation.person.Address.Zip5*@
+                                                <div class="col-md-12" id="AbuserInfo" style="border-bottom: groove">
+                                                    @if (Model.NOI.Abusers.Count > 0)
+                                                    {
+                                                        for (int i = 0; i < Model.NOI.Abusers.Count; i++)
+                                                        {
+                                                            @Html.HiddenFor(x => Model.NOI.Abusers[i].Id)
+                                                            <div id="@("Abuser_" + i)" style="margin-top:1%; border-top:groove">
+                                                                <b>Alleged Abuser Name : </b>@Model.NOI.Abusers[i].LastName, @Model.NOI.Abusers[i].FirstName
+                                                                <br />
+                                                                <b>AA Number: </b>@Model.NOI.Abusers[i].AANumber
+                                                                <br />
+                                                                <label>Relationship to Alleged Victim:</label>
+                                                                <br />
+
+                                                                @for (int idx = 0; idx < Model.NOI.Abusers[i].ListOfAllegedAbuserRelationship.Count; idx++)
+                                                                {
+                                                                    @Html.HiddenFor(x => Model.NOI.Abusers[i].ListOfAllegedAbuserRelationship[idx].Id)
+                                                                    //@Html.HiddenFor(x => Model.NOI.Abusers[i].ListOfAllegedAbuserRelationship[idx].Code)
+                                                                    @Html.CheckBoxFor(x => Model.NOI.Abusers[i].ListOfAllegedAbuserRelationship[idx].IsChecked) @Html.DisplayFor(x => Model.NOI.Abusers[i].ListOfAllegedAbuserRelationship[idx].Description) <br />
+                                                                    @Html.HiddenFor(x => Model.NOI.Abusers[i].ListOfAllegedAbuserRelationship[idx].Description)
+                                                                }
+
+                                                                <div class="otherrelation col-lg-7 row nextline">
+                                                                    @*  @Html.LabelFor(model => model.Abusers[i].OtherRelationship)*@
+                                                                    @Html.Label("Specify Alleged Abuser Relationship to client if marked Family Member or Other")
+                                                                    @Html.TextAreaFor(model => model.NOI.Abusers[i].OtherRelationship, new { @class = "form-control" })
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row nextline"></div>
+                                                        }
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <div id="Abuser" style="margin-top: 1%">
+                                                            <h5>No Abuser present to link with DHS/DRS</h5>
+                                                        </div>
+
+                                                    }
+                                                    <div class="row nextline"></div>
+                                                </div>
+                                                <div class="row nextline"></div>
+                                                <div class="" id="ANERelated" style="margin-top: 20px">
+                                                    <b>Choose the Type of Abuse and Enter the Allegations (Specify the number of the alleged abuser if more than one exist):</b>
+                                                    <br />
+
+                                                    @for (int idx = 0; idx < Model.NOI.ListAllegations.Count; idx++)
+                                                    {
+                                                        <div id="Allegation_@idx">
+                                                            <div class="row nextline" style="margin-left: 0px !important">
+                                                                @Html.HiddenFor(x => Model.NOI.ListAllegations[idx].Id)
+                                                                @Html.HiddenFor(x => Model.NOI.ListAllegations[idx].AllegationId)
+                                                                @*@Html.HiddenFor(x => Model.NOI.ListAllegations[idx].Code)*@
+                                                                @Html.CheckBoxFor(x => Model.NOI.ListAllegations[idx].IsSelected)
+                                                                <b>@Html.DisplayFor(x => Model.NOI.ListAllegations[idx].AllegationDescription)</b>
+                                                                @Html.HiddenFor(x => Model.NOI.ListAllegations[idx].AllegationDescription)
+                                                            </div>
+                                                            <div id="specify_@idx" class=" specify row nextline" style="margin-left: 0px !important">
+                                                                <div class="  col-lg-10">
+                                                                    @Html.TextAreaFor(model => model.NOI.ListAllegations[idx].Specify, new { @style = "width:100%", @class = "form-control, ckeditor1", rows = "5", })<br />
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    }
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                        <div class="row nextline">
+                                            <div class="col-lg-3 ">
+                                                @*@if (Model.viewReportSubstantiation.InCompleteErrors.ErrorsInReportOfSubstantiation && Model.viewReportSubstantiation.InCompleteErrors.HasErrorsAgencyName)
+                                                    {
+                                                        <span class="danger">Please select enter APS PA</span><br />
+                                                    }*@
+                                                @Html.LabelFor(m => m.NOI.APSPAName, new { @class = "control-label" })
+                                                @Html.TextBoxFor(m => m.NOI.APSPAName, new { @class = "form-control" })
+                                            </div>
+
+                                            <div class="col-lg-3 ">
+                                                @*@if (Model.viewReportSubstantiation.InCompleteErrors.ErrorsInReportOfSubstantiation && Model.viewReportSubstantiation.InCompleteErrors.HasErrorsCompletedBy)
+                                                    {
+                                                        <span class="danger">Please enter who completed the Report of Substantiation</span><br />
+                                                    }*@
+                                                @Html.LabelFor(m => m.NOI.APSPAContactName, new { @class = "control-label" })
+                                                @Html.TextBoxFor(m => m.NOI.APSPAContactName, new { @class = "form-control" })
+                                            </div>
+
+                                            <div class="col-lg-3 ">
+
+                                                @Html.LabelFor(m => m.NOI.APSPAEmail, new { @class = "control-label" })
+                                                @Html.TextBoxFor(m => m.NOI.APSPAEmail, new { @class = "form-control" })
+                                            </div>
+
+                                            <div class="col-lg-3 ">
+                                                @Html.LabelFor(m => m.NOI.APSPAContactPhone, new { @class = "control-label" })
+                                                @Html.TextBoxFor(m => m.NOI.APSPAContactPhone, new { @class = "form-control phonenumber" })
+                                            </div>
+
+
+
+
+
+                                    </div>
+
+                                        <br />
+                                        <br />
+
+                                        @if (Model.NOI.DateSubmitted != null)
+                                        {
+                                            <div>
+                                                @Html.LabelFor(model => model.NOI.DateSubmitted, htmlAttributes: new { @class = "" })  <br />
+
+                                                @Html.DisplayFor(model => model.NOI.DateSubmitted, "{0:MM/dd/yyyy}", new { @class = "datepicker form-control ", @placeholder = "MM/DD/YYYY", @disabled = "disabled" })
+                                                @Html.HiddenFor(model => model.NOI.DateSubmitted)
+                                            </div>
+                                        }
+
+
+                                        <br />
+                                        @if (Model.NOI.PreviousSubmissionModels != null && Model.NOI.PreviousSubmissionModels.Count != 0)
+                                        {
+                                            <div>
+                                                <strong>Submission History</strong>
+                                                @for (int i = 0; i < Model.NOI.PreviousSubmissionModels.Count; i++)
+                                                {
+                                                    <p>@Html.DisplayFor(m => Model.NOI.PreviousSubmissionModels[i].Id),  @Html.DisplayFor(m => Model.NOI.PreviousSubmissionModels[i].SubmissionDate)</p>
+                                                }
+                                            </div>
+                                        }
+
+                                        </div>
+                                    <div class="modal-footer">
+                                        <button id="SaveNotice" onclick="SaveNoticeForm('NOI');" type="button" class="btn btn-default">Save</button>
+                                        <button id="SubmitNotice" onclick="SubmitNoticeForm();" type="button" class="btn btn-default">Submit</button>
+                                        @*<button id="PrintNotice" type="button" class="btn btn-default">Print</button>*@
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+

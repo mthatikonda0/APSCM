@@ -1,0 +1,95 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewClientStatus
+
+<script src="~/Assets/Basic/Scripts/CMS/Case/PartialInvolvedAgencies.js"></script>
+
+
+
+<div class="well container">
+    <div id="DetailInterAgency">
+        <legend>Involved Agencies / Professionals</legend>
+        <div class="row next-line">
+            <div class="col-md-2 pull-right">
+                <button type="button" id="AddInvolvedAgency" value="Plus" class="btn btn-primary zero-Zindex" data-toggle="tooltip" title="Add">
+                    <span class="glyphicon glyphicon-plus" style="color: #fff"></span>
+                </button>
+
+            </div>
+        </div>
+        <br />
+        @for (int i = 0; i < Model.ListInvolvedAgencies.Count; i++)
+        {
+            <div id=@("InterAgency_" + i) class="interagency well" style="background-color:#fff; max-width:80%">
+
+                <div class="row nextline">
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.ListInvolvedAgencies[i].InteragencyTypeId, htmlAttributes: new { @class = "" })
+                        @Html.Hidden("Type_" + i, Model.ListInvolvedAgencies[i].InteragencyTypeId, new { @class = "ddlValue" })
+                        <br />
+                        @Html.DropDownListFor(model => model.ListInvolvedAgencies[i].InteragencyTypeId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewInteragencyCoordination { Id = 0, Description = " Select Agency" } }.Union(Model.caselookup.listofInteragencies.OrderBy(s => s.Code)), "Id", "Description", Model.ListInvolvedAgencies[i].InteragencyTypeId), new { @class = "form-control zero-Zindex" })
+
+
+                    </div>
+                    @*<div id="InteragencyOther" class=" col-md-3 specify">
+                        @Html.LabelFor(model => model.ListInvolvedAgencies[i].InteragencyOther, htmlAttributes: new { @class = "" })
+                        @Html.TextBoxFor(model => model.ListInvolvedAgencies[i].InteragencyOther, htmlAttributes: new { @class = " form-control " })
+                    </div>.*@
+                    </div>
+                 <div class="row nextline">
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.ListInvolvedAgencies[i].AgencyName, htmlAttributes: new { @class = "" })
+                        <br />
+                        @Html.TextBoxFor(model => model.ListInvolvedAgencies[i].AgencyName, new { @class = "form-control zero-Zindex", })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.ListInvolvedAgencies[i].AgencyService, htmlAttributes: new { @class = "" })
+                        <br />
+                        @Html.TextBoxFor(model => model.ListInvolvedAgencies[i].AgencyService, new { @class = "form-control zero-Zindex", })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(model => model.ListInvolvedAgencies[i].IsROI, htmlAttributes: new { @class = "" })
+                        <br />
+
+                        @Html.RadioButtonFor(model => model.ListInvolvedAgencies[i].IsROI, "y", new { }) Yes
+                
+                        @Html.RadioButtonFor(model => model.ListInvolvedAgencies[i].IsROI, "n", new {}) No
+                
+                        @Html.RadioButtonFor(model => model.ListInvolvedAgencies[i].IsROI, "u", new { }) Unknown      
+                    </div>
+                    <div class="col-md-2 roioptions" style="padding-top:25px" >
+                        @Html.CheckBoxFor(model => model.ListInvolvedAgencies[i].IsROIVerbal, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListInvolvedAgencies[i].IsROIVerbal, htmlAttributes: new { @class = "" })
+                        @Html.CheckBoxFor(model => model.ListInvolvedAgencies[i].IsROIWritten, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListInvolvedAgencies[i].IsROIWritten, htmlAttributes: new { @class = "" })
+                    </div>
+                </div>
+                <div class="row nextline">
+                </div>
+                <div class="row nextline">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.ListInvolvedAgencies[i].AgencyAddress, htmlAttributes: new { @class = "" })
+                        <br />
+                        @Html.TextBoxFor(model => model.ListInvolvedAgencies[i].AgencyAddress, new { @class = "form-control zero-Zindex", })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.ListInvolvedAgencies[i].AgencyContactPerson, htmlAttributes: new { @class = "" })
+                        <br />
+                        @Html.TextBoxFor(model => model.ListInvolvedAgencies[i].AgencyContactPerson, new { @class = "form-control zero-Zindex", })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.ListInvolvedAgencies[i].AgencyPhone, htmlAttributes: new { @class = "" })
+                        <br />
+                        @Html.TextBoxFor(model => model.ListInvolvedAgencies[i].AgencyPhone, new { @class = "form-control zero-Zindex phonenumber", })
+                    </div>
+                    <div class="col-md-1 pull-right" style="padding-top: 24px">
+                        <button type="button" id="InvolvedAgenciesremove_@(i)" class="btn delete-interagency btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                            <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row nextline">
+                </div>
+
+            </div>
+        }
+    </div>
+</div>
+
+

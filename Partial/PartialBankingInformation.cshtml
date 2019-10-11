@@ -1,0 +1,286 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewClientStatus
+
+@{
+    var errorclass = "";
+}
+
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsEmploymentStatusId)
+{
+    <span class="danger">Please select Employment Status</span><br />
+}
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIncomeLevelId)
+{
+    <span class="danger">Please select income level</span><br />
+}
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIsBanking)
+{
+    <span class="danger">Please select options under banking or enter banking details</span><br />
+}
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIsClientHasMMS)
+{
+    <span class="danger">Please select whether client is receiveing Money Management Services</span><br />
+}
+
+
+<script src="~/Assets/Basic/Scripts/CMS/Case/PartialBankingInformation.js"></script>
+
+<div class="container">
+
+    @{
+        errorclass = "";
+
+        if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsEmploymentStatusId)
+        {
+            errorclass = "has-error";
+        }
+        if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIncomeLevelId)
+        {
+            errorclass = "has-error";
+        }
+        if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIsBanking)
+        {
+            errorclass = "has-error";
+        }
+        if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIsClientHasMMS)
+        {
+            errorclass = "has-error";
+        }
+
+    }
+
+    <div class="well">
+        <div class="row next-line">
+            <div class="col-lg-2 form-group @errorclass" id="EmploymentStatus">
+                @Html.ValidationMessageFor(model => model.EmploymentStatusId)
+                @Html.LabelFor(m => m.EmploymentStatusId)
+                @Html.DropDownListFor(model => model.EmploymentStatusId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewEmploymentType { Id = 0, Description = " Select Employment Status" } }.Union(Model.caselookup.listofemploymenttypes.OrderBy(s => s.Code)), "Id", "Description", Model.EmploymentStatusId), new { @class = "form-control" })
+            </div>
+            <div class="col-lg-2 form-group @errorclass" id="IncomeLevel">
+                @Html.ValidationMessageFor(model => model.IncomeLevelId)
+                @Html.LabelFor(m => m.IncomeLevelId)
+                @Html.DropDownListFor(model => model.IncomeLevelId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewIncomeLevel { Id = 0, Description = " Select Income Level" } }.Union(Model.caselookup.listofincomelevels.OrderBy(s => s.Code)), "Id", "Description", Model.EmploymentStatusId), new { @class = "form-control" })
+            </div>
+
+            <div class="col-md-2">
+                @Html.LabelFor(model => model.TotalMonthlyIncome, htmlAttributes: new { @class = "" })
+
+                @Html.TextBoxFor(model => model.TotalMonthlyIncome, new { @class = "form-control zero-Zindex",})
+                @Html.ValidationMessageFor(model => model.TotalMonthlyIncome)
+            </div>
+            <div class="col-md-6" style="padding-top:25px">
+
+                @Html.RadioButtonFor(model => model.IsTotalMonthlyIncome, "a") Actual
+
+                @Html.RadioButtonFor(model => model.IsTotalMonthlyIncome, "e") Estimated
+
+                @Html.RadioButtonFor(model => model.IsTotalMonthlyIncome, "d") Declined
+
+                @Html.RadioButtonFor(model => model.IsTotalMonthlyIncome, "u") Unknown
+            </div>
+        </div>
+
+        <div class="row next-line"></div>
+        <div class="row next-line">
+           
+            <fieldset id="DetailIncomeHelper">
+
+                <div class="col-md-3 pull-right" >
+                    <button type="button" id="AddIncome" value="Plus" class="btn btn-default" data-toggle="tooltip" title="Add">
+                        <span class="glyphicon glyphicon-plus" style="color: blue"></span>
+                    </button>
+
+                </div>
+                <div class="row next-line"></div>
+                @for (int i = 0; i < Model.ListIncomeHelpers.Count; i++)
+                {
+                    <div id=@("OtherIncome_" + i) class="income">
+
+                        <div class="row nextline">
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.ListIncomeHelpers[i].MonthlyIncomeSource, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListIncomeHelpers[i].MonthlyIncomeSource, new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.ListIncomeHelpers[i].DollarAmountFromSource, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListIncomeHelpers[i].DollarAmountFromSource, new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.ListIncomeHelpers[i].CheckMailedTo, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListIncomeHelpers[i].CheckMailedTo, new { @class = "form-control" })
+                            </div>
+                            <div class="col-lg-1" style="padding-top: 25px;padding-left:10%">
+                                <button type="button" id="otherincomeremove_@(i)" class="btn delete-income btn-default" data-toggle="tooltip" title="Delete">
+                                    <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                </button>
+                            </div>
+                        </div>        
+                    </div>
+                }
+
+            </fieldset>
+           
+
+            @*<div class="col-md-3">
+                @Html.LabelFor(model => model.MonthlyIncomeSource, htmlAttributes: new { @class = "" })
+
+                @Html.TextBoxFor(model => model.MonthlyIncomeSource, new { @class = "form-control zero-Zindex" })
+                @Html.ValidationMessageFor(model => model.MonthlyIncomeSource)
+            </div>
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.DollarAmountFromSource, htmlAttributes: new { @class = "" })
+
+                @Html.TextBoxFor(model => model.DollarAmountFromSource, new { @class = "form-control zero-Zindex", @placeholder = "(Examples: Social Security, SSI, Pension, etc.) " })
+                @Html.ValidationMessageFor(model => model.DollarAmountFromSource)
+            </div>
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.CheckMailedTo, htmlAttributes: new { @class = "" })
+
+                @Html.TextBoxFor(model => model.CheckMailedTo, new { @class = "form-control zero-Zindex", @placeholder = "(Client, AA, direct deposit, etc.) " })
+            </div>*@
+
+        </div>
+        <div class="row next-line">
+            <div class="col-md-6" style="padding-top:25px">
+                @Html.LabelFor(model => model.LimitedAccess, htmlAttributes: new { @class = "" })
+
+                @Html.RadioButtonFor(model => model.LimitedAccess, "y") Yes
+
+                @Html.RadioButtonFor(model => model.LimitedAccess, "n") No
+            </div>
+        </div>
+    </div>
+
+    <div class="well">
+        <legend>Banking</legend>
+        <div class="row next-line">
+
+            <div class="col-md-6 form-group @errorclass">
+                @Html.LabelFor(model => model.IsBanking, htmlAttributes: new { @class = "errorclass" })
+
+                @Html.RadioButtonFor(model => model.IsBanking, "x") None
+
+                @Html.RadioButtonFor(model => model.IsBanking, "u") Unknown
+
+                @Html.RadioButtonFor(model => model.IsBanking, "d") Declined
+
+                @Html.RadioButtonFor(model => model.IsBanking, "r") Not Relevant To Allegations
+
+            </div>
+            <div class="col-md-3" style="padding-left:45%">
+                <button type="button" id="AddBanking" value="Plus" class="btn btn-default zero-Zindex" data-toggle="tooltip" title="Add">
+                    <span class="glyphicon glyphicon-plus" style="color: blue"></span>
+                </button>
+
+            </div>
+        </div>
+
+        <fieldset id="DetailBanking">
+
+            <div class="row next-line">
+            </div>
+
+            @for (int i = 0; i < Model.ListBankings.Count; i++)
+            {
+                <div id=@("OtherBanking_" + i) class="banking">
+
+                    <div class="well container" style="background-color:#fff">
+                        <div class="row nextline">
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.ListBankings[i].BankName, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListBankings[i].BankName, new { @class = "form-control zero-Zindex" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.ListBankings[i].BankAddress, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListBankings[i].BankAddress, new { @class = "form-control zero-Zindex" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.ListBankings[i].BankPhone, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListBankings[i].BankPhone, new { @class = "form-control phonenumber" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.ListBankings[i].AccountNumber, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListBankings[i].AccountNumber, new { @class = "form-control zero-Zindex" })
+                            </div>
+                        </div>
+                        <div class="row nextline">
+
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.ListBankings[i].AccountHolderName, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListBankings[i].AccountHolderName, new { @class = "form-control zero-Zindex" })
+                            </div>
+                            <div class="col-md-5" style="padding-top: 25px">
+                                @Html.CheckBoxFor(model => model.ListBankings[i].IsSavings, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListBankings[i].IsSavings)
+                                @Html.CheckBoxFor(model => model.ListBankings[i].IsChecking, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListBankings[i].IsChecking)
+                                @Html.CheckBoxFor(model => model.ListBankings[i].IsTrust, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListBankings[i].IsTrust)
+                                @Html.CheckBoxFor(model => model.ListBankings[i].IsSDB, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListBankings[i].IsSDB)
+                                @Html.CheckBoxFor(model => model.ListBankings[i].IsCD, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListBankings[i].IsCD)<br />
+                                <br />
+                            </div>
+                            <div class="col-lg-2" style="padding-top: 25px">
+                                @Html.LabelFor(model => model.ListBankings[i].IsROI, htmlAttributes: new { @class = "" })
+
+                                @Html.RadioButtonFor(model => model.ListBankings[i].IsROI, "y") Yes
+
+                                @Html.RadioButtonFor(model => model.ListBankings[i].IsROI, "n") No
+                            </div>
+                            <div class="col-lg-2 verbalBankingROIOptions" style="padding-top: 25px" id="">
+                                @Html.CheckBoxFor(model => model.ListBankings[i].IsROIVerbal, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListBankings[i].IsROIVerbal)
+                                @Html.CheckBoxFor(model => model.ListBankings[i].IsROIWritten, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListBankings[i].IsROIWritten)
+                            </div>
+
+                            <div class="col-lg-1" style="padding-top: 25px;padding-left:10%">
+                                <button type="button" id="otherbankingremove_@(i)" class="btn delete-banking btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                                    <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </fieldset>
+
+
+
+        <div class="row next-line">
+            <span><b tyle="text-decoration:underline;font-size:15px">Estimate of Financial Resources:</b>   Enter the following:-</span><br /><br />
+            "Lost = amount lost as a direct result of the financial exploitation. Protected = amount protected because of APS intervention on behalf of client. Recovered = amount recovered because of APS intervention on behalf of client."  <br />
+            <div class="col-lg-2 form-group">
+
+                @Html.LabelFor(model => model.Lost, htmlAttributes: new { @class = "" })
+
+                @Html.TextBoxFor(model => model.Lost, new { @class = "form-control zero-Zindex" })
+            </div>
+            <div class="col-lg-2 form-group">
+                @Html.LabelFor(model => model.Protected, htmlAttributes: new { @class = "" })
+
+                @Html.TextBoxFor(model => model.Protected, new { @class = "form-control zero-Zindex" })
+            </div>
+            <div class="col-lg-2 form-group">
+                @Html.LabelFor(model => model.Recovered, htmlAttributes: new { @class = "" })
+
+                @Html.TextBoxFor(model => model.Recovered, new { @class = "form-control zero-Zindex" })
+            </div>
+
+            <div class="col-lg-6 form-group @errorclass" style="padding-top:25px">
+                @Html.LabelFor(model => model.IsClientHasMMS, htmlAttributes: new { @class = "errorclass" })
+
+                @Html.RadioButtonFor(model => model.IsClientHasMMS, "y") Yes
+
+                @Html.RadioButtonFor(model => model.IsClientHasMMS, "n") No
+
+                @Html.RadioButtonFor(model => model.IsClientHasMMS, "u") Unknown
+
+            </div>
+        </div>
+    </div>
+
+</div>

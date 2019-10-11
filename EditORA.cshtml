@@ -1,0 +1,337 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewORA
+
+@{
+    ViewBag.Title = "ORA";
+    var errorclass = "";
+}
+
+<script src="~/Assets/Basic/Scripts/CMS/Case/EditORA.js"></script>
+
+<script>
+
+
+    $(document).ready(function () {
+        $("#MCO").hide();
+        $("#loading").hide();
+        $("#Allegation_7").hide();
+        $('.disablediv').find("select, input, textarea").attr("disabled", "disabled")
+
+
+    });
+
+</script>
+<div class="container">
+    <div class="panel panel-warning">
+
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="titletextbegin">
+                    <span class="glyphicon glyphicon-edit"></span><span class="textspace">
+                        <text>Overall Risk Assessment Update</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+
+
+
+        <div class="panel-body">
+            @if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsDateFTF)
+            {
+                <span class="danger">Please select FTF Date</span><br />
+            }
+
+            @if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsFunctionalAbilities)
+            {
+                <span class="danger">Please enter Functional Abilities</span><br />
+            }
+
+            @if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsMentalAbilities)
+            {
+                <span class="danger">Please enter Mental Abilities</span><br />
+            }
+
+            @if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsEnvironment)
+            {
+                <span class="danger">Please enter Environment</span><br />
+            }
+
+            @if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsSubstanceAbuse)
+            {
+                <span class="danger">Please enter Substance Abuse</span><br />
+            }
+
+            @if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsFinancialResources)
+            {
+                <span class="danger">Please enter Financial Resources</span><br />
+            }
+
+            @if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsFormalAndInformalServices)
+            {
+                <span class="danger">Please enter Formal and Informal Services</span><br />
+            }
+
+            @if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsAbuserFactors)
+            {
+                <span class="danger">Please enter Abuser Factors</span><br />
+            }
+            @if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsRationale)
+            {
+                <span class="danger">Please enter Rationale</span><br />
+            }
+            @if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsRisk)
+            {
+                <span class="danger">Please select Risk Level </span><br />
+            }
+            @if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsCaseworkerSignature)
+            {
+                <span class="danger">Please Sign</span><br />
+            }
+            @if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsCaseworkerSignatureDate)
+            {
+                <span class="danger">Please enter Date</span><br />
+            }
+            @using (Html.BeginForm("SaveORA", "Case", FormMethod.Post))
+            {
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.IntakeId)
+
+                <div class="well">
+
+                    @{
+                errorclass = "";
+
+                if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsDateFTF)
+                {
+                    errorclass = "has-error";
+                }
+
+
+                if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsFunctionalAbilities)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsMentalAbilities)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsEnvironment)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsSubstanceAbuse)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsFinancialResources)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsFormalAndInformalServices)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsAbuserFactors)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsRationale)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsRisk)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsCaseworkerSignature)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInORA && Model.InCompleteErrors.HasErrorsCaseworkerSignatureDate)
+                {
+                    errorclass = "has-error";
+                }
+                    }
+
+                    <div class="row nextline">
+                        <div class="col-lg-12 pull-right">
+                            <div class="btn-group pull-right" style="margin-right: 10px;">
+                                <button id="saveORA" rel="tooltip" type="submit" class="btn btn-success btn-md btn-outline" title=" Save & Close ">Save & Close</button>
+                                <a id="cancelORA" rel="tooltip" class="btn btn-default btn-md" title=" Cancel " href='@Url.Action("ManageCase", "Case", new { CaseheaderId = @Model.viewIntake.CaseheaderId})'>Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <p class="alert alert-info">
+                        <strong>Info !</strong> Risk Assessment Updates are to be completed after each three month face-to-face follow-up and at case closure. The risk score is to reflect the client's situation at the time the caseworker completed the Risk Assessment Update.
+                    </p>
+                    <div class="row nextline"></div>
+
+                    <div class="row nextline">
+                        @Html.Partial("_ViewClientCMS", Model.viewIntake.viewCaseHeader.Client)
+                    </div>
+
+                    <div class="panel-heading" style="border: groove; background-color: #efeed6; margin: 10px;">
+                        <b><u>To reflect conditions prior to interventions / APS involvement:</u></b><br />
+                        <br />
+
+                        <b>Low Risk:</b>
+                        <text>Overall the situation is not likely to recur or to escalate in severity</text>
+                        <br />
+                        <br />
+                        <b>Medium Risk:</b>
+                        <text>In general, there is some possibility the situation will continue and probably escalate in the future</text>
+                        <br />
+                        <br />
+                        <b>High Risk:</b>
+                        <text>It is very likely the situation will continue and probably escalate in the future</text>
+                        <br />
+                        <br />
+                    </div>
+
+                    <div class="well" id="RiskCategories" style="background-color:#fff">
+
+                        <div class="row nextline" id="Initail Risk Level">
+                            <div class="col-lg-6 @errorclass">
+                                <b><u>Risk Assessment - Overall Risk Level:</u></b><br />
+                                <div>
+                                    @Html.CheckBoxFor(model => model.IsANENA) @Html.LabelFor(model => model.IsANENA) /   @Html.CheckBoxFor(model => model.IsSNNA) @Html.LabelFor(model => model.IsSNNA)
+                                    <br />
+                                    @Html.CheckBoxFor(model => model.IsLowANE) @Html.LabelFor(model => model.IsLowANE) /   @Html.CheckBoxFor(model => model.IsLowSN) @Html.LabelFor(model => model.IsLowSN)
+                                    <br />
+                                    @Html.CheckBoxFor(model => model.IsMediumANE) @Html.LabelFor(model => model.IsMediumANE) / @Html.CheckBoxFor(model => model.IsMediumSN) @Html.LabelFor(model => model.IsMediumSN)
+                                    <br />
+                                    @Html.CheckBoxFor(model => model.IsHighANE) @Html.LabelFor(model => model.IsHighANE) /   @Html.CheckBoxFor(model => model.IsHighSN) @Html.LabelFor(model => model.IsHighSN)
+                                    <br />
+                                </div>
+                            </div>
+                            <div class="col-lg-2 form-group @errorclass">
+                                @Html.LabelFor(model => model.DateFTF)
+                                <div>
+                                    @Html.TextBoxFor(model => model.DateFTF,"{0:MM/dd/yyyy}", new { @class = "form-control  datepicker", @placeholder = "FTF Date" })
+                                    @Html.ValidationMessageFor(model => model.DateFTF)
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-3 form-group " id="EmploymentStatus">
+                                @Html.LabelFor(m => m.AssociatedMonthId)
+                                @Html.DropDownListFor(model => model.AssociatedMonthId, new SelectList(new[] { new AGE.CMS.Data.Models.Case.viewCasePlanTime { Id = 0, Description = " Select Associated Month" } }.Union(Model.ListCasePlanTime), "Id", "Description", Model.AssociatedMonthId), new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="row nextline"></div>
+
+                        <div class="" id="ChangesFromPreviousAssessment" style="background-color:#fff">
+
+                            <b style="text-decoration:underline">Changes from Previous Risk Assessment Should Be Noted Below (Under Rationale)</b>
+                            <div class="row nextline">
+                                <div class="col-lg-6 @errorclass">
+                                    @Html.LabelFor(model => model.FunctionalAbilities)
+                                    <br />
+                                    @Html.CheckBoxFor(model => model.IsFunctionalAbilities) @Html.LabelFor(model => model.IsFunctionalAbilities)
+                                    <br />
+                                    @Html.TextAreaFor(model => model.FunctionalAbilities, new { @class = "form-control" })<br />
+                                </div>
+
+
+                                <div class="col-lg-6 @errorclass">
+                                    @Html.LabelFor(model => model.MentalAbilities)
+                                    <br />
+                                    @Html.CheckBoxFor(model => model.IsMentalAbilities) @Html.LabelFor(model => model.IsMentalAbilities)
+                                    <br />
+                                    @Html.TextAreaFor(model => model.MentalAbilities, new { @class = "form-control" })<br />
+                                </div>
+
+                                <div class="col-lg-6 @errorclass">
+                                    @Html.LabelFor(model => model.Environment)
+                                    <br />
+                                    @Html.CheckBoxFor(model => model.IsEnvironment) @Html.LabelFor(model => model.IsEnvironment)
+                                    <br />
+                                    @Html.TextAreaFor(model => model.Environment, new { @class = "form-control" })<br />
+                                </div>
+
+                                <div class="col-lg-6 @errorclass">
+                                    @Html.LabelFor(model => model.SubstanceAbuse)
+                                    <br />
+                                    @Html.CheckBoxFor(model => model.IsSubstanceAbuse) @Html.LabelFor(model => model.IsSubstanceAbuse)
+                                    <br />
+                                    @Html.TextAreaFor(model => model.SubstanceAbuse, new { @class = "form-control" })<br />
+                                </div>
+
+                                <div class="col-lg-6 @errorclass">
+                                    @Html.LabelFor(model => model.FinancialResources)
+                                    <br />
+                                    @Html.CheckBoxFor(model => model.IsFinancialResources) @Html.LabelFor(model => model.IsFinancialResources)
+                                    <br />
+                                    @Html.TextAreaFor(model => model.FinancialResources, new { @class = "form-control" })<br />
+                                </div>
+
+                                <div class="col-lg-6 @errorclass">
+                                    @Html.LabelFor(model => model.FormalAndInformalServices)
+                                    <br />
+                                    @Html.CheckBoxFor(model => model.IsFormalAndInformalServices) @Html.LabelFor(model => model.IsFormalAndInformalServices)
+                                    <br />
+                                    @Html.TextAreaFor(model => model.FormalAndInformalServices, new { @class = "form-control" })<br />
+                                </div>
+
+                                <div class="col-lg-6 @errorclass">
+                                    @Html.LabelFor(model => model.AbuserFactors)
+                                    <br />
+                                    @Html.CheckBoxFor(model => model.IsAbuserFactors) @Html.LabelFor(model => model.IsAbuserFactors)
+                                    <br />
+                                    @Html.TextAreaFor(model => model.AbuserFactors, new { @class = "form-control" })<br />
+                                </div>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-lg-6 @errorclass">
+                                    @Html.LabelFor(model => model.Rationale)<br />
+                                    Note any significant changes from the OIRA. Based on your professional judgment, explain why you believe the victim may or may not be at continued risk of ANE and/or SN.
+                                    <div>
+                                        @Html.TextAreaFor(model => model.Rationale, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-lg-3 @errorclass">
+                                    @Html.LabelFor(model => model.CaseworkerSignature)
+                                    <div>
+                                        @Html.TextBoxFor(model => model.CaseworkerSignature, new { @class = "form-control", @placeholder = "Sign" })
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 @errorclass">
+                                    @Html.LabelFor(model => model.CaseworkerSignatureDate)
+                                    <div>
+                                        @Html.TextBoxFor(model => model.CaseworkerSignatureDate, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", @placeholder = "Date" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="well row nextline @(User.IsInRole("CMS_Supervisor") ? "enablediv" : "disablediv")">
+                                <div class="col-lg-3 ">
+                                    @Html.LabelFor(model => model.SupervisorName)
+                                    <div>
+                                        @Html.TextBoxFor(model => model.SupervisorName, new { @class = "form-control", @placeholder = "Sign" })
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 ">
+                                    @Html.LabelFor(model => model.SupervisorSignatureDate)
+                                    <div>
+                                        @Html.TextBoxFor(model => model.SupervisorSignatureDate, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", @placeholder = "Date" })
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

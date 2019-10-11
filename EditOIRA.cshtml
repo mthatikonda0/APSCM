@@ -1,0 +1,388 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewOIRA
+
+@{
+    ViewBag.Title = "EditOIRA";
+    var errorclass = "";
+}
+
+<script>
+
+    $(document).ready(function () {
+
+        window.setInterval(function () {
+            bootbox.confirm({
+                title: "Server about to time out",
+                message: "Please save your progress before you continue",
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Cancel'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Save'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        $("#isSessionMakeLive").val(true);
+                        $('form').submit();
+
+                    }
+
+                }
+
+
+            })
+
+        }, 7 * 60 * 1000);
+
+
+        $(document).on("shown.bs.modal", function (event) {
+            window.setInterval(function () {
+                $("#isSessionMakeLive").val(true);
+                $('form').submit();
+            }
+            , 1.5 * 60 * 1000);
+        });
+
+    });
+</script>
+
+
+
+<script src="~/Assets/Basic/Scripts/CMS/Case/EditOIRA.js"></script>
+
+<div class="container">
+
+    <div class="panel panel-warning">
+
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="titletextbegin">
+                    <span class="glyphicon glyphicon-edit"></span><span class="textspace">
+                        <text>Overall Inital Risk Assessment</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+
+        <div class="panel-body">
+            @if (Model.InCompleteErrors.ErrorsInOIRA && Model.InCompleteErrors.HasErrorsDateFTF)
+            {
+                <span class="danger">Please select FTF Date</span><br />
+            }
+
+            @if (Model.InCompleteErrors.ErrorsInOIRA && (Model.InCompleteErrors.HasErrorsIsFunctionalAbilities || Model.InCompleteErrors.HasErrorsIsMentalAbilities || Model.InCompleteErrors.HasErrorsIsEnvironment
+                                                             || Model.InCompleteErrors.HasErrorsIsEndangeringBehaviors || Model.InCompleteErrors.HasErrorsIsFinancialResources || Model.InCompleteErrors.HasErrorsIsSupportServices))
+            {
+                <span class="danger">Please select Yes/No/Unknown</span><br />
+            }
+
+            @if (Model.InCompleteErrors.ErrorsInOIRA && Model.InCompleteErrors.HasErrorsFunctionalAbilities)
+            {
+                <span class="danger">Please select risk for Functional Abilities</span><br />
+            }
+
+            @if (Model.InCompleteErrors.ErrorsInOIRA && Model.InCompleteErrors.HasErrorsMentalAbilities)
+            {
+                <span class="danger">Please select risk for Emotional/Mental Abilities</span><br />
+            }
+
+            @if (Model.InCompleteErrors.ErrorsInOIRA && Model.InCompleteErrors.HasErrorsEnvironment)
+            {
+                <span class="danger">Please select risk for Environment</span><br />
+            }
+
+            @if (Model.InCompleteErrors.ErrorsInOIRA && Model.InCompleteErrors.HasErrorsEndangeringBehaviors)
+            {
+                <span class="danger">Please select risk for Endangering Behaviors</span><br />
+            }
+
+            @if (Model.InCompleteErrors.ErrorsInOIRA && Model.InCompleteErrors.HasErrorsFinancialResources)
+            {
+                <span class="danger">Please select risk for Financial Resources</span><br />
+            }
+
+            @if (Model.InCompleteErrors.ErrorsInOIRA && Model.InCompleteErrors.HasErrorsSupportServices)
+            {
+                <span class="danger">Please select risk for Support Services</span><br />
+            }
+            @if (Model.InCompleteErrors.ErrorsInOIRA && Model.InCompleteErrors.HasErrorsRationale)
+            {
+                <span class="danger">Please enter Rationale</span><br />
+            }
+            @if (Model.InCompleteErrors.ErrorsInOIRA && Model.InCompleteErrors.HasErrorsRisk)
+            {
+                <span class="danger">Please select Risk level </span><br />
+            }
+          @if (Model.InCompleteErrors.ErrorsInOIRA && Model.InCompleteErrors.HasErrorsCaseworkerSignature)
+            {
+                <span class="danger">Please Sign</span><br />
+            }
+            @if (Model.InCompleteErrors.ErrorsInOIRA && Model.InCompleteErrors.HasErrorsCaseworkerSignatureDate)
+            {
+                <span class="danger">Please enter Date</span><br />
+            }
+
+            @using (Html.BeginForm("SaveOIRA", "Case", FormMethod.Post))
+            {
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.CaseheaderId)
+                @Html.HiddenFor(model => model.isSessionMakeLive)
+                {
+                    errorclass = "";
+
+                    if (Model.InCompleteErrors.HasErrorsIsFunctionalAbilities || Model.InCompleteErrors.HasErrorsIsMentalAbilities || Model.InCompleteErrors.HasErrorsIsEnvironment
+                                                                 || Model.InCompleteErrors.HasErrorsIsEndangeringBehaviors || Model.InCompleteErrors.HasErrorsIsFinancialResources || Model.InCompleteErrors.HasErrorsIsSupportServices)
+                    {
+                        errorclass = "has-error";
+                    }
+                    if (Model.InCompleteErrors.HasErrorsDateFTF)
+                    {
+                        errorclass = "has-error";
+                    }
+                    if (Model.InCompleteErrors.HasErrorsFunctionalAbilities)
+                    {
+                        errorclass = "has-error";
+                    }
+                    if (Model.InCompleteErrors.HasErrorsMentalAbilities)
+                    {
+                        errorclass = "has-error";
+                    }
+                    if (Model.InCompleteErrors.HasErrorsEnvironment)
+                    {
+                        errorclass = "has-error";
+                    }
+                    if (Model.InCompleteErrors.HasErrorsEndangeringBehaviors)
+                    {
+                        errorclass = "has-error";
+                    }
+                    if (Model.InCompleteErrors.HasErrorsFinancialResources)
+                    {
+                        errorclass = "has-error";
+                    }
+                    if (Model.InCompleteErrors.HasErrorsSupportServices)
+                    {
+                        errorclass = "has-error";
+                    }
+                    if (Model.InCompleteErrors.HasErrorsRationale)
+                    {
+                        errorclass = "has-error";
+                    }
+                    if (Model.InCompleteErrors.HasErrorsRisk)
+                    {
+                        errorclass = "has-error";
+                    }
+                    if (Model.InCompleteErrors.HasErrorsCaseworkerSignature)
+                    {
+                        errorclass = "has-error";
+                    }
+                    if (Model.InCompleteErrors.HasErrorsCaseworkerSignatureDate)
+                    {
+                        errorclass = "has-error";
+                    }
+                }
+
+                <div class="well">
+                    <div class="row">
+                        <div class="col-lg-12 pull-right">
+                            <div class="btn-group pull-right" style="margin-right: 10px;">
+                                <button id="saveOIRA" rel="tooltip" type="submit" class="btn btn-success btn-md btn-outline" title=" Save & Close ">Save & Close</button>
+                                <a id="cancelOIRA" rel="tooltip" class="btn btn-default btn-md" title=" Cancel " href ="@Url.Action("ManageCase", "Case", new {CaseheaderId = Model.CaseheaderId})">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <p class="alert alert-info" >
+                      <strong>Info!</strong>  The OIRA must be completed for all reports of ANE and/or SN unless: investigating a SIR on an open case, the AV declines the investigation, or the caseworker is unable to make the face-to-face visit with the AV. The OIRA should describe the AV's situation at the time the report was made and reflect the AV's situation prior to APS involvement. 
+                    </p>
+                    <div class="row nextline"></div>
+                    <div class="row nextline" style="margin: 1px;">
+                        @Html.Partial("_ViewClientCMS", Model.viewCaseHeader.Client)
+                    </div>
+
+                    <div class="well" style="background-color: #fff">
+
+                        <b><u>To reflect conditions prior to interventions / APS involvement:</u></b><br />
+                        <br />
+
+                        <b>Low Risk:</b>
+                        <text>Client's social environmental and functional status support that the client is not at risk of ANE and/or SN in his/her living situation</text>
+                        <br />
+                        <br />
+                        <b>Meduium Risk:</b>
+                        <text>There are factors present that suggest that the client may be at some risk of ANE and/or SN in his/her living situation</text>
+                        <br />
+                        <br />
+                        <b>High Risk:</b>
+                        <text>There are indications that the client is very likely to be at risk of ANE and/or SN in his/her living situation</text>
+                        <br />
+                        <br />
+
+                    </div>
+
+                    <div class="well" style="background-color: #fff">
+
+
+                        <div class="row nextline">
+                            <div class="col-lg-2 form-group">
+                                @Html.LabelFor(m => m.DateFTF)
+                                <div>
+                                    @Html.TextBoxFor(m => m.DateFTF, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", placeholder = "FTF Date" })
+                                    @Html.ValidationMessageFor(m => m.DateFTF)
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="row nextline" id="Abilities">
+
+                            <div class="col-lg-9" style="padding: 0 0 0 40px">
+                                <table class="table table-striped table-bordered" style="">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-md-2">&nbsp;</th>
+                                            <th class="col-md-1">Yes</th>
+                                            <th class="col-md-1">No</th>
+                                            <th class="col-md-1">Unknown</th>
+                                            <th class="col-md-2">Risk</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <b><u>Functional Ability</u></b><br />
+                                                @Html.LabelFor(model => model.IsNeedshelpwithADLs, new { @class = "control-label errorclass" })
+                                            </td>
+                                            <td>@Html.RadioButtonFor(model => model.IsNeedshelpwithADLs, "y")</td>
+                                            <td>@Html.RadioButtonFor(model => model.IsNeedshelpwithADLs, "n")</td>
+                                            <td>@Html.RadioButtonFor(model => model.IsNeedshelpwithADLs, "u")</td>
+                                            <td>
+                                                @Html.RadioButtonFor(model => model.NeedshelpwithADLs, "l") Low
+                                            @Html.RadioButtonFor(model => model.NeedshelpwithADLs, "m") Medium
+                                            @Html.RadioButtonFor(model => model.NeedshelpwithADLs, "h") High
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b><u>Emotional / Mental</u></b><br />
+                                                @Html.LabelFor(model => model.IsAppearsConfused, new { @class = "control-label errorclass" })
+                                            </td>
+                                            <td>@Html.RadioButtonFor(model => model.IsAppearsConfused, "y")</td>
+                                            <td>@Html.RadioButtonFor(model => model.IsAppearsConfused, "n")</td>
+                                            <td>@Html.RadioButtonFor(model => model.IsAppearsConfused, "u")</td>
+                                            <td>
+                                                @Html.RadioButtonFor(model => model.AppearsConfused, "l") Low
+                                            @Html.RadioButtonFor(model => model.AppearsConfused, "m") Medium
+                                            @Html.RadioButtonFor(model => model.AppearsConfused, "h") High
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b><u>Financial</u></b><br />
+                                                @Html.LabelFor(model => model.IsResourcesMisused, new { @class = "control-label errorclass" })
+                                            </td>
+                                            <td>@Html.RadioButtonFor(model => model.IsResourcesMisused, "y")</td>
+                                            <td>@Html.RadioButtonFor(model => model.IsResourcesMisused, "n")</td>
+                                            <td>@Html.RadioButtonFor(model => model.IsResourcesMisused, "u")</td>
+                                            <td>
+                                                @Html.RadioButtonFor(model => model.ResourcesMisused, "l") Low
+                                            @Html.RadioButtonFor(model => model.ResourcesMisused, "m") Medium
+                                            @Html.RadioButtonFor(model => model.ResourcesMisused, "h") High
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b><u>Environment</u></b><br />
+                                                @Html.LabelFor(model => model.IsEnvironmentUnsafe, new { @class = "control-label errorclass" })
+                                            </td>
+                                            <td>@Html.RadioButtonFor(model => model.IsEnvironmentUnsafe, "y")</td>
+                                            <td>@Html.RadioButtonFor(model => model.IsEnvironmentUnsafe, "n")</td>
+                                            <td>@Html.RadioButtonFor(model => model.IsEnvironmentUnsafe, "u")</td>
+                                            <td>
+                                                @Html.RadioButtonFor(model => model.EnvironmentUnsafe, "l") Low
+                                            @Html.RadioButtonFor(model => model.EnvironmentUnsafe, "m") Medium
+                                            @Html.RadioButtonFor(model => model.EnvironmentUnsafe, "h") High
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b><u>Support Services</u></b><br />
+                                                @Html.LabelFor(model => model.IsBasicNeedsMet, new { @class = "control-label errorclass" })
+                                            </td>
+                                            <td>@Html.RadioButtonFor(model => model.IsBasicNeedsMet, "y")</td>
+                                            <td>@Html.RadioButtonFor(model => model.IsBasicNeedsMet, "n")</td>
+                                            <td>@Html.RadioButtonFor(model => model.IsBasicNeedsMet, "u")</td>
+                                            <td>
+                                                @Html.RadioButtonFor(model => model.BasicNeedsMet, "l") Low
+                                            @Html.RadioButtonFor(model => model.BasicNeedsMet, "m") Medium
+                                            @Html.RadioButtonFor(model => model.BasicNeedsMet, "h") High
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b><u>Endangering Behaviors</u></b><br />
+                                                @Html.LabelFor(model => model.IsEndangeringBehaviors, new { @class = "control-label errorclass" })
+                                            </td>
+                                            <td>@Html.RadioButtonFor(model => model.IsEndangeringBehaviors, "y")</td>
+                                            <td>@Html.RadioButtonFor(model => model.IsEndangeringBehaviors, "n")</td>
+                                            <td>@Html.RadioButtonFor(model => model.IsEndangeringBehaviors, "u")</td>
+                                            <td>
+                                                @Html.RadioButtonFor(model => model.EndangeringBehaviors, "l") Low
+                                            @Html.RadioButtonFor(model => model.EndangeringBehaviors, "m") Medium
+                                            @Html.RadioButtonFor(model => model.EndangeringBehaviors, "h") High
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row nextline" id="Initail Risk Level">
+                            <div class="col-lg-6">
+                                <b><u>Overall Initial Risk Assessment - Overall Risk Level:</u></b><br />
+                                <div>
+                                    @Html.CheckBoxFor(model => model.IsLowANE) @Html.LabelFor(model => model.IsLowANE, new { @class = "errorclass" }) /   @Html.CheckBoxFor(model => model.IsLowSN) @Html.LabelFor(model => model.IsLowSN, new { @class = "errorclass" })
+                                    <br />
+                                    @Html.CheckBoxFor(model => model.IsMediumANE) @Html.LabelFor(model => model.IsMediumANE, new { @class = "errorclass" }) / @Html.CheckBoxFor(model => model.IsMediumSN) @Html.LabelFor(model => model.IsMediumSN, new { @class = "errorclass" })
+                                    <br />
+                                    @Html.CheckBoxFor(model => model.IsHighANE) @Html.LabelFor(model => model.IsHighANE, new { @class = "errorclass" }) /   @Html.CheckBoxFor(model => model.IsHighSN) @Html.LabelFor(model => model.IsHighSN, new { @class = "errorclass" })
+                                    <br />
+                                    @Html.CheckBoxFor(model => model.IsANENA) @Html.LabelFor(model => model.IsANENA, new { @class = "errorclass" }) /   @Html.CheckBoxFor(model => model.IsSNNA) @Html.LabelFor(model => model.IsSNNA, new { @class = "errorclass" })
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row nextline">
+                            <div class="col-lg-6 @errorclass">
+                                @Html.LabelFor(model => model.Rationale)<br />
+                                Based on your professional judgment, indicate why you believe the AV may or may not be at risk of ANE and/or SN.
+                                <div>
+                                    @Html.TextAreaFor(model => model.Rationale, new { @style = "width:100%", @class = "ckeditor1", rows = "3" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row nextline">
+                            <div class="col-lg-3 @errorclass">
+                                @Html.LabelFor(model => model.CaseworkerSignature)
+                                <div>
+                                    @Html.TextBoxFor(model => model.CaseworkerSignature, new { @class = "form-control", @placeholder = "Sign" })
+                                </div>
+                            </div>
+                            <div class="col-lg-3 @errorclass">
+                                @Html.LabelFor(model => model.CaseworkerSignatureDate)
+                                <div>
+                                    @Html.TextBoxFor(model => model.CaseworkerSignatureDate, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", @placeholder = "Date" })
+                                   </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

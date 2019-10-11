@@ -1,0 +1,92 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewClientCMS
+
+<div class="panel panel-default">
+    @*@Html.HiddenFor(model => model.Id)*@
+    <div class="panel-heading formheader" id="panelClientHeader">
+        <div class="row" id="partbheader">
+           <div class="col-lg-4">Client Information</div>     
+             <div class="col-lg-4 pull-right text-right"><a rel="tooltip" class="btn btn-default btn-xs" title="Edit Person"><span class="glyphicon glyphicon-edit"></span></a></div>
+           
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-lg-4">
+                <strong>@Html.DisplayFor(m => m.Person.LastName) , @Html.DisplayFor(m => m.Person.FirstName)</strong>
+
+                @if ((Model.Person.Demographic.GenderType.Description != null && Model.Person.Demographic.GenderType.Description.Trim().Length > 0) ||
+                     (Model.Person.Demographic.RaceType.Description != null && Model.Person.Demographic.RaceType.Description.Trim().Length > 0) ||
+                     (Model.Person.Demographic.MaritalStatusType.Description != null && Model.Person.Demographic.MaritalStatusType.Description.Trim().Length > 0)
+                    )
+                {
+                    <text>[</text>
+                }
+
+                <span class="textspace">
+                    @if (Model.Person.Demographic.GenderType.Description != null && Model.Person.Demographic.GenderType.Description.Trim().Length > 0)
+                    {
+                        <span>@Html.DisplayFor(m => m.Person.Demographic.GenderType.Description)</span>
+                        if ((Model.Person.Demographic.RaceType.Description != null && Model.Person.Demographic.RaceType.Description.Trim().Length > 0) ||
+                        (Model.Person.Demographic.MaritalStatusType.Description != null && Model.Person.Demographic.MaritalStatusType.Description.Trim().Length > 0)
+                       )
+                        {
+                        <text>|</text>
+                        }
+                    }
+
+                    @if (Model.Person.Demographic.RaceType.Description != null && Model.Person.Demographic.RaceType.Description.Trim().Length > 0)
+                    {
+                        <span>@Html.DisplayFor(m => m.Person.Demographic.RaceType.Description)</span>
+                        if ((Model.Person.Demographic.MaritalStatusType.Description != null && Model.Person.Demographic.MaritalStatusType.Description.Trim().Length > 0)
+                       )
+                        {
+                        <text>|</text>
+                        }
+                    }
+
+                    @if (Model.Person.Demographic.MaritalStatusType.Description != null && Model.Person.Demographic.MaritalStatusType.Description.Trim().Length > 0)
+                    {
+                        <span>@Html.DisplayFor(m => m.Person.Demographic.MaritalStatusType.Description)</span>
+                       
+                    }
+
+                </span>
+
+                @if ((Model.Person.Demographic.GenderType.Description != null && Model.Person.Demographic.GenderType.Description.Trim().Length > 0) ||
+                     (Model.Person.Demographic.RaceType.Description != null && Model.Person.Demographic.RaceType.Description.Trim().Length > 0) ||
+                     (Model.Person.Demographic.MaritalStatusType.Description != null && Model.Person.Demographic.MaritalStatusType.Description.Trim().Length > 0)
+                    )
+                {
+                    <text>]</text>
+                }
+
+            </div>
+            <div class="col-lg-4">
+                @{
+                
+                    var displaySSN = "*********";
+                    if (Model.Person.SSN != null && Model.Person.SSN.Trim().Length == 9)
+                    {
+                        displaySSN = "*****" + Model.Person.SSN.Trim().Substring(5);
+                    }
+                   
+                }
+
+                SSN: @displaySSN | DOB:@Html.DisplayFor(m => m.Person.DOB)
+            </div>
+            <div class="col-lg-4 text-right">
+
+                @if (Model.Person.Address.AddressLine1 != null)
+                {
+                    if (Model.Person.Address.AddressLine1 != null && Model.Person.Address.AddressLine1.Trim().Length > 0)
+                    {
+
+                    @Html.DisplayFor(m => m.Person.Address.AddressLine1) <text>,</text> @Html.DisplayFor(m => m.Person.Address.City) <span class="textspace">@Html.DisplayFor(m => m.Person.Address.StateType.Description)
+                        <text>-</text>
+                        @Html.DisplayFor(m => m.Person.Address.Zip5)</span>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

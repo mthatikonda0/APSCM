@@ -1,0 +1,43 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewClientStatus
+
+         @Html.ValidationSummary(true)
+
+
+         <div class="row">
+             <div class="panel panel-default nextline">
+                 <div class="panel-body ">
+                     <div id="content">
+                         <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                             <li class="active"><a href="#tabs-A1" data-toggle="tab">Additional Client Information</a></li>
+                             <li><a href="#tabs-B1" data-toggle="tab">Involved Agencies</a></li>
+                             <li><a href="#tabs-C1" data-toggle="tab">Services</a></li>
+                             <li><a href="#tabs-D1" data-toggle="tab">Living Arrangements and Relationships</a></li>
+                             <li><a href="#tabs-E1" data-toggle="tab">Medical History and Barriers</a></li>
+                             <li><a href="#tabs-F1" data-toggle="tab">Income and Banking Information</a></li>
+                         </ul>
+
+                         <div id="managecontent" class="tab-content">
+                             <div id="tabs-A1" class="tab-pane active">
+                                 @Html.Partial("PartialAdditionalClientInformation", Model)
+                             </div>
+                             <div id="tabs-B1" class="tab-pane fade">
+                                 @Html.Partial("PartialInvolvedAgencies", Model)
+                             </div>
+                             <div id="tabs-C1" class="tab-pane fade">
+                                 @Html.Partial("PartialServices", Model)
+                             </div>
+                             <div id="tabs-D1" class="tab-pane fade">
+                                 @Html.Partial("PartialLivingArrangements", Model)
+                             </div>
+                             <div id="tabs-E1" class="tab-pane fade">
+                                 @Html.Partial("PartialMedicalHistory", Model)
+                             </div>
+                             <div id="tabs-F1" class="tab-pane fade">
+                                 @Html.Partial("PartialBankingInformation", Model)
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+    

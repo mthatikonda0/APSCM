@@ -1,0 +1,441 @@
+﻿@model AGE.CMS.Data.Models.Referral.viewDHSReferral
+
+<script>
+
+    $(document).ready(function () {
+        $("#editclientbutton").hide();
+        $('#print').on('click', function () {
+            var template = $('#ReferralData').clone();
+
+            template.find("#heading").show();
+            template.find('.noprint').remove();
+            Print(template);
+        });
+
+        function Print(template) {
+            //alert(template.html());
+            //var w = window.open();
+            var w = window.open("", "popupWindow", "width=600, height=400, scrollbars=yes");
+            var html = template.html();
+
+            $(w.document.body).html(html);
+            w.print();
+
+        }
+
+        $("#heading").hide();
+
+
+        $("#validationtext").hide();
+        $('.disablediv').find("select, input, textarea").attr("disabled", "disabled")
+        $("form").submit(function (e) {
+            var countrue = 0;
+            var countfalse = 0;
+            $('.isdhs').each(function () {
+                if ($(this).is(":checked") == false) {
+                    countfalse++;
+                }
+                else {
+                    countrue++;
+                }
+            });
+            if (countfalse >= 3) {
+                $("#validationtext").show();
+                e.preventDefault();
+            }
+
+
+        });
+
+
+        $('#SaveAndCloseReferral').click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveReferrals", "Case")',
+                dataType: "json",
+                data: $('#alldiv').find('select, textarea, input').serialize(),
+                success: function (data) {
+                    //$.each(data, function (i, val) { });
+
+                    notification("Complaint Tracker submitted!");
+
+                    window.location.href = data;
+                }
+            });
+
+        });
+
+
+
+        $('.datepicker').datepicker({
+            format: 'mm-dd-yyyy',
+            changeMonth: true,
+            changeYear: true,
+            maxDate: new Date
+        });
+
+
+
+        var num = $('#ssn').html();
+        var gem = num.replace(/(\d{3})\-?(\d{2})\-?(\d{4})/, '$1-$2-$3');
+        $('#ssn').html(gem);
+
+        var gum = $('#phone').html();
+        var jum = gum.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, '$1-$2-$3');
+        $('#phone').html(jum);
+
+
+    });
+</script>
+
+
+
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.CaseheaderId)
+@Html.HiddenFor(model => model.ClientId)
+@Html.HiddenFor(model => model.ContractId)
+@Html.HiddenFor(model => model.StatusId)
+
+<div class="container" id="ReferralData">
+    <div class="panel panel-warning">
+
+        <div class="panel-heading">
+            <h2 class="panel-title noprint">
+                <span class="titletextbegin">
+                    <span class="glyphicon glyphicon-eye-open"></span><span class="textspace">
+                        <text>DHS Referrals</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+
+        <div class="row nextline " id="heading" style="border-bottom: 2px solid black">
+            <div class="pull-left" id="logoidoa" style="float:left">
+                <div id="imagelogo" align="center" style="float:left">
+                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+                         width="185px" height="70px" viewBox="0 0 250.000000 99.000000"
+                         preserveAspectRatio="xMidYMid meet">
+
+                        <g transform="translate(0.000000,99.000000) scale(0.100000,-0.100000)"
+                           fill="#000000" stroke="none">
+                            <path d="M310 903 c0 -7 5 -13 10 -13 6 0 10 -7 10 -15 0 -8 5 -15 10 -15 31
+                                    0 -4 -58 -38 -63 -35 -5 -49 -24 -35 -46 10 -16 8 -24 -14 -47 -16 -18 -28
+                                    -44 -31 -69 -4 -36 0 -47 29 -80 18 -21 33 -47 34 -59 0 -17 5 -20 28 -18 30
+                                    3 34 -11 15 -53 -10 -23 -9 -29 14 -50 14 -13 28 -22 31 -19 9 9 27 -24 31
+                                    -55 2 -18 8 -37 13 -42 6 -6 139 -9 344 -7 322 3 336 4 379 25 44 22 44 22 65
+                                    3 39 -37 70 -41 256 -34 165 7 179 9 179 26 0 14 -8 18 -34 18 -19 0 -38 5
+                                    -41 11 -4 5 7 45 24 87 l31 77 132 -2 132 -2 27 -68 c39 -95 38 -103 -11 -103
+                                    -33 0 -40 -3 -40 -20 0 -19 7 -20 135 -20 128 0 135 1 135 20 0 14 -7 20 -22
+                                    20 -13 0 -29 4 -36 9 -13 8 -163 345 -249 559 -20 49 -29 62 -47 62 -17 0 -27
+                                    -14 -50 -67 -16 -38 -53 -123 -84 -191 l-55 -123 -13 36 c-24 71 -95 121 -183
+                                    132 -43 5 -49 9 -60 39 -6 18 -37 55 -67 83 -91 83 -96 84 -556 86 -328 2
+                                    -398 0 -398 -12z m113 -15 c3 -11 17 -18 43 -20 37 -3 39 -5 46 -43 7 -38 -2
+                                    -207 -9 -175 -3 13 -24 14 -128 12 -69 -2 -125 -1 -125 2 0 3 9 20 20 38 13
+                                    23 16 38 10 48 -15 23 -12 30 10 30 26 0 70 43 70 68 0 11 -7 25 -15 32 -26
+                                    21 -17 30 29 28 32 -2 46 -8 49 -20z m310 -58 c5 -19 7 -145 5 -278 -6 -271
+                                    -4 -264 -73 -260 l-40 3 -3 279 c-2 217 1 281 10 288 7 4 31 7 52 6 36 -3 41
+                                    -6 49 -38z m327 20 c59 -11 112 -46 141 -94 37 -59 35 -72 -13 -124 -33 -35
+                                    -48 -62 -58 -100 -12 -53 -7 -130 11 -164 7 -14 3 -20 -18 -31 -59 -31 -180
+                                    -45 -252 -31 l-31 7 0 268 0 268 23 4 c43 8 145 7 197 -3z m753 -227 l45 -103
+                                    -108 0 -108 0 50 113 c27 61 52 119 56 127 4 10 8 7 13 -10 4 -14 27 -71 52
+                                    -127z m-376 2 c51 -58 68 -197 34 -272 -31 -67 -90 -89 -158 -56 -55 26 -61
+                                    52 -25 102 41 56 64 131 66 206 l1 62 30 -8 c17 -5 40 -20 52 -34z m-202 -113
+                                    c-4 -26 -10 -41 -12 -34 -3 7 -2 34 2 60 4 26 10 41 12 34 3 -7 2 -34 -2 -60z">
+
+
+                            </path>
+                        </g>
+                    </svg><br />
+                </div>
+            </div>
+
+            <h2 style="text-align: center"> Illinois Department on Aging APS</h2>
+
+            <h3 style="text-align: center"> DHS Referral </h3>
+
+
+        </div>
+
+
+
+        <div class="panel-body">
+
+            <br />
+            <div class="form-group">
+                <div class="col-md-1 pull-right">
+                    <div class="row">
+                        <div class="btn-group pull-right" style="margin-right: 10px;">
+                            <input type="button" class="btn btn-warning noprint" id="print" value="Print" />
+                            <a id="cancel" rel="tooltip" class="btn btn-default btn-md noprint" title=" Cancel " href="@Url.Action("ManageCase", "Case", new{ CaseheaderId = Model.CaseheaderId})">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <br />
+
+            <div class="well container">
+                <fieldset>
+
+                    <div class="row nextline" style="margin: 1px">
+                        @Html.Partial("_ViewClientCMS", Model.viewCaseHeader.Client)
+                    </div>
+
+                    <div class="container">
+                        <div class="row">
+                            <div id="check" class="col-md-12">
+                                @Html.CheckBoxFor(m => m.IsDRS, new { @class = "isdhs", @disabled = "disabled" })&nbsp;@Html.LabelFor(m => m.IsDRS)<br />
+                                @Html.CheckBoxFor(m => m.IsDDD, new { @class = "isdhs", @disabled = "disabled" })&nbsp;@Html.LabelFor(m => m.IsDDD)<br />
+                                @Html.CheckBoxFor(m => m.IsDMH, new { @class = "isdhs", @disabled = "disabled" })&nbsp;@Html.LabelFor(m => m.IsDMH)<br />
+                            </div>
+                        </div>
+                        <div class="row nextline well" style="background-color: #fff">
+                            <table class="table table-bordered well">
+
+                                <b>Client Information</b>
+
+                                <tr>
+                                    <th>Name:   &nbsp;</th>
+                                    <td>@Html.DisplayFor(model => model.viewCaseHeader.Client.Person.FirstName, new { @class = "control-label" }) @Html.DisplayFor(model => model.viewCaseHeader.Client.Person.LastName, new { @class = "control-label" })</td>
+
+                                </tr>
+                                <tr>
+                                    <th>Address:   &nbsp; </th>
+                                    <td>
+                                        @Html.DisplayFor(model => model.viewCaseHeader.Client.Person.Address.AddressLine1, new { @class = "control-label" }) &nbsp;
+
+                                        @if (Model.viewCaseHeader.Client.Person.Address.AddressLine2 != null)
+                                        {
+                                            @Html.DisplayFor(model => model.viewCaseHeader.Client.Person.Address.AddressLine2, new { @class = "control-label" })
+
+                                        }
+
+                                        , @Html.DisplayFor(model => model.viewCaseHeader.Client.Person.Address.City, new { @class = "control-label" }) &nbsp;,
+
+                                        @Html.DisplayFor(model => model.viewCaseHeader.Client.Person.Address.Zip5, new { @class = "control-label" }) - @Html.DisplayFor(model => model.viewCaseHeader.Client.Person.Address.Zip4, new { @class = "control-label" })
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <th>Phone:   &nbsp; </th>
+                                    <td>@Html.DisplayFor(model => model.viewCaseHeader.Client.Person.Phone.PhoneNumber, new { @class = "control-label" })</td>
+
+                                </tr>
+
+                                <tr>
+                                    <th>SSN: &nbsp; </th>
+                                    <td>@Html.DisplayFor(model => model.viewCaseHeader.Client.Person.SSN, new { @class = "control-label" })</td>
+
+                                </tr>
+                                <tr>
+                                    <th>Date Of Birth: &nbsp; </th>
+                                    <td>@Html.DisplayFor(model => model.viewCaseHeader.Client.Person.DOB, new { @class = "control-label" })</td>
+                                </tr>
+                                <tr>
+                                    <th>Gender: &nbsp;</th>
+                                    <td>@Html.DisplayFor(model => model.viewCaseHeader.Client.Person.Demographic.GenderType.Description, new { @class = "control-label" })</td>
+                                </tr>
+                                <tr>
+                                    <th>RIN: &nbsp;</th>
+                                    <td>@Html.DisplayFor(model => model.viewCaseHeader.Client.Person.RIN, new { @class = "control-label" })</td>
+                                </tr>
+                                @if (Model.viewCaseHeader.Intake.viewClient.IsLimitedEnglishSpeaking == "y")
+                                {
+                                    <tr>
+                                        <th>Limited English Speaking: &nbsp;</th>
+                                        <td>Yes</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Primary Language: &nbsp;</th>
+                                        <td>@Model.caselookup.listofprimarylanguage.FirstOrDefault(pl => pl.Id == Model.viewCaseHeader.Intake.viewClient.PrimaryLanguageId).Description.ToString() </td>
+
+                                    </tr>
+                                }
+                                @if (Model.viewCaseHeader.Intake.viewClient.IsLimitedEnglishSpeaking == "n")
+                                {
+                                    <tr>
+                                        <th>Limited English Speaking: &nbsp;</th>
+                                        <td>No</td>
+                                    </tr>
+                                }
+
+                            </table>
+                        </div>
+                    </div>
+
+
+
+                    <div id="dhs" class=" container well" style="background-color: #fff">
+
+                        <div class="row nextline"></div>
+                        <div class="row nextline"></div>
+
+                        <div class="row nextline">
+
+                            <div class="col-lg-6">
+                                @Html.LabelFor(m => m.TypeOfDisAbility)
+                                <div>
+                                    @Html.DisplayFor(m => m.TypeOfDisAbility, new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div>
+                                    @Html.LabelFor(m => m.StatementOfNeed)
+                                </div>
+                                <div>
+                                    @Html.DisplayFor(m => m.StatementOfNeed, new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="row nextline">
+                            <div class="col-lg-6">
+                                <div>
+                                    @Html.LabelFor(m => m.IncludeInformation)
+                                </div>
+                                <div>
+                                    @Html.DisplayFor(m => m.IncludeInformation, new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-6 form-group ">
+
+                                @Html.LabelFor(m => m.ContractId, new { @class = "control-label" })
+
+                                @Html.DropDownListFor(model => model.ContractId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewContract { Id = 0, ContractName = " Select Agency" } }.Union(Model.caselookup.listofallcontracts.OrderBy(s => s.ContractName)), "Id", "DisplayContractName", Model.ContractId), new { @class = "form-control", @disabled = "disabled" })
+
+                            </div>
+
+                        </div>
+                        <div class="row nextline"></div>
+                        <div class="row nextline">
+                            <b style="text-decoration: underline">Contact Person Submitting Referral:</b>
+                            <br />
+                            <div class="col-lg-3">
+
+                                <div>
+                                    @Html.LabelFor(m => m.NameSubmittingReferral)
+                                </div>
+                                <div>
+                                    @Html.TextBoxFor(m => m.NameSubmittingReferral, new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-lg-3">
+                                <div>
+                                    @Html.LabelFor(m => m.PhoneSubmittingReferral)
+                                </div>
+                                <div>
+                                    @Html.TextBoxFor(m => m.PhoneSubmittingReferral, new { @class = "form-control", @placeholder = "Enter Phone Number", @disabled = "disabled" })
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-lg-3">
+                                <div>
+                                    @Html.LabelFor(m => m.EmailSubmittingReferral)
+                                </div>
+                                <div>
+                                    @Html.TextBoxFor(m => m.EmailSubmittingReferral, new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+
+                            </div>
+                            @if (Model.StatusId == 24)
+                            {
+                            <div class="col-lg-3">
+                                <div>
+                                   <strong>Date Submitted:</strong>
+                                </div>
+                                <div>
+                                    @Html.DisplayFor(m => Model.DateSubmitted, new { @class = "form-control"})
+                                </div>
+
+                            </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="row nextline"></div>
+                    <div class="row nextline"></div>
+                    <div class="row nextline"></div>
+
+                    <div class="container well" id="receiving" style="background-color: #fff">
+                        <h4 style="text-align: center; text-decoration: underline">Response to be completed by the receiving Agency </h4>
+                        <div class="row nextline">
+                            <div class="col-lg-3">
+                                <div>
+                                    @Html.LabelFor(m => m.ReferedAgencyName)
+                                </div>
+                                <div>
+                                    @Html.TextBoxFor(m => m.ReferedAgencyName, new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+
+                            </div>
+                            <div class="col-lg-3">
+
+                                <div>
+                                    @Html.LabelFor(m => m.NameAgencyContactPerson)
+                                </div>
+                                <div>
+                                    @Html.TextBoxFor(m => m.NameAgencyContactPerson, new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+
+                            </div>
+                            <div class="col-lg-3">
+                                <div>
+                                    @Html.LabelFor(m => m.PhoneAgencyContactPerson)
+                                </div>
+                                <div>
+                                    @Html.TextBoxFor(m => m.PhoneAgencyContactPerson, new { @class = "form-control", @placeholder = "Enter Phone Number", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row nextline">
+                            <div class="col-lg-6">
+                                <div>
+                                    @Html.LabelFor(m => m.OutcomeSummary)
+                                </div>
+                                <div>
+                                    @Html.DisplayFor(m => m.OutcomeSummary, new { Value = "", @class = "form-control", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div>
+                                @Html.LabelFor(m => m.ResponseDate)
+                            </div>
+                            <div>
+                                @Html.TextBoxFor(m => m.ResponseDate, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", @disabled = "disabled" })
+                            </div>
+                        </div>
+
+
+                    </div>
+                </fieldset>
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+</div>

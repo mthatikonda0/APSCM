@@ -1,0 +1,166 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewClientStatus
+
+@{
+    ViewBag.Title = "Client Status";
+    var errorclass = "";
+}
+
+<script src="~/Assets/Basic/Scripts/CMS/Case/EditClientStatus.js"></script>
+<script>
+    $(document).ready(function () {
+
+
+        //window.setInterval(function () {
+        //    bootbox.confirm({
+        //        title: "Server about to time out",
+        //        message: "Please save your progress before you continue",
+        //        buttons: {
+        //            cancel: {
+        //                label: '<i class="fa fa-times"></i> Cancel'
+        //            },
+        //            confirm: {
+        //                label: '<i class="fa fa-check"></i> Save'
+        //            }
+        //        },
+        //        callback: function (result) {
+        //            if (result) {
+        //                $("#MakeSessionLive").val(true);
+        //                $('form').submit();
+        //            }
+        //        }
+
+
+        //    })
+
+        //}, 7 * 60 * 1000);
+
+
+        //$(document).on("shown.bs.modal", function (event) {
+        //    window.setInterval(function () {
+        //        $("#MakeSessionLive").val(true);
+        //        $('form').submit();
+        //    }, 1.5* 60 * 1000);
+        //});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        $('#saveClientStatusajax').click(function (e) {
+            e.preventDefault();
+            @*$("#isAjax").val(true);
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveClientStatus", "Case")',
+                dataType: "json",
+                data: $('#wholeclientstatus').find('select, textarea, input').serialize(),
+                success: function (data) {
+                    $("#Id").val(data);
+                    $("#isAjax").val(false);
+                    notification("Saved !!")
+                    //window.location.href = '@Url.Action("ListTrainingTrackersByUserName", "Staff")';
+                }
+
+            });*@
+            $('#MakeSessionLive').val(true);
+            $('form').submit();
+
+        });
+
+        $("#print").click(function (e) {
+            e.preventDefault();
+            var htmlasd = $('form').html();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("PrintClientStatus", "Case")',
+                dataType: "html",
+                data: { html: htmlasd },
+                success: function (data) {
+                    console.log(data);
+                }
+
+            });
+
+        });
+
+
+    });
+
+
+</script>
+
+<div class="container">
+    <div class="panel panel-warning">
+
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="titletextbegin">
+                    <span class="glyphicon glyphicon-th-large"></span><span class="textspace">
+                        <text>Client Status</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+        <div class="panel-body">
+            <div class="alert alert-info">
+                <strong>Info!</strong> The Client Status form is a working document to be updated throughout the case as new client information is learned. Recommend reviewing this form when each Risk Assessment is completed. .
+            </div>
+            @using (Html.BeginForm("SaveClientStatus", "Case", FormMethod.Post))
+            {
+                <div id="wholeclientstatus">
+                    @Html.HiddenFor(model => model.Id)
+                    @Html.HiddenFor(model => model.CaseheaderId)
+                    @Html.HiddenFor(M => M.isAjax)
+                    @Html.HiddenFor(M => M.MakeSessionLive)
+
+                    @if (Model.InCompleteErrors.ErrorsInClientStatus)
+                    {
+                        <span class="danger">Please correct the highlighted fields to complete Client Status</span>
+                    }
+                    else if (Model.StatusDescription == AGE.CMS.Data.Models.ENums.CaseStatus.Incomplete.ToString())
+                    {
+                        <span class="warning">Client Status is still Incomplete; Please Save to complete</span>
+                    }
+
+
+                    <div class="row nextline">
+                        <div class="col-lg-12 pull-right">
+                            <div class="btn-group pull-right" style="margin-right: 10px;">
+                                <button id="saveClientStatusajax" rel="tooltip" class="btn btn-success btn-md" title="Save">Save</button>
+                                <button id="saveClientStatus" rel="tooltip" type="submit" class="btn btn-success btn-outline btn-md" title="Save">Save & Close</button>
+
+
+                                <a id="cancelClientStatus" rel="tooltip" class="btn btn-default btn-md noprint" title=" Cancel " href="@Url.Action("ManageCase", "Case", new{ CaseheaderId = Model.CaseheaderId})">Cancel</a>
+
+
+
+
+
+                                @*<a id="print" rel="tooltip" class="btn btn-default btn-md" title=" Cancel ">Print</a>*@
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div id="viewclient">
+                        @Html.Partial("_viewClientCMS", Model.viewCaseHeader.Client)
+                    </div>
+
+                    <div id="clientstatus">
+                        @Html.Partial("PartialClientStatus", Model)
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

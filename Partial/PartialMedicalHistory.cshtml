@@ -1,0 +1,517 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewClientStatus
+
+@{
+    var errorclass = "";
+}
+
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsMedicalHistory)
+{
+    <span class="danger">Please select atleast one under Medical History</span><br />
+}
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsBarriers)
+{
+    <span class="danger">Please select atleast one under Barriers</span><br />
+}
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIsPhysician)
+{
+    <span class="danger">Please select options under bannking or enter banking details</span><br />
+}
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIsHealthInsurnace)
+{
+    <span class="danger">Please select options under Health Insurance or enter insurance details</span><br />
+}
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsBenefits)
+{
+    <span class="danger">Please check atleast one under benefits</span><br />
+}
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsBenefitsRIN)
+{
+    <span class="danger">Please enter RIN number under Benefits</span><br />
+}
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsBenefitsOther)
+{
+    <span class="danger">Please enter others under benefits</span><br />
+}
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIsMedication)
+{
+    <span class="danger">Please select options under medication or enter medication details</span><br />
+}
+@if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIsRecentHospitilization)
+{
+    <span class="danger">Please select option under Recent Hospitilization or explain</span><br />
+}
+
+
+<script src="~/Assets/Basic/Scripts/CMS/Case/PartialMedicalHistory.js"></script>
+
+<style>
+
+
+ .items {
+       overflow: hidden; /* simple clearfix */
+}
+.items .item {
+    font-size:15px;
+       float: left;
+       width: 25%;
+  color: #171e42;
+  padding: 10px;
+}
+
+     /*a {
+  color:#000000;
+    }
+
+        a:hover {
+text-decoration:none;        
+        }*/
+
+
+
+
+</style>
+<div class="container">
+
+    @{
+        errorclass = "";
+
+        if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsMedicalHistory)
+        {
+            errorclass = "has-error";
+        }
+        if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsBarriers)
+        {
+            errorclass = "has-error";
+        }
+        if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIsPhysician)
+        {
+            errorclass = "has-error";
+        }
+        if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIsHealthInsurnace)
+        {
+            errorclass = "has-error";
+        }
+        if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsBenefits)
+        {
+            errorclass = "has-error";
+        }
+        if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsBenefitsRIN)
+        {
+            errorclass = "has-error";
+        }
+        if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsBenefitsOther)
+        {
+            errorclass = "has-error";
+        }
+        if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIsMedication)
+        {
+            errorclass = "has-error";
+        }
+        if (Model.InCompleteErrors.ErrorsInClientStatus && Model.InCompleteErrors.HasErrorsIsRecentHospitilization)
+        {
+            errorclass = "has-error";
+        }
+        
+    }
+
+    <div class="well">
+        <div class="container">
+            <div class="row">
+                <legend >Medical History</legend>
+            </div>
+            <div class="row nextline well" style="background-color:#fff">
+                <div class="items ">
+
+                    @for (int idx = 0; idx < 2; idx++)
+                    {
+
+                        <div class="col-lg-3 item">
+                            @Html.HiddenFor(x => Model.MedicalHistory[idx].Id)
+                            @Html.CheckBoxFor(x => Model.MedicalHistory[idx].IsChecked, new { @class = "" })
+                            @Html.DisplayFor(x => Model.MedicalHistory[idx].Description, new { @class = "errorclass" })
+                            @Html.HiddenFor(x => Model.MedicalHistory[idx].Description)
+                            @Html.HiddenFor(x => Model.MedicalHistory[idx].Code)
+
+                        </div>
+                    }
+                    <div id="RemainingMedicalHistory" class="">
+                        @for (int idx = 2; idx < Model.MedicalHistory.Count; idx++)
+                        {
+                            <div class="col-lg-3 item" id="RemainingMedical_@idx">
+                                @Html.HiddenFor(x => Model.MedicalHistory[idx].Id)
+                                @Html.CheckBoxFor(x => Model.MedicalHistory[idx].IsChecked, new { @class = "" })
+                                @Html.DisplayFor(x => Model.MedicalHistory[idx].Description, new { @class = "errorclass" })
+                                @Html.HiddenFor(x => Model.MedicalHistory[idx].Description)
+                                @Html.HiddenFor(x => Model.MedicalHistory[idx].Code)
+                                <div class="ailment">
+                                    @Html.DropDownListFor(model => model.MedicalHistory[idx].AilmentConfirmationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewAilmentConfirmation { Id = 0, Description = " Select Ailment" } }.Union(Model.caselookup.listofailmentconfirmations.OrderBy(s => s.Code)), "Id", "Description", Model.MedicalHistory[idx].AilmentConfirmationId), new { @class = "form-control SelectAilment", @style = "max-width:50%" })
+                                </div>
+                                 </div>
+                        }
+                    </div>
+
+                    
+
+                </div>
+                <div class="col-lg-3" id="isothermedicalcondition">
+                    @Html.LabelFor(m=>m.IsOtherMedicalCondition)
+                    <div>
+                        @Html.TextBoxFor(m => m.IsOtherMedicalCondition, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.IsOtherMedicalCondition)
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="row">
+                <legend>Barriers</legend>
+            </div>
+            <div class="row nextline well" style="background-color:#fff">
+                <div class="items ">
+
+                    @for (int ix = 0; ix < 1; ix++)
+                    {
+
+                        <div class="item col-lg-3" id="barrierlist_@ix">
+                            @Html.HiddenFor(x => Model.Barriers[ix].Id)
+                            @Html.CheckBoxFor(x => Model.Barriers[ix].IsChecked, new { @class = "errorclass" })
+                            @Html.DisplayFor(x => Model.Barriers[ix].Description, new { @class = "" })
+                            @Html.HiddenFor(x => Model.Barriers[ix].Description)
+                            @Html.HiddenFor(x => Model.Barriers[ix].Code)
+                        </div>
+
+                    }
+                    @for (int ix = 10; ix < 11; ix++)
+                    {
+
+                        <div class="item col-lg-3" id="barrierlist_unknown">
+                            @Html.HiddenFor(x => Model.Barriers[ix].Id)
+                            @Html.CheckBoxFor(x => Model.Barriers[ix].IsChecked, new { @class = "errorclass" })
+                            @Html.DisplayFor(x => Model.Barriers[ix].Description, new { @class = "" })
+                            @Html.HiddenFor(x => Model.Barriers[ix].Description)
+                            @Html.HiddenFor(x => Model.Barriers[ix].Code)
+                        </div>
+
+                    }
+                    <div id="remainingBarrier" class="">
+                        @for (int idx = 1; idx < Model.Barriers.Count; idx++)
+                        {
+
+                            <div class="item col-lg-3" id="barriers_@idx">
+                                @Html.HiddenFor(x => Model.Barriers[idx].Id)
+                                @Html.CheckBoxFor(x => Model.Barriers[idx].IsChecked, new { @class = "errorclass" })
+                                @Html.DisplayFor(x => Model.Barriers[idx].Description, new { @class = "" })
+                                @Html.HiddenFor(x => Model.Barriers[idx].Description)
+                                @Html.HiddenFor(x => Model.Barriers[idx].Code)
+                                <div class="ailment">
+                                    @Html.DropDownListFor(model => model.Barriers[idx].AilmentConfirmationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewAilmentConfirmation { Id = 0, Description = " Select Ailment" } }.Union(Model.caselookup.listofailmentconfirmations.OrderBy(s => s.Code)), "Id", "Description", Model.Barriers[idx].AilmentConfirmationId), new { @class = "form-control SelectAilment", @style = "max-width:50%" })
+                                </div>
+                                 </div>
+                        }
+                    </div>
+
+                </div>
+                <div class="col-lg-3" id="IsOtherBehaviourBarrier">
+                    @Html.LabelFor(m => m.IsOtherBehaviourBarrier)
+                    <div>
+                        @Html.TextBoxFor(m => m.IsOtherBehaviourBarrier, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.IsOtherBehaviourBarrier)
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="well">
+
+        <div id="DetailPhysician">
+            <legend>Physician</legend>
+        
+            <div class="col-md-6 @errorclass">
+                @Html.LabelFor(model => model.IsPhysician, htmlAttributes: new { @class = "errorclass" })
+
+                @Html.RadioButtonFor(model => model.IsPhysician, "n") None
+                
+                @Html.RadioButtonFor(model => model.IsPhysician, "u") Unknown
+
+                @Html.RadioButtonFor(model => model.IsPhysician, "r") Not relevant to allegations
+            </div>  
+                 <div class="col-md-6" style="padding-left:95%">
+                <button type="button" id="AddPhysician" value="Plus" class="btn btn-default zero-Zindex" data-toggle="tooltip" title="Add">
+                    <span class="glyphicon glyphicon-plus" style="color: blue"></span>
+                </button>
+
+            </div>
+
+
+                <div class="row nextline"></div>
+            @for (int i = 0; i < Model.ListPhysicians.Count; i++)
+            {
+                <div id=@("Physician_" + i) class="physician">
+                
+                    <div class="well container" style="background-color:#fff">
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.ListPhysicians[i].PhysicianName, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListPhysicians[i].PhysicianName, new { @class = "form-control zero-Zindex" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.ListPhysicians[i].Phone, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListPhysicians[i].Phone, new { @class = "form-control phonenumber" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.ListPhysicians[i].HospitalName, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListPhysicians[i].HospitalName, new { @class = "form-control zero-Zindex" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.ListPhysicians[i].Speciality, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListPhysicians[i].Speciality, new { @class = "form-control zero-Zindex" })
+                            </div>
+                        </div>
+                        <div class="row nextline">
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.ListPhysicians[i].Diagnosis, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListPhysicians[i].Diagnosis, new { @class = "form-control zero-Zindex" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.ListPhysicians[i].DateLastSeen, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListPhysicians[i].DateLastSeen, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", placeholder = "Last Seen Date" })
+
+                                @Html.CheckBoxFor(model => model.ListPhysicians[i].IsLastSeenUnknown, new { @class = "zero-Zindex" })  @Html.LabelFor(model => model.ListPhysicians[i].IsLastSeenUnknown, htmlAttributes: new { @class = "" })
+                                <br />
+                            </div>
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.ListPhysicians[i].IsROI, htmlAttributes: new { @class = "" })
+                                <br />
+
+                                @Html.RadioButtonFor(model => model.ListPhysicians[i].IsROI, "y") Yes
+                
+                            @Html.RadioButtonFor(model => model.ListPhysicians[i].IsROI, "n") No
+                
+                            @*@Html.RadioButtonFor(model => model.ListPhysicians[i].IsROI, "u") Unknown*@      
+                            </div>
+                            <div class="col-md-2 verbalmedical" style="padding-top: 25px">
+                                @Html.CheckBoxFor(model => model.ListPhysicians[i].IsROIVerbal, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListPhysicians[i].IsROIVerbal, htmlAttributes: new { @class = "" })
+
+                                @Html.CheckBoxFor(model => model.ListPhysicians[i].IsROIWritten, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListPhysicians[i].IsROIWritten, htmlAttributes: new { @class = "" })
+
+                            </div>
+
+                            <div class="col-lg-1" style="padding-left: 10%; padding-top: 20px">
+                                <button type="button"  id="physicalremove_@(i)" class="btn delete-physician btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                                    <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+      
+    </div>
+
+    <div class="well">
+        <div id="DetailHealthInsurance">
+            <legend>Health Insurance</legend>
+            <div class="row nextline">
+                <div class="col-md-9 errorclass">
+                    @Html.LabelFor(model => model.IsHealthInsurnace, htmlAttributes: new { @class = "errorclass" })
+
+                    @Html.RadioButtonFor(model => model.IsHealthInsurnace, "n") None
+
+                    @Html.RadioButtonFor(model => model.IsHealthInsurnace, "u") Unknown
+
+                    @Html.RadioButtonFor(model => model.IsHealthInsurnace, "r") Not relevant to allegations
+                </div>
+                <div class="col-md-3" style="padding-left:20%">
+                <button type="button" id="AddHealthInsurnace" value="Plus" class="btn btn-default zero-Zindex" data-toggle="tooltip" title="Add">
+                    <span class="glyphicon glyphicon-plus" style="color: blue"></span>
+                </button>
+
+            </div>
+            </div>
+            <div class="row next-line"> </div>
+                @for (int i = 0; i < Model.ListHealthInsurnaces.Count; i++)
+                {
+                    <div id=@("HealthInsurance_" + i) class="healthinsurnace">
+                        <div class="well container" style="background-color:#fff">
+                            <div class="row nextline">
+
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.ListHealthInsurnaces[i].InsuranceName, htmlAttributes: new { @class = "" })
+                                    <br />
+                                    @Html.TextBoxFor(model => model.ListHealthInsurnaces[i].InsuranceName, new { @class = "form-control zero-Zindex" })
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.ListHealthInsurnaces[i].Phone, htmlAttributes: new { @class = "" })
+                                    <br />
+                                    @Html.TextBoxFor(model => model.ListHealthInsurnaces[i].Phone, new { @class = "form-control phonenumber" })
+                                </div>
+                                <div class="col-md-6" style="padding: 25px 0 0 45%">
+                                    <button type="button" id="healthremove_@(i)" class="btn delete-healthInsurance btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                                        <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            }
+           
+        </div>
+
+        <div class="row next-line">
+            
+        </div>
+    </div>
+
+    <div class="well">
+        <div class="row nextline">
+            <legend>Client Benefits</legend>
+        </div>
+        <div class="row next-line">
+            <div class="col-md-8 @errorclass">
+                @for (int idx = 0; idx < Model.Benefits.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.Benefits[idx].Id)
+                    @Html.CheckBoxFor(x => Model.Benefits[idx].IsChecked)
+                    @Html.DisplayFor(x => Model.Benefits[idx].Description, new { @class = "errorclass" })
+                    @Html.HiddenFor(x => Model.Benefits[idx].Description)
+                    @Html.HiddenFor(x => Model.Benefits[idx].Code)
+                    if (idx == 0)
+                    {
+                        <div id="benefits_RIN">
+                            @Html.LabelFor(model => model.Benefits[idx].Rin)
+                            @Html.TextBoxFor(model => model.Benefits[idx].Rin, new { @class = "form-control errorclass" })
+                        </div>
+                    }
+                    if (idx == 8)
+                    {
+                        <div id="benefits_Other">
+                            @Html.LabelFor(model => model.Benefits[idx].Other)
+                            @Html.TextBoxFor(model => model.Benefits[idx].Other, new { @class = "form-control errorclass" })
+                        </div>
+                    }
+                    <br />
+                }
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <div class="well">
+        <div id="DetailMedication">
+            <legend>Medication</legend>
+
+            <div class="col-md-9 @errorclass">
+                @Html.LabelFor(model => model.IsMedication, htmlAttributes: new { @class = "errorclass" })
+
+                @Html.RadioButtonFor(model => model.IsMedication, "n") None
+                
+                @Html.RadioButtonFor(model => model.IsMedication, "u") Unknown
+
+                @Html.RadioButtonFor(model => model.IsMedication, "r") Not relevant to allegations
+            </div>
+                 <div class=" col-md-3" style="padding-left:22%">
+                <button type="button" id="AddMedication" value="Plus" class="btn btn-default zero-Zindex" data-toggle="tooltip" title="Add">
+                    <span class="glyphicon glyphicon-plus" style="color: blue"></span>
+                </button>
+
+            </div>
+            <div class="row nextline"></div>
+            @for (int i = 0; i < Model.ListMedications.Count; i++)
+            {
+                <div id=@("Medication_" + i) class="medication">
+                    
+                    <div class="well container" style="background-color:#fff">
+                        <div class="row nextline">
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.ListMedications[i].MedicationName, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListMedications[i].MedicationName, new { @class = "form-control zero-Zindex" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.ListMedications[i].PhysicianName, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListMedications[i].PhysicianName, new { @class = "form-control zero-Zindex" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.ListMedications[i].DatePrescribed, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.TextBoxFor(model => model.ListMedications[i].DatePrescribed, new { @class = "form-control datepicker", placeholder = "Prescribed Date" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.ListMedications[i].IsTakingAsPrescribed, htmlAttributes: new { @class = "" })
+                                <br />
+                                @Html.RadioButtonFor(model => model.ListMedications[i].IsTakingAsPrescribed, "y", new { @class = "zero-Zindex" }) Yes
+                
+                            @Html.RadioButtonFor(model => model.ListMedications[i].IsTakingAsPrescribed, "n", new { @class = "zero-Zindex" }) No
+                
+                            @Html.RadioButtonFor(model => model.ListMedications[i].IsTakingAsPrescribed, "u", new { @class = "zero-Zindex" }) Unknown   
+                            </div>
+                            <div class="col-lg-3"  style="padding:15px 0 0 20% ">
+                                <button type="button" id="medicationremove_@(i)" class="btn delete-medication btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                                    <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+        <div class="row next-line">
+       
+        </div>
+    </div>
+
+    <div class="well">
+        <div class="row next-line">
+            <div class="col-md-3 @errorclass">
+                @Html.LabelFor(model => model.IsRecentHospitilization, htmlAttributes: new { @class = "errorclass" })
+                <br />
+
+                @Html.RadioButtonFor(model => model.IsRecentHospitilization, "n") None               
+                
+                @Html.RadioButtonFor(model => model.IsRecentHospitilization, "u") Unknown      
+            </div>
+            <div class="col-md-8 ">
+                @Html.TextAreaFor(model => model.RecentHospitilization, new { @class="form-control"})
+            </div>
+        </div>
+         <div class="row next-line"></div>
+        <br />
+        <div class="row next-line">
+            <div class="col-md-2">
+                @Html.LabelFor(model => model.IsInjuryLocationChart, htmlAttributes: new { @class = "" })
+                <br />
+
+                <a data-toggle="popover" data-trigger="focus" data-placement="top" title="Note" data-content="Please upload a copy of the completed Injury Location Chart now">
+                    @Html.RadioButtonFor(model => model.IsInjuryLocationChart, "y")
+                </a> Yes
+
+                @Html.RadioButtonFor(model => model.IsInjuryLocationChart, "n") No
+</div>
+            <div class="col-md-2" id="date">
+                @Html.LabelFor(model => model.DateInjuryLocation, htmlAttributes: new { @class = "" })
+                <br />
+                @Html.TextBoxFor(model => model.DateInjuryLocation, new { @class = "form-control datepicker", placeholder = "Date" })
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,865 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewOSRA
+@{
+    ViewBag.Title = "View OSRA";
+
+    List<SelectListItem> ClutterImageRating = new List<SelectListItem>();
+    ClutterImageRating.Add(new SelectListItem { Text = "1", Value = "1" });
+    ClutterImageRating.Add(new SelectListItem { Text = "2", Value = "2" });
+    ClutterImageRating.Add(new SelectListItem { Text = "3", Value = "3" });
+    ClutterImageRating.Add(new SelectListItem { Text = "4", Value = "4" });
+    ClutterImageRating.Add(new SelectListItem { Text = "5", Value = "5" });
+    ClutterImageRating.Add(new SelectListItem { Text = "6", Value = "6" });
+    ClutterImageRating.Add(new SelectListItem { Text = "7", Value = "7" });
+    ClutterImageRating.Add(new SelectListItem { Text = "8", Value = "8" });
+    ClutterImageRating.Add(new SelectListItem { Text = "9", Value = "9" });
+}
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#editclientbutton").hide();
+        $('#imagelogo').hide();
+        $('#print').on('click', function () {
+
+
+            var template = $('#OSRA').clone();
+            template.find("#imagelogo").show();
+            template.find("#heading").show();
+            template.find('.noprint').remove();
+            Print(template);
+
+
+        });
+
+        function Print(template) {
+            var w = window.open("", "popupWindow", "width=600, height=400, scrollbars=yes");
+            var html = template.html();
+
+            $(w.document.body).html(html);
+            w.print();
+
+        }
+
+
+        $(function () {
+            $('input, select, textarea').attr('disabled', 'disabled');
+        });
+
+
+
+        $("#heading").hide();
+    });
+</script>
+
+
+<script src="~/Assets/Basic/Scripts/CMS/Case/EditOSRA.js"></script>
+
+<div class="container">
+    <div class="panel panel-warning">
+
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="titletextbegin">
+                    <span class="glyphicon glyphicon-eye-open"></span><span class="textspace">
+                        <text>Overall Substantiated Risk Assessment</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+
+        <div class="panel-body">
+
+
+
+            <fieldset id="OSRA">
+
+                @using (Html.BeginForm("SaveOSRA", "Case"))
+                {
+                    @Html.HiddenFor(model => model.Id)
+                    @Html.HiddenFor(model => model.CaseheaderId)
+                    @Html.HiddenFor(model => model.IntakeId)
+
+                    <div class="container">
+                        <div class="row nextline" id="printButton">
+                            <div class="btn-group pull-right">
+                                <a href="" class="btn btn-warning noprint" id="print" value="Print">Print</a>
+                                <a id="cancelOSRA" rel="tooltip" class="btn btn-default btn-md noprint" title=" Cancel " href='@Url.Action("ManageCase", "Case", new { CaseheaderId = @Model.viewIntake.CaseheaderId})'>Cancel</a>
+                            </div>
+                        </div>
+
+                        <div class="row nextline " id="heading" style="border-bottom: 2px solid black">
+                            <div class="pull-left" id="logoidoa" style="float:left">
+                                <div id="imagelogo" align="center" style="float:left">
+                                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+                                         width="185px" height="70px" viewBox="0 0 250.000000 99.000000"
+                                         preserveAspectRatio="xMidYMid meet">
+
+                                        <g transform="translate(0.000000,99.000000) scale(0.100000,-0.100000)"
+                                           fill="#000000" stroke="none">
+                                            <path d="M310 903 c0 -7 5 -13 10 -13 6 0 10 -7 10 -15 0 -8 5 -15 10 -15 31
+                                    0 -4 -58 -38 -63 -35 -5 -49 -24 -35 -46 10 -16 8 -24 -14 -47 -16 -18 -28
+                                    -44 -31 -69 -4 -36 0 -47 29 -80 18 -21 33 -47 34 -59 0 -17 5 -20 28 -18 30
+                                    3 34 -11 15 -53 -10 -23 -9 -29 14 -50 14 -13 28 -22 31 -19 9 9 27 -24 31
+                                    -55 2 -18 8 -37 13 -42 6 -6 139 -9 344 -7 322 3 336 4 379 25 44 22 44 22 65
+                                    3 39 -37 70 -41 256 -34 165 7 179 9 179 26 0 14 -8 18 -34 18 -19 0 -38 5
+                                    -41 11 -4 5 7 45 24 87 l31 77 132 -2 132 -2 27 -68 c39 -95 38 -103 -11 -103
+                                    -33 0 -40 -3 -40 -20 0 -19 7 -20 135 -20 128 0 135 1 135 20 0 14 -7 20 -22
+                                    20 -13 0 -29 4 -36 9 -13 8 -163 345 -249 559 -20 49 -29 62 -47 62 -17 0 -27
+                                    -14 -50 -67 -16 -38 -53 -123 -84 -191 l-55 -123 -13 36 c-24 71 -95 121 -183
+                                    132 -43 5 -49 9 -60 39 -6 18 -37 55 -67 83 -91 83 -96 84 -556 86 -328 2
+                                    -398 0 -398 -12z m113 -15 c3 -11 17 -18 43 -20 37 -3 39 -5 46 -43 7 -38 -2
+                                    -207 -9 -175 -3 13 -24 14 -128 12 -69 -2 -125 -1 -125 2 0 3 9 20 20 38 13
+                                    23 16 38 10 48 -15 23 -12 30 10 30 26 0 70 43 70 68 0 11 -7 25 -15 32 -26
+                                    21 -17 30 29 28 32 -2 46 -8 49 -20z m310 -58 c5 -19 7 -145 5 -278 -6 -271
+                                    -4 -264 -73 -260 l-40 3 -3 279 c-2 217 1 281 10 288 7 4 31 7 52 6 36 -3 41
+                                    -6 49 -38z m327 20 c59 -11 112 -46 141 -94 37 -59 35 -72 -13 -124 -33 -35
+                                    -48 -62 -58 -100 -12 -53 -7 -130 11 -164 7 -14 3 -20 -18 -31 -59 -31 -180
+                                    -45 -252 -31 l-31 7 0 268 0 268 23 4 c43 8 145 7 197 -3z m753 -227 l45 -103
+                                    -108 0 -108 0 50 113 c27 61 52 119 56 127 4 10 8 7 13 -10 4 -14 27 -71 52
+                                    -127z m-376 2 c51 -58 68 -197 34 -272 -31 -67 -90 -89 -158 -56 -55 26 -61
+                                    52 -25 102 41 56 64 131 66 206 l1 62 30 -8 c17 -5 40 -20 52 -34z m-202 -113
+                                    c-4 -26 -10 -41 -12 -34 -3 7 -2 34 2 60 4 26 10 41 12 34 3 -7 2 -34 -2 -60z">
+
+
+                                            </path>
+                                        </g>
+                                    </svg><br />
+                                </div>
+                            </div>
+
+                            <h2 style="text-align: center"> Illinois Department on Aging APS</h2>
+
+                            <h3 style="text-align: center"> Overall Substantiated Risk Assessment </h3>
+                        </div>
+                        <br />
+
+                        <div class="row nextline" id="Client">
+                            @Html.Partial("_ViewClientCMS", Model.viewIntake.viewCaseHeader.Client)
+                        </div>
+
+
+                        <div class="well">
+
+                            <div class="form-group">
+                                <div class=" well container " id="FunctionalAbilities" style="background-color: #fff">
+                                    <div class="row">
+                                        <h4 style="text-decoration: underline">Functional Abilities</h4>
+                                        <br />
+                                    </div>
+
+                                    <div class="container">
+                                        <div class="row nextline  " id="PhysicalDisabilities">
+                                            <div class="col-lg-10">
+                                                @Html.LabelFor(model => model.IsPhysicalDisability)
+                                                @Html.RadioButtonFor(model => model.IsPhysicalDisability, "y", new { @id = "IsPhysicalDisabilityYes" }) Yes
+                                                @Html.RadioButtonFor(model => model.IsPhysicalDisability, "n", new { @id = "IsPhysicalDisabilityNo" }) No
+                                                @Html.RadioButtonFor(model => model.IsPhysicalDisability, "u", new { @id = "IsPhysicalDisabilityUnknown" }) Unknown
+                                            </div>
+                                            <div class="row nextline  " id="PhysicalDisabilitiesOptions">
+                                                <div class="col-lg-5">
+                                                    @Html.CheckBoxFor(model => model.IsPhysicalDisabilitySevere) @Html.LabelFor(model => model.IsPhysicalDisabilitySevere)
+                                                    <br />
+
+                                                    @Html.CheckBoxFor(model => model.IsPhysicalDisabilityModerate) @Html.LabelFor(model => model.IsPhysicalDisabilityModerate)<br />
+
+                                                    @Html.CheckBoxFor(model => model.IsPhysicalDisabilityMild) @Html.LabelFor(model => model.IsPhysicalDisabilityMild)
+                                                    <br />
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row nextline  " id="PhysicalCapacity">
+                                            <div class="col-lg-10">
+                                                @Html.LabelFor(model => model.IsPhysicalCapacity)
+                                                @Html.RadioButtonFor(model => model.IsPhysicalCapacity, "y") Yes
+                                                @Html.RadioButtonFor(model => model.IsPhysicalCapacity, "n") No
+                                                @Html.RadioButtonFor(model => model.IsPhysicalCapacity, "u") Unknown
+                                            </div>
+                                        </div>
+                                        <div class="row nextline  " id="React">
+                                            <div class="col-lg-10">
+                                                @Html.LabelFor(model => model.IsClientCanReact)
+                                                @Html.RadioButtonFor(model => model.IsClientCanReact, "y", new { @id = "IsClientCanReactYes" }) Yes
+                                                @Html.RadioButtonFor(model => model.IsClientCanReact, "n", new { @id = "IsClientCanReactNo" }) No
+                                                @Html.RadioButtonFor(model => model.IsClientCanReact, "u", new { @id = "IsClientCanReactUnknown" }) Unknown
+                                            </div>
+                                            <div class="row nextline  " id="ReactOptions">
+                                                <div class="col-lg-5">
+                                                    @Html.CheckBoxFor(model => model.IsClientCanReactForSelf) @Html.LabelFor(model => model.IsClientCanReactForSelf)
+                                                    <br />
+
+                                                    @Html.CheckBoxFor(model => model.IsClientCanReactDial911) @Html.LabelFor(model => model.IsClientCanReactDial911)
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row nextline"></div>
+
+
+                                        <div class="row nextline  " id="DirectingOwnCare">
+                                            @Html.LabelFor(model => model.IsClientDirectOwnCare, new { @class = "" })
+                                            <table class="table table-striped table-hover" style="width: 70%">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="col-md-2">&nbsp;</th>
+                                                        <th class="col-md-1">Yes</th>
+                                                        <th class="col-md-1">No</th>
+                                                        <th class="col-md-1">Unknown</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientCanMakeAppointments)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientCanMakeAppointments, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientCanMakeAppointments, "n")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientCanMakeAppointments, "u")</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientCanPayBills)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientCanPayBills, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientCanPayBills, "n")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientCanPayBills, "u")</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientCanMaintainLivingEnvironment)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientCanMaintainLivingEnvironment, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientCanMaintainLivingEnvironment, "n")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientCanMaintainLivingEnvironment, "u")</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientCanDecidePersonalCare)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientCanDecidePersonalCare, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientCanDecidePersonalCare, "n")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientCanDecidePersonalCare, "u")</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientCanUnderstandConsequences)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientCanUnderstandConsequences, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientCanUnderstandConsequences, "n")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientCanUnderstandConsequences, "u")</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row nextline  " id="Assistance">
+                                            <table class="table table-striped table-hover " style="width: 70%">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="col-md-1">Client needs assistance with</th>
+                                                        <th class="col-md-1">Met</th>
+                                                        <th class="col-md-1">Unmet</th>
+                                                        <th class="col-md-1">Assistant</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientNeedsDressing)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsDressing, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsDressing, "n")</td>
+                                                        <td>@Html.TextBoxFor(model => model.ClientNeedsDressingAssistant, new { @class = "form-control" })</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientNeedsBathing)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsBathing, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsBathing, "n")</td>
+                                                        <td>@Html.TextBoxFor(model => model.ClientNeedsBathingAssistant, new { @class = "form-control" })</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientNeedsGrooming)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsGrooming, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsGrooming, "n")</td>
+                                                        <td>@Html.TextBoxFor(model => model.ClientNeedsGroomingAssistant, new { @class = "form-control" })</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientNeedsFoodShopping)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsFoodShopping, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsFoodShopping, "n")</td>
+                                                        <td>@Html.TextBoxFor(model => model.ClientNeedsFoodShoppingAssistant, new { @class = "form-control" })</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientNeedsMealsPreparing)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsMealsPreparing, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsMealsPreparing, "n")</td>
+                                                        <td>@Html.TextBoxFor(model => model.ClientNeedsMealsPreparingAssistant, new { @class = "form-control" })</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientNeedsEating)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsEating, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsEating, "n")</td>
+                                                        <td>@Html.TextBoxFor(model => model.ClientNeedsEatingAssistant, new { @class = "form-control" })</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientNeedsUsingToilet)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsUsingToilet, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsUsingToilet, "n")</td>
+                                                        <td>@Html.TextBoxFor(model => model.ClientNeedsUsingToiletAssistant, new { @class = "form-control" })</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientNeedsHouseKeeping)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsHouseKeeping, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsHouseKeeping, "n")</td>
+                                                        <td>@Html.TextBoxFor(model => model.ClientNeedsHouseKeepingAssistant, new { @class = "form-control" })</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientNeedsTransportation)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsTransportation, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsTransportation, "n")</td>
+                                                        <td>@Html.TextBoxFor(model => model.ClientNeedsTransportationAssistant, new { @class = "form-control" })</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientNeedsAppliance)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsAppliance, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsAppliance, "n")</td>
+                                                        <td>@Html.TextBoxFor(model => model.ClientNeedsApplianceAssistant, new { @class = "form-control" })</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientNeedsTelephone)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsTelephone, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsTelephone, "n")</td>
+                                                        <td>@Html.TextBoxFor(model => model.ClientNeedsTelephoneAssistant, new { @class = "form-control" })</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientNeedsMedicalCare)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsMedicalCare, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsMedicalCare, "n")</td>
+                                                        <td>@Html.TextBoxFor(model => model.ClientNeedsMedicalCareAssistant, new { @class = "form-control" })</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>@Html.LabelFor(model => model.IsClientNeedsSelfAdminMedication)</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsSelfAdminMedication, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsSelfAdminMedication, "n")</td>
+                                                        <td>@Html.TextBoxFor(model => model.ClientNeedsSelfAdminMedicationAssistant, new { @class = "form-control" })</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            @Html.LabelFor(model => model.IsClientNeedsOther)
+                                                            @Html.TextAreaFor(model => model.ClientNeedsOther, new { @class = "form-control" })
+                                                        </td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsOther, "y")</td>
+                                                        <td>@Html.RadioButtonFor(model => model.IsClientNeedsOther, "n")</td>
+                                                        <td>@Html.TextBoxFor(model => model.ClientNeedsOtherAssistant, new { @class = "form-control" })</td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="well container" id="MentalAbilities" style="background-color: #fff">
+                                    <div class="row">
+                                        <h4 style="text-decoration: underline">Emotional Status, Mental Functioning and Depression</h4>
+                                        <br />
+                                    </div>
+                                    <div class="container">
+                                        <div class="row nextline  " id="MentalConditions">
+                                            @Html.LabelFor(model => model.IsMentalCondition)
+                                            @Html.RadioButtonFor(model => model.IsMentalCondition, "y", new { @id = "IsMentalConditionYes" }) Yes
+                                            @Html.RadioButtonFor(model => model.IsMentalCondition, "n", new { @id = "IsMentalConditionNo" }) No
+                                            @Html.RadioButtonFor(model => model.IsMentalCondition, "u", new { @id = "IsMentalConditionUnknown" }) Unknown
+                                        </div>
+                                        <div class="row nextline col-lg-10  " id="MentalConditionsOptions">
+                                            @Html.CheckBoxFor(model => model.IsMentalConditionProfound) @Html.LabelFor(model => model.IsMentalConditionProfound)<br />
+                                            @Html.CheckBoxFor(model => model.IsMentalConditionModerate) @Html.LabelFor(model => model.IsMentalConditionModerate)<br />
+
+                                        </div>
+                                        <div class="row nextline  " id="MentalCapacity">
+                                            @Html.LabelFor(model => model.IsMentalCapacity)
+                                            @Html.RadioButtonFor(model => model.IsMentalCapacity, "y", new { @id = "IsMentalCapacityYes" }) Yes
+                                            @Html.RadioButtonFor(model => model.IsMentalCapacity, "n", new { @id = "IsMentalCapacityNo" }) No
+                                            @Html.RadioButtonFor(model => model.IsMentalCapacity, "u", new { @id = "IsMentalCapacityUnknown" }) Unknown
+                                        </div>
+
+
+                                        <div class="row nextline col-lg-12  " id="MentalCapacityOptions">
+                                            @Html.CheckBoxFor(model => model.IsMentalCapacityCognitiveImpairement) @Html.LabelFor(model => model.IsMentalCapacityCognitiveImpairement)<br />
+                                            @Html.CheckBoxFor(model => model.IsMentalCapacityDevelopmentalDisability) @Html.LabelFor(model => model.IsMentalCapacityDevelopmentalDisability)<br />
+                                            @Html.CheckBoxFor(model => model.IsMentalCapacityEmotionalProblems) @Html.LabelFor(model => model.IsMentalCapacityEmotionalProblems)<br />
+                                            @Html.CheckBoxFor(model => model.IsMentalCapacityTraumaticBrainInjury) @Html.LabelFor(model => model.IsMentalCapacityTraumaticBrainInjury)<br />
+                                            @Html.CheckBoxFor(model => model.IsMentalCapacityOther) @Html.LabelFor(model => model.IsMentalCapacityOther)
+                                            <div class="row nextline">
+                                                <div class="col-lg-3  " id="MentalCapacityOptionsOther">
+                                                    @Html.TextAreaFor(model => model.MentalCapacityOther, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+                                        <div class="row nextline"></div>
+
+                                        <div class="row nextline" id="Psychological">
+                                            @Html.LabelFor(model => model.IsClientHasPsychologicalSymptoms)
+                                            @Html.RadioButtonFor(model => model.IsClientHasPsychologicalSymptoms, "y", new { @id = "IsClientHasPsychologicalSymptomsYes" }) Yes
+                                            @Html.RadioButtonFor(model => model.IsClientHasPsychologicalSymptoms, "n", new { @id = "IsClientHasPsychologicalSymptomsNo" }) No
+                                            @Html.RadioButtonFor(model => model.IsClientHasPsychologicalSymptoms, "u", new { @id = "IsClientHasPsychologicalSymptomsUnknown" }) Unknown
+                                        </div>
+                                        <div class="row nextline col-lg-10" id="PsychologicalOptions">
+                                            @Html.CheckBoxFor(model => model.IsClientMentallyIll) @Html.LabelFor(model => model.IsClientMentallyIll)<br />
+                                            @Html.CheckBoxFor(model => model.IsClientHasPersonalityDisorder) @Html.LabelFor(model => model.IsClientHasPersonalityDisorder)<br />
+                                            @Html.CheckBoxFor(model => model.IsClientDangerousToSelf) @Html.LabelFor(model => model.IsClientDangerousToSelf)<br />
+                                            @Html.CheckBoxFor(model => model.IsClientDangerousToOthers) @Html.LabelFor(model => model.IsClientDangerousToOthers)<br />
+                                        </div>
+                                        <div class="row nextline"></div>
+                                        <div class="row nextline">
+                                            <div class="col-lg-4" id="MentalStatus">
+                                                <b style="text-decoration: underline">Mental Status</b><br />
+                                                @Html.CheckBoxFor(model => model.IsClientDisorientedToTime) @Html.LabelFor(model => model.IsClientDisorientedToTime)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientDisorientedToPlace) @Html.LabelFor(model => model.IsClientDisorientedToPlace)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientDisorientedToPerson) @Html.LabelFor(model => model.IsClientDisorientedToPerson)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientIncoherent) @Html.LabelFor(model => model.IsClientIncoherent)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientPoorMemory) @Html.LabelFor(model => model.IsClientPoorMemory)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientConfused) @Html.LabelFor(model => model.IsClientConfused)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientSeverelyAnxious) @Html.LabelFor(model => model.IsClientSeverelyAnxious)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientUnreasonablyFearful) @Html.LabelFor(model => model.IsClientUnreasonablyFearful)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientCannotFollowConversation) @Html.LabelFor(model => model.IsClientCannotFollowConversation)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientFaultyJudgement) @Html.LabelFor(model => model.IsClientFaultyJudgement)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientMMSEScore) @Html.LabelFor(model => model.IsClientMMSEScore)<br />
+                                            </div>
+                                            <div class="col-lg-4" id="Depression">
+                                                <b style="text-decoration: underline">Depression</b><br />
+                                                @Html.CheckBoxFor(model => model.IsClientChangeinEatingHabits) @Html.LabelFor(model => model.IsClientChangeinEatingHabits)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientChangeinSleepingHabits) @Html.LabelFor(model => model.IsClientChangeinSleepingHabits)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientRecentLoss) @Html.LabelFor(model => model.IsClientRecentLoss)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientDecreasedSocialInteraction) @Html.LabelFor(model => model.IsClientDecreasedSocialInteraction)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientLossOfInterest) @Html.LabelFor(model => model.IsClientLossOfInterest)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientWithdrawn) @Html.LabelFor(model => model.IsClientWithdrawn)<br />
+                                            </div>
+                                            <div class="col-lg-4" id="MentalIllness">
+                                                <b style="text-decoration: underline">Mental Illness</b><br />
+                                                @Html.CheckBoxFor(model => model.IsClientPsychiatricHistory) @Html.LabelFor(model => model.IsClientPsychiatricHistory)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientBizarreBehavior) @Html.LabelFor(model => model.IsClientBizarreBehavior)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientHearVoices) @Html.LabelFor(model => model.IsClientHearVoices)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientVisualHallucinations) @Html.LabelFor(model => model.IsClientVisualHallucinations)<br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="well container " id="Environment" style="background-color: #fff">
+                                    <div class="row">
+                                        <h4 style="text-decoration: underline">Environment</h4>
+                                        <br />
+                                    </div>
+                                    <div class="container">
+                                        <div class="row nextline  " id="LivingSituation">
+                                            @Html.LabelFor(model => model.IsClientLivingSituation)
+                                            @Html.RadioButtonFor(model => model.IsClientLivingSituation, "y", new { @id = "IsClientLivingSituationYes" }) Yes
+                                            @Html.RadioButtonFor(model => model.IsClientLivingSituation, "n", new { @id = "IsClientLivingSituationNo" }) No
+                                            @Html.RadioButtonFor(model => model.IsClientLivingSituation, "u", new { @id = "IsClientLivingSituationUnknown" }) Unknown
+                                        </div>
+                                        <div class="row nextline " id="LivingSituationOptions">
+                                            @Html.TextAreaFor(model => model.ClientLivingSituation, new { @class = "form-control" })
+                                        </div>
+
+                                        <div class="row nextline " id="SafePlace">
+                                            @Html.LabelFor(model => model.IsClientPlaceSafe)
+                                            @Html.RadioButtonFor(model => model.IsClientPlaceSafe, "y", new { @id = "IsClientPlaceSafeYes" }) Yes
+                                            @Html.RadioButtonFor(model => model.IsClientPlaceSafe, "n", new { @id = "IsClientPlaceSafeNo" }) No
+                                            @Html.RadioButtonFor(model => model.IsClientPlaceSafe, "u", new { @id = "IsClientPlaceSafeunknown" }) Unknown
+
+                                            <div id="SafePlaceOptions" class=" ">
+                                                @Html.CheckBoxFor(model => model.IsClientPlaceUtilities) @Html.LabelFor(model => model.IsClientPlaceUtilities)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientPlacePosesBarriers) @Html.LabelFor(model => model.IsClientPlacePosesBarriers)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientPlaceSettingUnsafe) @Html.LabelFor(model => model.IsClientPlaceSettingUnsafe)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientPlaceOther) @Html.LabelFor(model => model.IsClientPlaceOther)
+                                                <div id="SafePlaceOptionsOther">@Html.TextBoxFor(model => model.ClientPlaceOther, new { @class = "form-control" })</div>
+                                                <br />
+                                            </div>
+                                        </div>
+                                        <div class="row nextline " id="Cleanliness">
+                                            @Html.LabelFor(model => model.IsClientResidenceMeetsStandards)
+                                            @Html.RadioButtonFor(model => model.IsClientResidenceMeetsStandards, "y", new { @id = "IsClientResidenceMeetsStandardsYes" }) Yes
+                                            @Html.RadioButtonFor(model => model.IsClientResidenceMeetsStandards, "n", new { @id = "IsClientResidenceMeetsStandardsNo" }) No
+                                            @Html.RadioButtonFor(model => model.IsClientResidenceMeetsStandards, "u", new { @id = "IsClientResidenceMeetsStandardsUnknown" }) Unknown
+
+                                            <div id="CleanlinessOptions">
+                                                @Html.CheckBoxFor(model => model.IsClientResidenceTrashDisposed) @Html.LabelFor(model => model.IsClientResidenceTrashDisposed)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientResidenceGrossHealthViolations) @Html.LabelFor(model => model.IsClientResidenceGrossHealthViolations)<br />
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row nextline " id="ClutterImage">
+                                            <label for="Clutter">Clutter image rating:</label>
+                                            <font color="red"> (Upload related photographs under supporing documentation-screening tools)</font>
+
+                                            <br />
+                                            @Html.CheckBoxFor(model => model.IsClutterImageRatingNotApplicable) @Html.LabelFor(model => model.IsClutterImageRatingNotApplicable)<br />
+                                            <div id="clusterrating" class="row nextline">
+                                                <div class="col-lg-2">
+                                                    @Html.CheckBoxFor(model => model.IsClutterImageRatingKitchen) @Html.LabelFor(model => model.IsClutterImageRatingKitchen)<br />
+                                                    <div id="KitchenRating">
+                                                        @Html.DropDownListFor(model => model.ClutterImageRatingKitchen, ClutterImageRating, "Select Rating", new { @class = "form-control", @required = "false" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    @Html.CheckBoxFor(model => model.IsClutterImageRatingBedRoom) @Html.LabelFor(model => model.IsClutterImageRatingBedRoom)<br />
+                                                    <div id="BedRoomRating">
+                                                        @Html.DropDownListFor(model => model.ClutterImageRatingBedRoom, ClutterImageRating, "Select Rating", new { @class = "form-control", @required = "false" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    @Html.CheckBoxFor(model => model.IsClutterImageRatingLivingRoom) @Html.LabelFor(model => model.IsClutterImageRatingLivingRoom)<br />
+                                                    <div id="LivingRoomRating">
+                                                        @Html.DropDownListFor(model => model.ClutterImageRatingLivingRoom, ClutterImageRating, "Select Rating", new { @class = "form-control", @required = "false" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="row nextline">
+                                            <b style="text-decoration: underline">Check all that apply</b><br />
+                                            <div class="col-lg-4">
+                                                @*<b style="text-decoration: underline">Mental Status</b><br />*@
+                                                @Html.CheckBoxFor(model => model.IsClientHomeless) @Html.LabelFor(model => model.IsClientHomeless)<br />
+                                                @*@Html.CheckBoxFor(model => model.IsClientInadequate) @Html.LabelFor(model => model.IsClientInadequate)<br />*@
+                                                @Html.CheckBoxFor(model => model.IsClientNoRefrigerator) @Html.LabelFor(model => model.IsClientNoRefrigerator)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientNoVentilation) @Html.LabelFor(model => model.IsClientNoVentilation)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientLackingUtilities) @Html.LabelFor(model => model.IsClientLackingUtilities)<br />
+                                            </div>
+                                            <div class="col-lg-4">
+                                                @*<b style="text-decoration: underline">Depression</b><br />*@
+                                                @Html.CheckBoxFor(model => model.IsFireSafety) @Html.LabelFor(model => model.IsFireSafety)<br />
+                                                @Html.CheckBoxFor(model => model.IsAnimalInfestation) @Html.LabelFor(model => model.IsAnimalInfestation)<br />
+                                                @Html.CheckBoxFor(model => model.IsHomeInNeedOfRepair) @Html.LabelFor(model => model.IsHomeInNeedOfRepair)<br />
+                                                @Html.CheckBoxFor(model => model.IsHomeEvictionNotice) @Html.LabelFor(model => model.IsHomeEvictionNotice)<br />
+                                                @Html.CheckBoxFor(model => model.IsHomeAccumulatedPersonalItems) @Html.LabelFor(model => model.IsHomeAccumulatedPersonalItems)<br />
+                                            </div>
+                                            <div class="col-lg-4">
+                                                @*<b style="text-decoration: underline">Mental Illness</b><br />*@
+                                                @Html.CheckBoxFor(model => model.IsUnmanageableStairs) @Html.LabelFor(model => model.IsUnmanageableStairs)<br />
+                                                @Html.CheckBoxFor(model => model.IsHomeModificationsNeeded) @Html.LabelFor(model => model.IsHomeModificationsNeeded)<br />
+                                                @Html.CheckBoxFor(model => model.IsHomeInHighCrimeArea) @Html.LabelFor(model => model.IsHomeInHighCrimeArea)<br />
+                                                @Html.CheckBoxFor(model => model.IsHomeUsedforCriminalActivity) @Html.LabelFor(model => model.IsHomeUsedforCriminalActivity)<br />
+                                                @Html.CheckBoxFor(model => model.IsHomeInappropriate) @Html.LabelFor(model => model.IsHomeInappropriate)<br />
+                                                @Html.CheckBoxFor(model => model.IsHomeEnvironmentOther) @Html.LabelFor(model => model.IsHomeEnvironmentOther)<div id="HomeEnvironmentOther">@Html.DisplayFor(model => model.HomeEnvironmentOther, new { @class = "form-control" })</div>
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="well container " id="SubstanceAbuse" style="background-color: #fff">
+                                    <div class="row">
+                                        <h4 style="text-decoration: underline">Substance Abuse and Other Endangering Behavior</h4>
+                                        <br />
+                                    </div>
+                                    <div class="container">
+                                        <div class="row nextline" id="EndangeringBehaviours">
+                                            @Html.LabelFor(model => model.IsClientSuffersSubstanceAbuse)
+                                            @Html.RadioButtonFor(model => model.IsClientSuffersSubstanceAbuse, "y", new { @id = "IsClientSuffersSubstanceAbuseYes" }) Yes
+                                            @Html.RadioButtonFor(model => model.IsClientSuffersSubstanceAbuse, "n", new { @id = "IsClientSuffersSubstanceAbuseNo" }) No
+                                            @Html.RadioButtonFor(model => model.IsClientSuffersSubstanceAbuse, "u", new { @id = "IsClientSuffersSubstanceAbuseUnknown" }) Unknown
+
+                                            <div id="EndangeringBehavioursOptions" class="">
+                                                @Html.CheckBoxFor(model => model.IsClientSuffersActiveSubstanceAbuse) @Html.LabelFor(model => model.IsClientSuffersActiveSubstanceAbuse)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientSuffersPeriodicSubstanceAbuse) @Html.LabelFor(model => model.IsClientSuffersPeriodicSubstanceAbuse)<br />
+                                                <br />
+                                            </div>
+                                        </div>
+                                        <div class="row nextline " id="ChemicallyAbusive">
+                                            @Html.LabelFor(model => model.IsClientCheminallyAbusive)
+                                            @Html.RadioButtonFor(model => model.IsClientCheminallyAbusive, "y", new { @id = "IsClientCheminallyAbusiveYes" }) Yes
+                                            @Html.RadioButtonFor(model => model.IsClientCheminallyAbusive, "n", new { @id = "IsClientCheminallyAbusiveNo" }) No
+                                            @Html.RadioButtonFor(model => model.IsClientCheminallyAbusive, "u", new { @id = "IsClientCheminallyAbusiveUnknown" }) Unknown
+
+                                            <div id="ChemicallyAbusiveOptions" class="">
+                                                @Html.CheckBoxFor(model => model.IsClientChemicalThreatensHealth) @Html.LabelFor(model => model.IsClientChemicalThreatensHealth)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientSuffersThreatensMedication) @Html.LabelFor(model => model.IsClientSuffersThreatensMedication)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientEnrolledInSubstanceAbuseTreatment) @Html.LabelFor(model => model.IsClientEnrolledInSubstanceAbuseTreatment)<br />
+                                                <br />
+                                            </div>
+                                        </div>
+                                        <div class="row nextline">
+                                            <div class="col-lg-6">
+                                                <b>Substance Abuse</b>(Check all that apply)<br />
+                                                @Html.CheckBoxFor(model => model.IsPreviousHistory) @Html.LabelFor(model => model.IsPreviousHistory)<br />
+                                                @Html.CheckBoxFor(model => model.IsAlcoholSmell) @Html.LabelFor(model => model.IsAlcoholSmell)<br />
+                                                @Html.CheckBoxFor(model => model.IsSlurredSpeech) @Html.LabelFor(model => model.IsSlurredSpeech)<br />
+                                                @Html.CheckBoxFor(model => model.IsDialtedPupils) @Html.LabelFor(model => model.IsDialtedPupils)<br />
+                                                @Html.CheckBoxFor(model => model.IsFrequentFalls) @Html.LabelFor(model => model.IsFrequentFalls)<br />
+                                                @Html.CheckBoxFor(model => model.IsBottlesPresent) @Html.LabelFor(model => model.IsBottlesPresent)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuseofRxMedications) @Html.LabelFor(model => model.IsAbuseofRxMedications)<br />
+                                                @Html.CheckBoxFor(model => model.IsSubstanceAbuseOther) @Html.LabelFor(model => model.IsSubstanceAbuseOther)<div id="substanceAbuseOther">@Html.DisplayFor(model => model.SubstanceAbuseOther, new { @class = "form-control" })</div>
+                                                <br />
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <b>Other Endangering Behaviors</b>(Check all that apply)<br />
+                                                @Html.CheckBoxFor(model => model.IsSuicidalActs) @Html.LabelFor(model => model.IsSuicidalActs)<br />
+                                                @Html.CheckBoxFor(model => model.IsWandering) @Html.LabelFor(model => model.IsWandering)<br />
+                                                @Html.CheckBoxFor(model => model.IsFrequenstDangerousPlaces) @Html.LabelFor(model => model.IsFrequenstDangerousPlaces)<br />
+                                                @Html.CheckBoxFor(model => model.IsLifeThreateningBehaviors) @Html.LabelFor(model => model.IsLifeThreateningBehaviors)<br />
+                                                @Html.CheckBoxFor(model => model.IsRefusesMedicalTreatment) @Html.LabelFor(model => model.IsRefusesMedicalTreatment)<br />
+                                                @Html.CheckBoxFor(model => model.IsEndangeringBehaviorOther) @Html.LabelFor(model => model.IsEndangeringBehaviorOther)<div id="endangeringBehaviorOther">@Html.DisplayFor(model => model.EndangeringBehaviorOther, new { @class = "form-control" })</div>
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="well container " id="FinancialResources" style="background-color: #fff">
+                                    <div class="row">
+                                        <h4 style="text-decoration: underline">Income/Financial Resources</h4>
+                                        <br />
+                                    </div>
+                                    <div class="container">
+                                        <div class="row nextline" id="Employment">
+                                            <div class="col-lg-3 form-group  " id="EmploymentStatus">
+                                                @Html.ValidationMessageFor(model => model.EmploymentStatusId)
+                                                @Html.LabelFor(m => m.EmploymentStatusId)
+                                                @Html.DropDownListFor(model => model.EmploymentStatusId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewEmploymentType { Id = 0, Description = " Select Employment Status" } }.Union(Model.caselookup.listofemploymenttypes.OrderBy(s => s.Code)), "Id", "Description", Model.EmploymentStatusId), new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="row nextline  " id="FinancialAssets">
+                                            @Html.LabelFor(model => model.IsClientHaveFinancialResources)
+                                            @Html.RadioButtonFor(model => model.IsClientHaveFinancialResources, "y", new { @id = "IsClientHaveFinancialResourcesYes" }) Yes
+                                            @Html.RadioButtonFor(model => model.IsClientHaveFinancialResources, "n", new { @id = "IsClientHaveFinancialResourcesNo" }) No
+                                            @Html.RadioButtonFor(model => model.IsClientHaveFinancialResources, "u", new { @id = "IsClientHaveFinancialResourcesUnknown" }) Unknown
+                                        </div>
+                                        <div class="row nextline  " id="BasicNeeds">
+                                            @Html.LabelFor(model => model.IsCaregiverProvidingBasicNeeds)
+                                            @Html.RadioButtonFor(model => model.IsCaregiverProvidingBasicNeeds, "y", new { @id = "IsCaregiverProvidingBasicNeedsYes" }) Yes
+                                            @Html.RadioButtonFor(model => model.IsCaregiverProvidingBasicNeeds, "n", new { @id = "IsCaregiverProvidingBasicNeedsNo" }) No
+                                            @Html.RadioButtonFor(model => model.IsCaregiverProvidingBasicNeeds, "u", new { @id = "IsCaregiverProvidingBasicNeedsUnknown" }) Unknown
+
+                                            <div id="BasicNeedsOptions" class=" ">
+                                                @Html.CheckBoxFor(model => model.IsClienthasInsufficientAssets) @Html.LabelFor(model => model.IsClienthasInsufficientAssets)<br />
+                                                @Html.CheckBoxFor(model => model.IsCaregiverNotUtilizeServices) @Html.LabelFor(model => model.IsCaregiverNotUtilizeServices)<br />
+                                                @Html.CheckBoxFor(model => model.IsNoResourcesAvailable) @Html.LabelFor(model => model.IsNoResourcesAvailable)<br />
+                                                <br />
+                                            </div>
+                                        </div>
+                                        <div class="row nextline  " id="AssetsManagement">
+                                            @Html.LabelFor(model => model.IsClientAssetsProperlyManaged)
+                                            @Html.RadioButtonFor(model => model.IsClientAssetsProperlyManaged, "y", new { @id = "IsClientAssetsProperlyManagedYes" }) Yes
+                                            @Html.RadioButtonFor(model => model.IsClientAssetsProperlyManaged, "n", new { @id = "IsClientAssetsProperlyManagedNo" }) No
+                                            @Html.RadioButtonFor(model => model.IsClientAssetsProperlyManaged, "u", new { @id = "IsClientAssetsProperlyManagedUnknown" }) Unknown
+
+                                            <div id="AssetsManagementOptions" class=" ">
+                                                @Html.LabelFor(model => model.ClientAssetsProperlyManaged) @Html.DisplayFor(model => model.ClientAssetsProperlyManaged, new { @class = "form-control" })
+                                                <br />
+                                                <br />
+                                            </div>
+                                        </div>
+                                        <div class="row nextline">
+                                            <div class="col-lg-4">
+                                                <b>Client</b><br />
+                                                @Html.CheckBoxFor(model => model.IsClientFinaciallyDependent) @Html.LabelFor(model => model.IsClientFinaciallyDependent)<br />
+                                                @Html.CheckBoxFor(model => model.IsChooseAmongNecessities) @Html.LabelFor(model => model.IsChooseAmongNecessities)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientVulnerableToFutureExploitation) @Html.LabelFor(model => model.IsClientVulnerableToFutureExploitation)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientUnableToManageFinances) @Html.LabelFor(model => model.IsClientUnableToManageFinances)<br />
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <b>Abuser</b><br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserFinanciallyDependentOnClientResources) @Html.LabelFor(model => model.IsAbuserFinanciallyDependentOnClientResources)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserMismanagmementOfFinancesResources) @Html.LabelFor(model => model.IsAbuserMismanagmementOfFinancesResources)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserQuestionableOfResources) @Html.LabelFor(model => model.IsAbuserQuestionableOfResources)<br />
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <b>Other</b><br />
+                                                @Html.CheckBoxFor(model => model.IsOtherUnpaidBills) @Html.LabelFor(model => model.IsOtherUnpaidBills)<br />
+                                                @Html.CheckBoxFor(model => model.IsOtherUtilitiesCutoff) @Html.LabelFor(model => model.IsOtherUtilitiesCutoff)<br />
+                                                @Html.CheckBoxFor(model => model.IsOthersFinanciallyDependentOnClient) @Html.LabelFor(model => model.IsOthersFinanciallyDependentOnClient)<br />
+                                                @Html.CheckBoxFor(model => model.IsOthersother) @Html.LabelFor(model => model.IsOthersother)<div id="Othersother">@Html.DisplayFor(model => model.Othersother, new { @class = "form-control" })</div>
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="well container " id="FormalAndInformalServices" style="background-color: #fff">
+                                    <div class="row">
+                                        <h4 style="text-decoration: underline">Formal and Informal Support Services</h4>
+                                        <br />
+                                    </div>
+                                    <div class="container">
+                                        <div class="row nextline  " id="Supportive">
+                                            @Html.LabelFor(model => model.IsClientHasSupportiveFriendship)
+                                            @Html.RadioButtonFor(model => model.IsClientHasSupportiveFriendship, "y", new { @id = "IsClientHasSupportiveFriendshipYes" }) Yes
+                                            @Html.RadioButtonFor(model => model.IsClientHasSupportiveFriendship, "n", new { @id = "IsClientHasSupportiveFriendshipNo" }) No
+                                            @Html.RadioButtonFor(model => model.IsClientHasSupportiveFriendship, "u", new { @id = "IsClientHasSupportiveFriendshipUnknown" }) Unknown
+                                        </div>
+                                        <div class="row nextline  " id="ArrangeServices">
+                                            @Html.LabelFor(model => model.IsNeighborsArrangeForServices, new { @class = "control-lable" })
+                                            @Html.RadioButtonFor(model => model.IsNeighborsArrangeForServices, "y", new { @id = "IsNeighborsArrangeForServicesYes" }) Yes
+                                            @Html.RadioButtonFor(model => model.IsNeighborsArrangeForServices, "n", new { @id = "IsNeighborsArrangeForServicesNo" }) No
+                                            @Html.RadioButtonFor(model => model.IsNeighborsArrangeForServices, "u", new { @id = "IsNeighborsArrangeForServicesUnknown" }) Unknown
+                                            @Html.RadioButtonFor(model => model.IsNeighborsArrangeForServices, "x", new { @id = "IsNeighborsArrangeForServicesNA" }) NA - No assistance needed
+
+                                            <div id="ArrangeServicesOptions" class=" ">
+                                                @Html.CheckBoxFor(model => model.IsNoDependableFamily) @Html.LabelFor(model => model.IsNoDependableFamily)<br />
+                                                @Html.CheckBoxFor(model => model.IsLacksAdequateInformalCare) @Html.LabelFor(model => model.IsLacksAdequateInformalCare)<br />
+                                                @Html.CheckBoxFor(model => model.IsLacksAdequateFormalCare) @Html.LabelFor(model => model.IsLacksAdequateFormalCare)<br />
+                                                @Html.CheckBoxFor(model => model.IsIsolated) @Html.LabelFor(model => model.IsIsolated)<br />
+                                            </div>
+                                        </div>
+                                        <div class="row nextline  " id="CommunitySupportServices">
+                                            @Html.LabelFor(model => model.IsClientReceivingCommunitySupport)
+                                            @Html.RadioButtonFor(model => model.IsClientReceivingCommunitySupport, "y", new { @id = "IsClientReceivingCommunitySupportYes" }) Yes
+                                            @Html.RadioButtonFor(model => model.IsClientReceivingCommunitySupport, "n", new { @id = "IsClientReceivingCommunitySupportNo" }) No
+                                            @Html.RadioButtonFor(model => model.IsClientReceivingCommunitySupport, "u", new { @id = "IsClientReceivingCommunitySupportUnknown" }) Unknown
+                                        </div>
+                                        <div class="row nextline">
+                                            <div class="col-lg-3  " id="CommunitySupportServicesOptions">
+                                                @Html.TextAreaFor(model => model.ClientReceivingCommunitySupport, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+
+                                        <div class="row nextline  " id="Advocate">
+                                            @Html.LabelFor(model => model.IsClientHasAdvocate)
+                                            @Html.RadioButtonFor(model => model.IsClientHasAdvocate, "y", new { @id = "IsClientHasAdvocateYes" }) Yes
+                                            @Html.RadioButtonFor(model => model.IsClientHasAdvocate, "n", new { @id = "IsClientHasAdvocateNo" }) No
+                                            @Html.RadioButtonFor(model => model.IsClientHasAdvocate, "u", new { @id = "IsClientHasAdvocateUnknown" }) Unknown
+                                            @Html.RadioButtonFor(model => model.IsClientHasAdvocate, "x", new { @id = "IsClientHasAdvocateNA" }) NA - No assistance needed
+
+                                            <div id="AdvocateOptions" class=" ">
+                                                @Html.CheckBoxFor(model => model.IsClientCaregiverToOthers) @Html.LabelFor(model => model.IsClientCaregiverToOthers)<br />
+                                                @Html.CheckBoxFor(model => model.IsClientReliesOnOtherToCommunicate) @Html.LabelFor(model => model.IsClientReliesOnOtherToCommunicate)<br />
+                                                @Html.CheckBoxFor(model => model.IsFormalother) @Html.LabelFor(model => model.IsFormalother)
+                                                <div class="row nextline  " id="Formalother">
+                                                    <div class=" col-lg-3">@Html.DisplayFor(model => model.Formalother, new { @class = "form-control" })</div>
+                                                </div>
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="well container " id="AbuserFactors" style="background-color: #fff">
+                                    <div class="row  ">
+                                        <h4 style="text-decoration: underline">Absuer Factors</h4>
+                                        <br />
+                                    </div>
+                                    <div class="container">
+                                        <div class="row nextline">
+                                            <div class="col-lg-4">
+                                                @Html.CheckBoxFor(model => model.IsAbuserEmotionallyDependentOnClient) @Html.LabelFor(model => model.IsAbuserEmotionallyDependentOnClient)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserFinanciallyDependentOnClient) @Html.LabelFor(model => model.IsAbuserFinanciallyDependentOnClient)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserUnreliable) @Html.LabelFor(model => model.IsAbuserUnreliable)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserPoorCaregivingSkills) @Html.LabelFor(model => model.IsAbuserPoorCaregivingSkills)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserPoorCopingSkills) @Html.LabelFor(model => model.IsAbuserPoorCopingSkills)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserIsolatesClient) @Html.LabelFor(model => model.IsAbuserIsolatesClient)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserCognitiveLimitations) @Html.LabelFor(model => model.IsAbuserCognitiveLimitations)<br />
+                                            </div>
+                                            <div class="col-lg-4">
+                                                @Html.CheckBoxFor(model => model.IsAbuserPhysicalLimitations) @Html.LabelFor(model => model.IsAbuserPhysicalLimitations)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserSubstanceAbuseAlcohol) @Html.LabelFor(model => model.IsAbuserSubstanceAbuseAlcohol)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserSubstanceAbuseDrugs) @Html.LabelFor(model => model.IsAbuserSubstanceAbuseDrugs)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserPresentsOverburdend) @Html.LabelFor(model => model.IsAbuserPresentsOverburdend)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserWillNotPermitServices) @Html.LabelFor(model => model.IsAbuserWillNotPermitServices)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserUncooperative) @Html.LabelFor(model => model.IsAbuserUncooperative)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserUndueInfluence) @Html.LabelFor(model => model.IsAbuserUndueInfluence)<br />
+                                            </div>
+                                            <div class="col-lg-4">
+                                                @Html.CheckBoxFor(model => model.IsAbuserUnrestricted) @Html.LabelFor(model => model.IsAbuserUnrestricted)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserHistoryOfAbuse) @Html.LabelFor(model => model.IsAbuserHistoryOfAbuse)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserPetAbuse) @Html.LabelFor(model => model.IsAbuserPetAbuse)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserPreviousAbuser) @Html.LabelFor(model => model.IsAbuserPreviousAbuser)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserCriminalHistory) @Html.LabelFor(model => model.IsAbuserCriminalHistory)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserNone) @Html.LabelFor(model => model.IsAbuserNone)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserUnknown) @Html.LabelFor(model => model.IsAbuserUnknown)<br />
+                                                @Html.CheckBoxFor(model => model.IsAbuserOther) @Html.LabelFor(model => model.IsAbuserOther)<div id="AbuserOther">@Html.DisplayFor(model => model.AbuserOther, new { @class = "form-control" })</div>
+                                                <br />
+                                                <br />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="well container " id="OverallRiskAssessment" style="background-color: #fff">
+                                    <div class="row nextline" id="Risk Definitions Substantiated">
+                                        <div class="col-lg-12 form-group">
+                                            <h4 style="text-decoration: underline">To reflect conditions prior to interventions / APS involvenment:</h4>
+                                            <br />
+                                            <br />
+
+                                            <b>Low Risk:</b>
+                                            @*<text>Client's social environmental and functional status support that the client is not at risk of ANE and/or SN in his/her living situation</text>*@
+                                            <text>Overall the situation is not likely to recur or to escalate in severity.</text>
+                                            <br />
+                                            <br />
+                                            <b>Meduium Risk:</b>
+                                            @*<text>There are factors present that suggest that the client may be at some risk of ANE and/or SN in his/her living situation</text>*@
+                                            <text>In general, there is some possibility  the situation will continue and probably escalate in the future.</text>
+                                            <br />
+                                            <br />
+                                            <b>High Risk:</b>
+                                            @*<text>There are indications that the client is very likely to be at risk of ANE and/or SN in his/her living situation</text>*@
+                                            <text>It is very likely the situation will continue and probably escalate in the future.</text>
+                                            <br />
+                                        </div>
+                                    </div>
+                                    <div class="row nextline" id="Substantiated Risk Level">
+                                        <div class="col-lg-6  ">
+                                            <b><u>Risk Assessment - Overall Risk Level:</u></b><br />
+                                            <div>
+                                                @Html.CheckBoxFor(model => model.IsANENA) @Html.LabelFor(model => model.IsANENA) /   @Html.CheckBoxFor(model => model.IsSNNA) @Html.LabelFor(model => model.IsSNNA)
+                                                <br />
+                                                @Html.CheckBoxFor(model => model.IsLowANE) @Html.LabelFor(model => model.IsLowANE) /   @Html.CheckBoxFor(model => model.IsLowSN) @Html.LabelFor(model => model.IsLowSN)
+                                                <br />
+                                                @Html.CheckBoxFor(model => model.IsMediumANE) @Html.LabelFor(model => model.IsMediumANE) / @Html.CheckBoxFor(model => model.IsMediumSN) @Html.LabelFor(model => model.IsMediumSN)
+                                                <br />
+                                                @Html.CheckBoxFor(model => model.IsHighANE) @Html.LabelFor(model => model.IsHighANE) /   @Html.CheckBoxFor(model => model.IsHighSN) @Html.LabelFor(model => model.IsHighSN)
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row nextline">
+                                        <div class="col-lg-12 form-group  ">
+                                            @Html.LabelFor(model => model.Rationale) (Provide a brief rationale for the overall risk level highlighting the risk categories/indicators that had a bearing on the overall score. Note any significant changes from the last risk assessment that was administered. Based on your clinical judgement, indicate why you believe the person may or may not be at continued risk of ANE and/or SN)
+                                            <div>
+                                                @Html.TextAreaFor(model => model.Rationale, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row nextline">
+                                        <div class="col-lg-3 ">
+                                            @Html.LabelFor(model => model.CaseworkerSignature)
+                                            <div>
+                                                @Html.TextBoxFor(model => model.CaseworkerSignature, new { @class = "form-control", @placeholder = "Sign" })
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 ">
+                                            @Html.LabelFor(model => model.CaseworkerSignatureDate)
+                                            <div>
+                                                @Html.TextBoxFor(model => model.CaseworkerSignatureDate, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", @placeholder = "Date", @value = "" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row nextline">
+                                        <text>Supervisor has reviewed and approved the risk level assigned and agrees information is complete and accurate.</text>
+                                        <div class="col-lg-3 ">
+                                            @Html.LabelFor(model => model.SupervisorSignature)
+                                            <div>
+                                                @Html.TextBoxFor(model => model.SupervisorSignature, new { @class = "form-control", @placeholder = "Sign" })
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 ">
+                                            @Html.LabelFor(model => model.SupervisorSignatureDate)
+                                            <div>
+                                                @Html.TextBoxFor(model => model.SupervisorSignatureDate,"{0:MM/dd/yyyy}", new { @class = "form-control datepicker", @placeholder = "Date", @value = "" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </fieldset>
+
+        </div>
+    </div>
+</div>

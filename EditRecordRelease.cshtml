@@ -1,0 +1,282 @@
+﻿@model AGE.CMS.Data.Models.Case.viewRecordRelease
+
+@{
+    ViewBag.Title = "Record Release";
+    var errorclass = "";
+}
+
+<script src="~/Assets/Basic/Scripts/CMS/Case/RecordRelease.js"></script>
+
+<div class="container">
+    <div class="panel panel-warning">
+
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="titletextbegin">
+                    <span class="glyphicon glyphicon-edit"></span><span class="textspace">
+                        <text>Record Release</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+
+        <div class="panel-body">
+
+            @if (ViewBag.Error == null)
+            {
+
+
+
+                using (Html.BeginForm("SaveRecordRelease", "Case", FormMethod.Post))
+                {
+                    @Html.HiddenFor(model => model.Id)
+                    @Html.HiddenFor(model => model.CaseheaderId)
+                    @Html.HiddenFor(model => model.DateCreated)
+
+                    <div class="row nextline">
+                        <div class="col-md-12 pull-right">
+                            <div class="btn-group pull-right" style="margin-right: 10px;">
+                                <button id="SaveRecordRelease" rel="tooltip" type="submit" class="btn btn-success btn-md btn-outline" title=" Save & Close ">Save & Close</button>
+                                <a id="cancelRecordRelease" rel="tooltip" class="btn btn-default btn-md" title=" Cancel " href='@Url.Action("ManageCase", "Case", new { CaseheaderId = @Model.CaseheaderId})'>Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row nextline"></div>
+                    if (Model.InCompleteErrors.ErrorsInRelease)
+                    {
+                        <span class="danger">Please correct the highlighted fields to complete the case</span>
+                    }
+                    else if (Model.StatusDescription == AGE.CMS.Data.Models.ENums.CaseStatus.Incomplete.ToString())
+                    {
+                        <span class="warning">Release form is still Incomplete; Please Save to complete</span>
+                    }
+
+                    <div class="row nextline" style="margin: 1px">
+                        @Html.Partial("_ViewClientCMS", Model.viewCaseHeader.Client)
+                    </div>
+
+
+
+
+
+                    <div class="panel-heading" style="border: groove; background-color: #efeed6;">
+                        This form should be used for tracking all request or subpoenas for client records received by the APS Provider Agency.
+                        <br />
+
+                        Access to APS records (but not access to reporter information) may be provided to those entities listed in Section 8 of the APS Act.
+                        <br />
+
+                        Before releasing APS records, save the record separately, redact the saved copy and provide the final to requestor with a letter detailing confidentiality requirements of the APS Act.
+                        <br />
+
+                        Save a copy of the final redacted copy and the cover letter to this tab.
+                        <br />
+
+                        <b><u>Redaction Reminders:</u></b> reporter identity, social security numbers, driver’s license numbers, Medicare or Medicaid numbers.  The goal is to redact information which would specifically identify an individual. Error on the side of caution and feel free to consult IDoA legal staff for discussion.
+                        <br />
+
+                    </div>
+
+
+
+
+
+                    if (Model.InCompleteErrors.ErrorsInRelease && Model.InCompleteErrors.HasErrorsReleaseType)
+                    {
+                        <span class="danger">Please select type of Record Release</span><br />
+                    }
+                    if (Model.InCompleteErrors.ErrorsInRelease && Model.InCompleteErrors.HasErrorsReceiver)
+                    {
+                        <span class="danger">Please select type of agency release request recevied</span><br />
+                    }
+                    if (Model.InCompleteErrors.ErrorsInRelease && Model.InCompleteErrors.HasErrorsDateRequestReceived)
+                    {
+                        <span class="danger">Date of Record request is required</span><br />
+                    }
+                    if (Model.InCompleteErrors.ErrorsInRelease && Model.InCompleteErrors.HasErrorsReceviedBy)
+                    {
+                        <span class="danger">Please select type of request for release received by</span><br />
+                    }
+                    if (Model.InCompleteErrors.ErrorsInRelease && Model.InCompleteErrors.HasErrorsRequestor)
+                    {
+                        <span class="danger">Please select type of Release Requestor</span><br />
+                    }
+                    if (Model.InCompleteErrors.ErrorsInRelease && Model.InCompleteErrors.HasErrorsDateGranted)
+                    {
+                        <span class="danger">Date of record released is required</span><br />
+                    }
+                    if (Model.InCompleteErrors.ErrorsInRelease && Model.InCompleteErrors.HasErrorsCompletedBy)
+                    {
+                        <span class="danger">Please select type of agency record release completed by</span><br />
+                    }
+                    if (Model.InCompleteErrors.ErrorsInRelease && Model.InCompleteErrors.HasErrorsPreparedBy)
+                    {
+                        <span class="danger">Please enter person name who prepared release</span><br />
+                    }
+
+
+
+                    <div class="">
+                        <div class="well">
+                            <div class="container well" style="background-color: #fff">
+                                <div class="row nextline">
+                                    @{
+                    errorclass = "";
+
+                    if (Model.InCompleteErrors.ErrorsInRelease && Model.InCompleteErrors.HasErrorsReleaseType)
+                    {
+                        errorclass = "has-error";
+                    }
+
+                    if (Model.InCompleteErrors.ErrorsInRelease && Model.InCompleteErrors.HasErrorsReceiver)
+                    {
+                        errorclass = "has-error";
+                    }
+                    if (Model.InCompleteErrors.ErrorsInRelease && Model.InCompleteErrors.HasErrorsDateRequestReceived)
+                    {
+                        errorclass = "has-error";
+                    }
+                    if (Model.InCompleteErrors.ErrorsInRelease && Model.InCompleteErrors.HasErrorsReceviedBy)
+                    {
+                        errorclass = "has-error";
+                    }
+
+                                    }
+
+                                    <div class="col-md-3 @errorclass">
+                                        @Html.ValidationMessageFor(model => model.RecordReleaseTypeId)
+                                        @Html.LabelFor(model => model.RecordReleaseTypeId, new { @class = "control-label" })
+                                        <div>
+                                            @Html.DropDownListFor(model => model.RecordReleaseTypeId, new SelectList(new[] { new AGE.CMS.Data.Models.Case.viewRecordReleaseType { Id = 0, Description = " Select Type " } }.Union(Model.caselookup.listofRecordReleaseTypes.OrderBy(s => s.Description)), "Id", "Description", Model.RecordReleaseTypeId), new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 @errorclass">
+                                        @Html.ValidationMessageFor(model => model.DateIntake)
+                                        @Html.LabelFor(model => model.DateIntake, new { @class = "control-label" })
+                                        <div>
+                                            @*@Html.DisplayFor(model => model.DateIntake)*@
+                                            @Html.DropDownListFor(model => model.DateIntake, (List<SelectListItem>)ViewBag.IntakeDates, "Select Intake Date", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row nextline">
+                                    <div class="col-md-3 @errorclass">
+                                        @Html.LabelFor(model => model.RecordReleaseRequestReceiverId, new { @class = "control-label" })
+                                        <div>
+                                            @Html.DropDownListFor(model => model.RecordReleaseRequestReceiverId, new SelectList(new[] { new AGE.CMS.Data.Models.Case.viewRecordReleaseRequestReceiver { Id = 0, Description = " Receiver " } }.Union(Model.caselookup.listofRecordReleaseRequestsReceivers.OrderBy(s => s.Description)), "Id", "Description", Model.RecordReleaseRequestReceiverId), new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 @errorclass">
+                                        @Html.LabelFor(model => model.DateRequestReceived, new { @class = "control-label" })
+                                        <div>
+                                            @Html.TextBoxFor(model => model.DateRequestReceived, new { @class = "form-control DateRequestReceived", placeholder = "Request Received Date" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 @errorclass">
+                                        @Html.LabelFor(model => model.RecordReleaseRequestReceivedById, new { @class = "control-label" })
+                                        <div>
+                                            @Html.DropDownListFor(model => model.RecordReleaseRequestReceivedById, new SelectList(new[] { new AGE.CMS.Data.Models.Case.viewRecordReleaseRequestReceivedBy { Id = 0, Description = " Received By " } }.Union(Model.caselookup.listofRecordReleaseRequestsReceivedBy.OrderBy(s => s.Description)), "Id", "Description", Model.RecordReleaseRequestReceivedById), new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 @errorclass" id="RecordReleaseRequestReceivedByOther">
+                                        @Html.LabelFor(model => model.RecordReleaseRequestReceivedByOther)
+                                        <div>
+                                            @Html.TextBoxFor(model => model.RecordReleaseRequestReceivedByOther, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row nextline">
+                                    @{
+                    errorclass = "";
+
+                    if (Model.InCompleteErrors.ErrorsInRelease && Model.InCompleteErrors.HasErrorsRequestor)
+                    {
+                        errorclass = "has-error";
+                    }
+                                    }
+
+                                    <div class="col-md-3 @errorclass">
+                                        @Html.LabelFor(model => model.RecordReleaseRequestorId, new { @class = "control-label" })
+                                        <div>
+                                            @Html.DropDownListFor(model => model.RecordReleaseRequestorId, new SelectList(new[] { new AGE.CMS.Data.Models.Case.viewRecordReleaseRequestor { Id = 0, Description = " Requestor " } }.Union(Model.caselookup.listofRecordReleaseRequestors.OrderBy(s => s.Description)), "Id", "Description", Model.RecordReleaseRequestorId), new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 " id="RequestorOther">
+                                        @Html.LabelFor(model => model.RecordReleaseRequestorOther)
+                                        <div>
+                                            @Html.TextBoxFor(model => model.RecordReleaseRequestorOther, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row nextline">
+                                    @{
+                    errorclass = "";
+
+
+                    if (Model.InCompleteErrors.ErrorsInRelease && Model.InCompleteErrors.HasErrorsDateGranted)
+                    {
+                        errorclass = "has-error";
+                    }
+
+                    if (Model.InCompleteErrors.ErrorsInRelease && Model.InCompleteErrors.HasErrorsCompletedBy)
+                    {
+                        errorclass = "has-error";
+                    }
+                    if (Model.InCompleteErrors.ErrorsInRelease && Model.InCompleteErrors.HasErrorsPreparedBy)
+                    {
+                        errorclass = "has-error";
+                    }
+
+                                    }
+                                    <div class="row nextline">
+                                        <div class="col-md-3  @errorclass">
+                                            @Html.LabelFor(model => model.DateRecordReleaseRequestGranted, new { @class = "control-label" })
+                                            <div>
+                                                @Html.TextBoxFor(model => model.DateRecordReleaseRequestGranted, new { @class = "form-control DateRecordReleaseRequestGranted", placeholder = "Request Granted Date" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-9  @errorclass" style="padding-top:25px">
+                                            @Html.LabelFor(model => model.IsRecordReleaseRequestGranted, htmlAttributes: new { @class = "" })
+
+                                            @Html.RadioButtonFor(model => model.IsRecordReleaseRequestGranted, "y") Yes
+
+                                            @Html.RadioButtonFor(model => model.IsRecordReleaseRequestGranted, "n") No
+                                        </div>
+
+                                      
+                                    </div>
+                                    <div class="row nextline">
+                                        <div class="col-md-3  @errorclass">
+                                            @Html.LabelFor(model => model.RecordReleaseRequestCompletedId, new { @class = "control-label" })
+                                            <div>
+                                                @Html.DropDownListFor(model => model.RecordReleaseRequestCompletedId, new SelectList(new[] { new AGE.CMS.Data.Models.Case.viewRecordReleaseRequestReceiver { Id = 0, Description = " Completed By " } }.Union(Model.caselookup.listofRecordReleaseRequestsReceivers.OrderBy(s => s.Description)), "Id", "Description", Model.RecordReleaseRequestCompletedId), new { @class = "form-control" })
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3 form-group  @errorclass">
+                                            @Html.LabelFor(model => model.ReleasePreparedBy, new { @class = "control-label" })
+                                            <div>
+                                                @Html.TextBoxFor(model => model.ReleasePreparedBy, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+
+            }
+
+            else
+            {
+                <div class="alert alert-danger" role="alert">@ViewBag.Error</div>
+            }
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewClientCMS
+
+<div class="container">
+
+
+    @Html.HiddenFor(model => model.Person.FirstName)
+    @Html.HiddenFor(model => model.Person.LastName)
+    @Html.HiddenFor(model => model.Person.DOB)
+    @Html.HiddenFor(model => model.Id)
+
+    @if (Model.viewlawenforcement.Id > 0)
+    {
+        <p>
+            <a href="@Url.Action("LawEnforcement", "Case", new { ClientId = Model.Id, Id = Model.viewlawenforcement.Id, CaseheaderId = Model.CaseheaderId })">
+                <button id="EditLawEnforcement" class="btn btn-primary edit" type="button">
+                    <span class="glyphicon glyphicon-edit"></span><span style="margin-left: 5px;">
+                        <text>Law Enforcement Tracking Instrument</text>
+                    </span>
+                </button>
+            </a>
+        </p>
+    }
+
+    else
+    {
+        <p>
+            <a href="@Url.Action("LawEnforcement", "Case", new { ClientId = Model.Id, Id = Model.viewlawenforcement.Id, CaseheaderId = Model.CaseheaderId })">
+                <button id="newLawEnforcement" class="btn btn-success create" type="button">
+                    <span class="glyphicon glyphicon-plus"></span><span style="margin-left: 5px;">
+                        <text>New Law Enforcement Tracking Instrument</text>
+                    </span>
+                </button>
+            </a>
+        </p>
+    }
+
+
+</div>

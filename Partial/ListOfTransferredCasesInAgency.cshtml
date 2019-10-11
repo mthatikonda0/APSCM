@@ -1,0 +1,88 @@
+﻿@model AGE.CMS.Data.Models.Dashboard.ViewOpenClosedTransferedCasesModel
+@using PagedList.Mvc;
+
+
+
+
+    @if (Model != null && Model.TransferedCases != null && Model.TransferedCases.Count > 0)
+    {
+        if (Model.FilterFirstName.Trim().Length > 0 || Model.FilterLastName.Trim().Length > 0 || Model.FilterDOB.Trim().Length > 0 || Model.FilterSSN.Trim().Length > 0 || Model.FilterCWLastName.Trim().Length > 0)
+        {
+            <h4>Filter Active (Lastname = @Model.FilterLastName.Trim()) (Firstname = @Model.FilterFirstName.Trim()) (DOB = @Model.FilterDOB.Trim()) (SSN = @Model.FilterSSN.Trim()) (CW Last Name = @Model.FilterCWLastName.Trim()) (Abuser Search = @Model.IsAbuserSearch)</h4>
+        }
+
+        <table class="table table-striped table-hover " id="TransferredCasesInAgency">
+            <caption style="display: none">List of Cases</caption>
+            <thead>
+                <tr>
+                    <th class="col-lg-1">&nbsp;</th>
+                    <th class="col-lg-1">Client</th>
+                    <th class="col-lg-3">Transferred From</th>
+                    <th class="col-lg-3">Transferred To</th>
+                    <th class="col-lg-2">Case Transferred Date</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model.TransferedCases)
+                {
+
+                    <tr class="">
+                        <td>
+
+                            <div class="btn-group">
+                                <a rel="tooltip" class="btn btn-default btn-xs" title="Manage Case" href='@Url.Action("ManageCase", "Case", new { CaseheaderId = @item.Id })'><span class="glyphicon glyphicon-th-large"></span></a>
+                            </div>
+
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.LastName) , @Html.DisplayFor(modelItem => item.FirstName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ContractDescription)</td>
+                        <td>@Html.DisplayFor(modelItem => item.TransferredToAgencyDescription)</td>
+                        <td>
+                            @if (item.DateTransferred != null)
+                            {
+                                @item.DateTransferred.ToShortDateString()
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.DateTransferred)
+                            }
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+            @*<tfoot>
+                <tr>
+                    <th class="col-lg-1">&nbsp;</th>
+                    <th class="col-lg-1">Client</th>
+                    <th class="col-lg-3">Transferred From</th>
+                    <th class="col-lg-3">Transferred To</th>
+                    <th class="col-lg-2">Case Transferred Date</th>
+                </tr>
+            </tfoot>*@
+        </table>
+
+
+        <div id="container" style="margin-left: 20px">
+            <table width="100%" cellpadding="0">
+                <tr>
+                    <td width="150" valign="top">
+                        Total Records: @Model.AllTransferedCases.Count.ToString()
+                    </td>
+                    <td align="right" valign="top">
+                        Page @(Model.TransferedCases.PageCount < Model.TransferedCases.PageNumber ? 0 : Model.TransferedCases.PageNumber) of @Model.TransferedCases.PageCount
+                        @Html.PagedListPager(Model.TransferedCases, page => Url.Action("ListOfCasesInAgency", "Case", new { Page = page, ListName = "TRANSFERED" }))
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    }
+    else
+    {
+        <p>There are no <u><b>transferred</b></u> cases in Agency</p>
+    }
+

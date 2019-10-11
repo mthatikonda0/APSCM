@@ -1,0 +1,1805 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewCaseHeader
+
+<script>
+    $(document).ready(function () {
+        $(".closeintake").hide();
+        if ($.trim($('#initialTable tbody').text()) == "") {
+            $('#initialTableDiv').hide();
+        }
+
+        if ($('#IR').find('div.panel-group').length !== 0) {
+            $("#item_IntakeReportTypeId option[value='1']").remove();
+        }
+        $('.intakecaseerrors').hide();
+        $(".verifyintakebox").click(function (e) {
+            $(this).siblings('.intakecaseerrors').toggle();
+        });
+
+        $(".billingsubmit").click(function (e) {
+            var id = $(this).attr('data-transfer');
+
+            $.ajax({
+                url: '@Url.Action("SubmitToBilling", "Case")',
+                type: 'POST',
+                dataType: 'json',
+                data: { IntakeId: id },
+                success: function (data) {
+                    window.location.href = data;
+                },
+                error: function (request, status, error) {
+                    //$('#fail').show();
+                }
+            });
+        });
+
+
+
+        $(".closeintake").click(function (e) {
+            var id = $(this).attr('data-transfer');
+
+            bootbox.confirm({
+                title: "Closing Intake",
+                message: "Do you want to close the Intake?",
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Cancel'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirm'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+
+                        $.ajax({
+                            url: '@Url.Action("CloseIntake", "Intake")',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: { Id: id },
+                            success: function (data) {
+                                if (data.url != undefined) {
+                                    window.location.href = data.url;
+                                }
+                                else {
+                                    $("#error").show();
+                                    for (i = 0; i < data.length; i++) {
+                                        $("#error").append(data[i] + "<br/>");
+
+                                    }
+                                }
+                            },
+                            
+                            })
+                        };
+                    }
+                })
+            });
+      
+
+
+
+        $(".update").click(function (e) {
+            var id = $(this).attr('data-transfer');
+            var reporttypeid = $(this).parentsUntil('tr').prev().find('select').val()
+            var message;
+            if (reporttypeid == 1) {
+                message = "Is the first report involving the eligible adult who is not known to the APS PA through an APS report. Requires a complete, separate assessment."
+            }
+            if (reporttypeid == 2) {
+                message = "Is a report of a new set of circumstances of ANE/SN or new alleged abusers involving an eligible adult known to the APS PA through a previously classifed APS report. Requires a complete, separate investigation."
+            }
+            if (reporttypeid == 3) {
+                message = "Provides related additional information about the original report. Does not require a complete, separate investigation."
+            }
+
+            @*if (reporttypeid == 2) {
+                bootbox.prompt({
+                    title: "Should this change timeline!",
+                    inputType: 'checkbox',
+                    inputOptions: [
+                        {
+                            text: 'Yes',
+                            value: '1',
+                        },
+                        {
+                            text: 'No',
+                            value: '0',
+                        }
+                    ],
+                    callback: function (reply) {
+
+                        if (reply != null) {
+
+
+                            var IsTimelineChanges = reply[0];
+
+                            bootbox.confirm({
+                                title: "Are you sure?",
+                                message: message,
+                                buttons: {
+                                    cancel: {
+                                        label: '<i class="fa fa-times"></i> Cancel'
+                                    },
+                                    confirm: {
+                                        label: '<i class="fa fa-check"></i> Confirm'
+                                    }
+                                },
+                                callback: function (result) {
+                                    if (result) {
+
+                                        $.ajax({
+                                            url: '@Url.Action("UpdateIntakeReportType", "Case")',
+                                            type: "POST",
+                                            data: {
+                                                Id: id,
+                                                IntakeReportTypeId: reporttypeid,
+                                                IsTimelineChanges: IsTimelineChanges,
+                                            },
+                                            success: function (data) {
+                                                window.location.href = data.Url;
+                                            },
+                                            error: function (request, status, error) {
+                                                $('#fail').show();
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+
+            }
+
+            else {*@
+            var IsTimelineChanges = '0';
+            bootbox.confirm({
+                title: "Are you sure?",
+                message: message,
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Cancel'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirm'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+
+                        $.ajax({
+                            url: '@Url.Action("UpdateIntakeReportType", "Case")',
+                            type: "POST",
+                            data: {
+                                Id: id,
+                                IntakeReportTypeId: reporttypeid,
+                                IsTimelineChanges: IsTimelineChanges,
+                            },
+                            success: function (data) {
+                                window.location.href = data.Url;
+                            },
+                            error: function (request, status, error) {
+                                $('#fail').show();
+                            }
+                        });
+                    }
+                }
+            });
+            //}
+        });
+
+
+
+        $(".updateIntakeType").click(function (e) {
+            var id = $(this).attr('data-transfer');
+            var reporttypeid = this.nextElementSibling.firstElementChild.value
+            var message;
+            if (reporttypeid == 1) {
+                message = "Is the first report involving the eligible adult who is not known to the APS PA through an APS report. Requires a complete, separate assessment."
+            }
+            if (reporttypeid == 2) {
+                message = "Is a report of a new set of circumstances of ANE/SN or new alleged abusers involving an eligible adult known to the APS PA through a previously classifed APS report. Requires a complete, separate investigation."
+            }
+            if (reporttypeid == 3) {
+                message = "Provides related additional information about the original report. Does not require a complete, separate investigation."
+            }
+        var IsTimelineChanges = '0';
+            bootbox.confirm({
+                title: "Are you sure?",
+                message: message,
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Cancel'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirm'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+
+                        $.ajax({
+                            url: '@Url.Action("UpdateIntakeReportType", "Case")',
+                            type: "POST",
+                            data: {
+                                Id: id,
+                                IntakeReportTypeId: reporttypeid,
+                                IsTimelineChanges: IsTimelineChanges,
+                            },
+                            success: function (data) {
+                                window.location.href = data.Url;
+                            },
+                            error: function (request, status, error) {
+                                $('#fail').show();
+                            }
+                        });
+                    }
+                }
+            });
+            //}
+        });
+
+
+    });
+
+    
+</script>
+<style>
+    .intakeheadings {
+        cursor: pointer;
+        height: 50%;
+        background-color: #f7f6dd !important;
+        padding-top: 3px;
+        padding-bottom: 3px;
+        border-color: #949382 !important;
+    }
+
+    /*.zommable:hover {
+        -ms-transform: scale(1.15);
+        -webkit-transform: scale(1.15);
+        transform: scale(1.15);
+        -webkit-transition: transform 0.3s ease-in-out;
+        z-index: 100;
+    }*/
+
+    .subheadings {
+        cursor: pointer;
+        height: 50%;
+        background-color: #949382 !important;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        border-color: #949382 !important;
+    }
+
+    .intakesubheadings {
+        height: 50%;
+        background-color: white !important;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        border-bottom: 2px;
+        border-color: #949382 !important;
+    }
+
+    .intakeheadings:hover, .intakeheadings:active {
+        background-color: #edebcb !important;
+    }
+</style>
+
+<div class="container">
+
+    <div class="nextline well" id="initialTableDiv" style="background-color: white">
+        @if (Model.ListofIntakeForms != null && Model.ListofIntakeForms.Any())
+        {
+            <table class="table table-striped table-hover " id="initialTable">
+                <caption style="display: none">List of Intakes</caption>
+                <thead>
+                    <tr>
+                        <th class="col-md-1">&nbsp;</th>
+                        <th class="col-md-1">Intake Id</th>
+                        <th class="col-md-1">Date Intake</th>
+                        <th class="col-md-1">Priority</th>
+                        <th class="col-md-1">Status</th>
+                        <th class="col-md-1">Intake Type</th>
+                        <th class="col-md-1">&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.ListofIntakeForms)
+                    {
+                        if (item.IntakeReportTypeId == null)
+                        {
+
+                            <tr class="">
+                                <td>
+
+                                    <div class="btn-group">
+                                        <a rel="tooltip" class="btn btn-default btn-sm" title="View Intake " href='@Url.Action("ViewIntake", "Intake", new { ClientId = Model.Id, Id = item.Id, mode = "Case" })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                    </div>
+
+                                </td>
+                                <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                                <td>@Html.DisplayFor(modelItem => item.DateIntake)</td>
+                                <td>@Html.DisplayFor(modelItem => item.PriorityType)</td>
+                                <td>@Html.DisplayFor(modelItem => item.StatusDescription)</td>
+                                @if (User.IsInRole("CMS_Admin") || User.IsInRole("CMS_IDOAStaff") || User.IsInRole("CMS_Supervisor") || User.IsInRole("CMS_Caseworker"))
+                                {
+                                    using (Html.BeginForm("UpdateIntakeReportType", "Case"))
+                                    {
+                                        @Html.HiddenFor(model => item.Id)
+                                        <td>@Html.DropDownListFor(modelItem => item.IntakeReportTypeId, new SelectList(new[] { new AGE.CMS.Data.Models.LookupModels.viewIntakeReportType { Id = 0, Description = " Select Intake Type" } }.Union(Model.caselookup.ListOfIntakeReportTypes), "Id", "Description", item.IntakeReportTypeId), new { @class = "form-control" })</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary update" data-transfer="@item.Id"><span class="glyphicon glyphicon-circle-arrow-up"></span><span class="textspace"></span>Update </button>
+                                            </div>
+                                        </td>
+                                    }
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                }
+
+
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <div class="row nextline">
+
+        <div class="panel-group" id="accordionIR">
+            <div class="panel panel-default" id="panelIR">
+                <div class="panel-heading intakeheadings" data-toggle="collapse" data-target="#collapseIR">
+                    <div class="">
+                        <w style="text-align: center"><h4 style="color:#8b2433">Initial Intake Report</h4></w>
+                    </div>
+                </div>
+                <div id="collapseIR" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div id="IR">
+                            <div class="  ">
+                                @if (Model.ListofIntakeForms != null && Model.ListofIntakeForms.Any())
+                                {
+                                    foreach (var item in Model.ListofIntakeForms)
+                                    {
+                                        if (item.IntakeReportTypeId == 1)
+                                        {
+                                            <div id="error" class=" well container" style="font-size:small ; color:red;display:none">
+                                                <u>Complete to Close Intake</u><br>
+                                                <span id="error"></span>
+                                            </div>
+                                            <div class="panel-group" style="border-color:red" id="accordionIR_@item.Id">
+                                                <div class="panel panel-primary" id="panelIR_@item.Id">
+                                                    <div class="panel-heading intakesubheadings">
+                                                        <div class="">
+                                                            <div class="btn-group">
+                                                                <a rel="tooltip" class="btn btn-primary btn-sm" title="Forms" data-toggle="collapse" data-target="#collapseIR_@item.Id">Forms</a>
+                                                                <a rel="tooltip" class="btn btn-default btn-sm" title="View Intake" href='@Url.Action("ViewIntake", "Intake", new { Id = item.Id, mode = "Case" })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                            </div>
+                                                            <b style="color: black">Intake Id: @item.Id &nbsp; Intake Date: @item.DateIntake.Value.ToShortDateString() </b>
+                                                            @if ((User.IsInRole("CMS_IDOAStaff") || User.IsInRole("CMS_Supervisor")) && (!(item.StatusId == 4 || item.StatusId == 5)))
+                                                                {
+
+                                                                    <a rel="tooltip" class="btn btn-primary btn-sm pull-right closeintake" data-transfer="@item.Id" title="Close Intake">Close Intake</a>
+
+                                                                }
+                                                            @if (User.IsInRole("CMS_Admin") || User.IsInRole("CMS_IDOAStaff"))
+                                                            {
+                                                                    <button type="button" class="btn btn-primary btn-sm updateIntakeType pull-right" data-transfer="@item.Id"><span class="glyphicon glyphicon-circle-arrow-up"></span><span class="textspace"></span>Update </button>
+                                                                    <div class="pull-right"> @Html.DropDownListFor(modelItem => item.IntakeReportTypeId, new SelectList(new[] { new AGE.CMS.Data.Models.LookupModels.viewIntakeReportType { Id = 0, Description = " Select Intake Type" } }.Union(Model.caselookup.ListOfIntakeReportTypes), "Id", "Description", item.IntakeReportTypeId), new { @class = "form-control " })</div>
+                                                                    @Html.HiddenFor(model => item.Id)
+                                                               
+                                                            }
+
+
+
+
+
+
+                                                        </div>
+
+                                                    </div>
+                                                    
+                                                    <div id="collapseIR_@item.Id" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+                                                            @if (item.StatusId == 28)
+                                                            {
+                                                                <a rel="tooltip" class="btn btn-block btn-outline btn-success" title="Billing Case is Approved"><span class="textspace"></span>Billing Case is Approved</a>
+
+                                                            }
+                                                            else if (item.StatusId == 27)
+                                                            {
+                                                                <a rel="tooltip" class="btn btn-block btn-outline btn-warning" title="Billing is Initiated"><span class="textspace"></span>Billing is Initiated</a>
+
+                                                            }
+                                                            else if (item.ListofCaseActivityTracker != null && item.ListofCaseActivityTracker.Any())
+                                                            {
+                                                                <div class="row nextline">
+                                                                    <a rel="tooltip" class="verifyintakebox btn btn-block btn-outline btn-danger" title="Please clear these errors to submit Case for Billing"><span class="textspace"></span>Verify Case (Errors : @item.validateintake.Messages.Count)</a>
+                                                                    <div class="intakecaseerrors" style="padding-left: 15px;">
+                                                                        @if (item.validateintake.IsValid)
+                                                                        {
+                                                                            <button type="button" class="btn btn-primary billingsubmit" data-transfer="@item.Id"><span class="glyphicon glyphicon-circle-arrow-up"></span><span class="textspace"></span>Please click here to Submit Case for Billing </button>
+                                                                        }
+
+                                                                        else
+                                                                        {
+                                                                            foreach (var message in item.validateintake.Messages)
+                                                                            {
+                                                                                <p>@message</p>
+                                                                            }
+                                                                        }
+
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            <br />
+
+                                                            <div class="row">
+                                                                <div class="ASP col-lg-4 zommable">
+                                                                    <div class="panel-group" id="accordionIRASP_@item.Id">
+                                                                        <div class="panel panel-default" id="panelIRASP_@item.Id">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff">Assessement Preparation</b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    @if (item.viewASP != null && item.viewASP.Id > 0)
+                                                                                    {
+                                                                                        if (item.viewASP.StatusDescription != AGE.CMS.Data.Models.ENums.CaseStatus.Approved.ToString() && item.viewASP.StatusDescription != AGE.CMS.Data.Models.ENums.CaseStatus.Closed.ToString())
+                                                                                        {
+                                                                                            <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Prep " href='@Url.Action("EditAssessmentPreparation", "Case", new { Id = item.viewASP.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                                                        }
+
+                                                                                        <a rel="tooltip" class="btn btn-default btn-sm" title="View Prep " href='@Url.Action("ViewAssessementPreperation", "Case", new { Id = item.viewASP.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                                                                        <b>Status : @item.viewASP.StatusDescription &nbsp; Date Created: @item.viewASP.DateCreated</b>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <a rel="tooltip" class="closable btn btn-success btn-outline" title="Create New Assessment Preparation Form" href='@Url.Action("EditAssessmentPreparation", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span>New Assessment Preparation</a>
+                                                                                        <div class="row nextline"></div>
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                @*<div class="Allegations col-lg-4 zommable">
+                                                                    <div class="panel-group" id="accordionIRAllegations_@item.Id">
+                                                                        <div class="panel panel-default" id="panelIRAllegations_@item.Id">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                            <b style="color:#fff" rel="tooltip" data-toggle="collapse" data-target="collapseIRAllegations_@item.Id">Allegations
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    @if (item.Allegations != null && item.Allegations.Any())
+                                                                                    {
+                                                                                        foreach (var allegation in item.Allegations)
+                                                                                        {
+                                                                                    <b>@Html.DisplayFor(x => allegation.Description)</b>  <br />
+                                                                                        }
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                    <h4>There are no Allegations</h4>
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    </div>*@
+                                                                <div class="Caseplan col-lg-4 zommable">
+                                                                    <div class="panel-group">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                                                                            Case Plan
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    @if (item.viewCasePlan.Id > 0)
+                                                                                    {
+
+                                                                                        <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Case Plan " href='@Url.Action("EditCasePlan", "Case", new { Id = item.viewCasePlan.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                                                        <a rel="tooltip" class="btn btn-default btn-sm" title="View Case Plan " href='@Url.Action("ViewCasePlan", "Case", new { Id = item.viewCasePlan.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                        <span class="textspace"></span><b>@*Status : @item.SuspiciousDeath.StatusDescription &nbsp;*@ Date Created: @item.viewCasePlan.DateCreated.Value.ToShortDateString() </b>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <a rel="tooltip" class="closable btn btn-success btn-outline" title="Create Case Plan" href='@Url.Action("EditCasePlan", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>Case Plan</a>
+                                                                                        <div class="row nextline"></div>
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row nextline">
+                                                                <div class="OSRA col-lg-4 zommable">
+                                                                    <div class="panel-group">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                                                                            Overall Substantiated Risk Assessement
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    @if (item.ListofOSRA != null && item.ListofOSRA.Any())
+                                                                                    {
+                                                                                        foreach (var osra in item.ListofOSRA)
+                                                                                        {
+
+                                                                                            if (osra.StatusDescription == "Incomplete" || osra.StatusDescription == "Open" || osra.StatusDescription == "Submitted")
+                                                                                            {
+                                                                                                <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit OSRA " href='@Url.Action("EditOSRA", "Case", new { Id = osra.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                                                                <a rel="tooltip" class="btn btn-default btn-sm" title="View OSRA " href='@Url.Action("ViewOSRA", "Case", new { Id = osra.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                <a rel="tooltip" class="btn btn-default btn-sm" title="View OSRA " href='@Url.Action("ViewOSRA", "Case", new { Id = osra.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                            }
+                                                                                            <b>Status : @osra.StatusDescription &nbsp; Date Created: @osra.DateCreated.Value.ToShortDateString() </b>
+                                                                                        }
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <a rel="tooltip" class="closable btn btn-success btn-outline" title="Create New OSRA" href='@Url.Action("EditOSRA", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>OSRA</a>
+                                                                                        <div class="row nextline"></div>
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="AllegedAbusers col-lg-4 zommable">
+                                                                    <div class="panel-group" id="accordionIRAllegedAbusers_@item.Id">
+                                                                        <div class="panel panel-default" id="panelIRAllegedAbusers_@item.Id">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color:#fff" rel="tooltip" data-toggle="collapse" data-target="collapseIRAllegedAbusers_@item.Id">AA(s)/Abuser(s)</b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    <a rel="tooltip" class="closable btn btn-success btn-outline" title="Create New Alleged Abuser" href='@Url.Action("EditAbuser", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span>New Alleged Abuser</a>
+                                                                                    <div class="row nextline"></div>
+                                                                                    @if (item.ListofCaseAbusers != null && item.ListofCaseAbusers.Any())
+                                                                                    {
+                                                                                        <table class="table table-striped table-hover ">
+                                                                                            <caption style="display: none">List of Abusers</caption>
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th class="col-md-1">&nbsp;</th>
+                                                                                                    <th class="col-md-1">AANumber</th>
+                                                                                                    <th class="col-lg-1">Alleged Abuser Name</th>
+
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+
+                                                                                                @foreach (var abuser in item.ListofCaseAbusers)
+                                                                                                {
+                                                                                                    if (abuser.FirstName != Model.Client.Person.FirstName || abuser.LastName != Model.Client.Person.LastName)
+                                                                                                    {
+                                                                                                        <tr class="">
+                                                                                                            <td>
+                                                                                                                <div class="btn-group">
+                                                                                                                    <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Abuser" href='@Url.Action("EditAbuser", "Case", new { Id = abuser.Id, IntakeId = @item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                                                                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Abuser" href='@Url.Action("ViewAbuser", "Case", new { Id = abuser.Id, IntakeId = @item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                                                </div>
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                @Html.DisplayFor(modelitem => abuser.AANumber)
+                                                                                                            </td>
+                                                                                                            <td>@Html.DisplayFor(modelItem => abuser.LastName),@Html.DisplayFor(modelItem => abuser.FirstName)</td>
+                                                                                                        </tr>
+                                                                                                    }
+                                                                                                }
+
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+
+                                                                                        <span>None. Add any new alleged abuser not listed on Intake</span>
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="Clientassessement col-lg-4 zommable">
+                                                                    <div class="panel-group">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                                                                            Client Assessement
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    @if (item.viewClientAssesssment.Id > 0)
+                                                                                    {
+
+                                                                                        @*if (item.viewClientAssesssment.StatusDescription == "Incomplete" || item.viewClientAssesssment.StatusDescription == "Open")
+                                                                                            {
+                                                                                                <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Client Assessment " href='@Url.Action("EditCA", "Case", new { Id = item.viewClientAssesssment.Id, IntakeId = item.Id, mode = "assessement" })'><span class="glyphicon glyphicon-edit"></span></a>
+
+                                                                                            }
+                                                                                            else if (item.viewClientAssesssment.StatusDescription == "Submitted")
+                                                                                            {
+                                                                                                if (User.IsInRole("CMS_Supervisor") || User.IsInRole("CMS_IDOAStaff"))
+                                                                                                {
+                                                                                                    <a rel="tooltip" class="closable btn btn-default btn-sm" title="Approve Client Assessement " href='@Url.Action("EditCA", "Case", new { Id = item.viewClientAssesssment.Id, IntakeId = item.Id, mode = "assessement" })'><span class="glyphicon glyphicon-ok"></span></a>
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Client Assessment " href='@Url.Action("ViewClientAssessementNew", "Case", new { Id = item.viewClientAssesssment.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                                }
+                                                                                            }
+                                                                                            else { }
+                                                                                            @*{
+                                                                                                <a rel="tooltip" class="btn btn-default btn-sm" title="View Client Assessement " href='@Url.Action("ViewClientAssessementNew", "Case", new { Id = item.viewClientAssesssment.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                                    }*@
+
+                                                                                        <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Client Assessment " href='@Url.Action("EditCA", "Case", new { Id = item.viewClientAssesssment.Id, IntakeId = item.Id, mode = "assessement" })'><span class="glyphicon glyphicon-edit"></span></a>
+
+                                                                                        if (item.viewClientAssesssment.StatusDescription == "NewReport")
+                                                                                        {
+                                                                                            item.viewClientAssesssment.StatusDescription = "Approved";
+                                                                                        }
+                                                                                        <a rel="tooltip" class="btn btn-default btn-sm" title="View Client Assessment " href='@Url.Action("ViewClientAssessementNew", "Case", new { Id = item.viewClientAssesssment.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a> <span class="textspace"></span><b>Status : @item.viewClientAssesssment.StatusDescription &nbsp; Date Created: @item.viewClientAssesssment.DateCreated.Value.ToShortDateString() </b>
+
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <a rel="tooltip" class="closable btn btn-success btn-outline" title="Create Client Assessment" href='@Url.Action("EditCA", "Case", new { Id = 0, IntakeId = item.Id, mode = "initial" })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>Client Assessment</a>
+                                                                                        <div class="row nextline"></div>
+                                                                                    }
+
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row nextline">
+                                                                <div class="Updatedriskassessement col-lg-4 zommable">
+                                                                    <div class="panel-group">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                                                                            Updated Risk Assessement
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    <a rel="tooltip" class="closable btn btn-success btn-outline" title="Create New ORA " href='@Url.Action("EditORA", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>ORA</a><br />
+                                                                                    <div class="row nextline"></div>
+                                                                                    @if (item.ListofORA != null && item.ListofORA.Any())
+                                                                                    {
+                                                                                        foreach (var ora in item.ListofORA)
+                                                                                        {
+                                                                                            <br />
+
+
+                                                                                            <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit ORA " href='@Url.Action("EditORA", "Case", new { Id = ora.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+
+                                                                                            <a rel="tooltip" class="btn btn-default btn-sm" title="View ORA " href='@Url.Action("ViewORA", "Case", new { Id = ora.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                                                                            <span class="textspace"></span><b>Status : @ora.StatusDescription &nbsp; Date Created: @ora.DateCreated.Value.ToShortDateString() </b>
+                                                                                        }
+                                                                                    }
+                                                                                    else
+                                                                                    {
+
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="WaiverExtension col-lg-4 zommable">
+                                                                    <div class="panel-group">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                                                                            Waivers/Extension
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    @if (@User.IsInRole("CMS_RAAAdmin") || @User.IsInRole("CMS_IDOAStaff") || @User.IsInRole("CMS_Supervisor"))
+                                                                                    {
+                                                                                        <a rel="tooltip" class=" btn btn-success btn-outline" title="Create Waiver " href='@Url.Action("EditWaiverExtension", "Case", new { Id = 0, IntakeId = item.Id, mode = "ManageCase" })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>Waiver Extension</a><br />
+                                                                                    }
+                                                                                    <div class="row nextline"></div>
+                                                                                    @if (item.ListofWaiverExtensions != null && item.ListofWaiverExtensions.Any())
+                                                                                    {
+                                                                                        <table class="table table-striped table-hover ">
+                                                                                            <caption style="display: none">List of Waivers</caption>
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th class="col-md-1">&nbsp;</th>
+                                                                                                    <th class="col-md-1">Waiver Type</th>
+                                                                                                    <th class="col-md-1">Status</th>
+                                                                                                    <th class="col-md-1">Date Created</th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+
+                                                                                                @foreach (var waiver in item.ListofWaiverExtensions)
+                                                                                                {
+
+                                                                                                    <tr class="">
+                                                                                                        <td>
+
+                                                                                                            <div class="btn-group">
+                                                                                                                <a rel="tooltip" class="btn btn-default btn-sm" title="View Waiver " href='@Url.Action("ViewWaiverExtension", "Case", new { Id = waiver.Id, mode = "ManageCase" })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                                            </div>
+
+                                                                                                        </td>
+                                                                                                        <td>@Html.DisplayFor(modelItem => waiver.WaiverType)</td>
+                                                                                                        <td>@Html.DisplayFor(modelItem => waiver.StatusDescription)</td>
+                                                                                                        @if (@waiver.DateCreated != null)
+                                                                                                        {
+                                                                                                            <td>@waiver.DateCreated.Value.ToShortDateString()</td>
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            <td>@Html.DisplayFor(modelItem => waiver.DateCreated)</td>
+                                                                                                        }
+                                                                                                    </tr>
+                                                                                                }
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="CaseActivityTrackers col-lg-4 zommable">
+                                                                    <div class="panel-group">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                                                                            Case Activity Trackers
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    <div class="">
+
+                                                                                        @if (item.ListofCaseActivityTracker != null && item.ListofCaseActivityTracker.Any())
+                                                                                        {
+                                                                                            <table class="table table-striped table-hover ">
+                                                                                                <caption style="display: none">List of Abusers</caption>
+                                                                                                <thead>
+                                                                                                    <tr>
+                                                                                                        <th class="col-lg-1">&nbsp;</th>
+                                                                                                        <th class="col-lg-1">Substantiation Decision</th>
+                                                                                                        <th class="col-lg-1">Time Frame</th>
+                                                                                                        <th class="col-lg-1">Priority</th>
+                                                                                                        <th class="col-lg-1">Date Created</th>
+
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tbody>
+
+                                                                                                    @foreach (var caseactivity in item.ListofCaseActivityTracker)
+                                                                                                    {
+
+                                                                                                        <tr class="">
+                                                                                                            <td>
+                                                                                                                <div class="btn-group">
+                                                                                                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Case Activity" href='@Url.Action("ViewCaseActivityTracker", "Case", new { Id = caseactivity.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                                                                                                    <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Case Activity" href='@Url.Action("EditCaseActivityTracker", "Case", new { Id = caseactivity.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                                                                                </div>
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                @Html.DisplayFor(modelitem => caseactivity.SubstantiationDecisionDescription)
+                                                                                                            </td>
+                                                                                                            <td>@Html.DisplayFor(modelItem => caseactivity.ExceptionDescription)</td>
+                                                                                                            <td>
+                                                                                                                @Html.DisplayFor(modelitem => caseactivity.PriorityDescription)
+                                                                                                            </td>
+                                                                                                            @if (@caseactivity.DateCreated != null)
+                                                                                                            {
+                                                                                                                <td>@caseactivity.DateCreated.Value.ToShortDateString()</td>
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                <td>@Html.DisplayFor(modelItem => caseactivity.DateCreated)</td>
+                                                                                                            }
+                                                                                                        </tr>
+                                                                                                    }
+
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <a rel="tooltip" class="closable btn btn-success btn-outline" title="Add New Case Activity" href='@Url.Action("EditCaseActivityTracker", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>Case Activity</a>
+                                                                                        }
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row nextline">
+                                                                <div class="Lawenfrcement col-lg-6 zommable">
+                                                                    <div class="panel-group">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                                                                            Law Enforcement
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    <a rel="tooltip" class=" btn btn-success btn-outline" title="Create New Law Enforcement " href='@Url.Action("LawEnforcement", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>Law Enforcement</a>
+                                                                                    <br />
+                                                                                    <div class="row nextline"></div>
+                                                                                    @{ var approvemessage = ""; }
+                                                                                    @if (item.ListofLawEnforcement != null && item.ListofLawEnforcement.Any())
+                                                                                    {
+                                                                                        foreach (var lawenfo in item.ListofLawEnforcement)
+                                                                                        {
+                                                                                            if (lawenfo.Id > 0)
+                                                                                            {
+                                                                                                if (lawenfo.PartOneDone == true && lawenfo.PartTwoDone == true)
+                                                                                                {
+                                                                                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Law Enforcement " href='@Url.Action("ViewLawEnforcement", "Case", new { Id = lawenfo.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    <a rel="tooltip" class=" btn btn-default btn-sm" title="Edit Law Enforcement " href='@Url.Action("LawEnforcement", "Case", new { Id = lawenfo.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                                                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Law Enforcement " href='@Url.Action("ViewLawEnforcement", "Case", new { Id = lawenfo.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                                }
+
+                                                                                                if (lawenfo.PartOneDone == null && lawenfo.PartTwoDone == null)
+                                                                                                {
+                                                                                                    approvemessage = "Part 1 is Incomplete and Part 2 is Incomplete";
+                                                                                                }
+                                                                                                else if (lawenfo.PartOneDone == false && lawenfo.PartTwoDone == null)
+                                                                                                {
+                                                                                                    approvemessage = "Part 1 is Submited and Part 2 Incomplete";
+                                                                                                }
+                                                                                                else if (lawenfo.PartOneDone == true && lawenfo.PartTwoDone == null)
+                                                                                                {
+                                                                                                    approvemessage = "Part 1 is Approved and Part 2 is Incomplete";
+                                                                                                }
+                                                                                                else if (lawenfo.PartTwoDone == false && lawenfo.PartOneDone == true)
+                                                                                                {
+                                                                                                    approvemessage = "Part 2 is Submited part 1 is Approved";
+                                                                                                }
+                                                                                                else if (lawenfo.PartTwoDone == true && lawenfo.PartOneDone == true)
+                                                                                                {
+                                                                                                    approvemessage = "Completed";
+                                                                                                }
+
+                                                                                                <span class="textspace"></span><b>Status  : @approvemessage  &nbsp; Date Created: @lawenfo.DateCreated.Value.ToShortDateString() </b> <br />
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="Suspiciousdeath col-lg-6 zommable">
+                                                                    <div class="panel-group">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                                                                            Suspicious Death
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    @if (item.SuspiciousDeath.Id > 0)
+                                                                                    {
+                                                                                        if (Model.StatusId == 5)
+                                                                                        {
+                                                                                            <a rel="tooltip" class=" btn btn-default btn-sm" title="View Suspicious Death" href='@Url.Action("ViewSuspiciousDeath", "Case", new { Id = item.SuspiciousDeath.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <a rel="tooltip" class="btn btn-default btn-sm" title="Edit Suspicious Death" href='@Url.Action("SuspiciousDeath", "Case", new { Id = item.SuspiciousDeath.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                                                            <a rel="tooltip" class=" btn btn-default btn-sm" title="View Suspicious Death" href='@Url.Action("ViewSuspiciousDeath", "Case", new { Id = item.SuspiciousDeath.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                        }
+
+                                                                                        if (item.SuspiciousDeath.PartOneDone == null && item.SuspiciousDeath.PartTwoDone == null)
+                                                                                        {
+
+                                                                                            approvemessage = "Part 1 is Incomplete and Part 2 is Incomplete";
+
+                                                                                        }
+
+                                                                                        else if (item.SuspiciousDeath.PartOneDone == false && item.SuspiciousDeath.PartTwoDone == null)
+                                                                                        {
+
+                                                                                            approvemessage = "Part 1 is Submited and Part 2 Incomplete";
+
+                                                                                        }
+                                                                                        else if (item.SuspiciousDeath.PartOneDone == true && item.SuspiciousDeath.PartTwoDone == null)
+                                                                                        {
+                                                                                            approvemessage = "Part 1 is Approved and Part 2 is Incomplete";
+                                                                                        }
+
+                                                                                        else if (item.SuspiciousDeath.PartTwoDone == false && item.SuspiciousDeath.PartOneDone == true)
+                                                                                        {
+
+                                                                                            approvemessage = "Part 2 is Submited part 1 is Approved";
+
+                                                                                        }
+                                                                                        else if (item.SuspiciousDeath.PartTwoDone == true && item.SuspiciousDeath.PartOneDone == true)
+                                                                                        {
+                                                                                            approvemessage = "Completed";
+                                                                                        }
+
+
+                                                                                        <span class="textspace"></span><b>Status : @approvemessage &nbsp; Date Created: @item.SuspiciousDeath.DateCreated.Value.ToShortDateString() </b>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <a rel="tooltip" class=" btn btn-success btn-outline" title="Create Suspicious Death" href='@Url.Action("SuspiciousDeath", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>Suspicious Death</a>
+                                                                                        <div class="row nextline"></div>
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                }
+
+                                else
+                                {
+                                    <p>There is no Initial Report yet</p>
+                                }
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-group" id="accordionSIR">
+            <div class="panel panel-default" id="panelSIR">
+                <div class="panel-heading intakeheadings" data-toggle="collapse" data-target="#collapseSIR">
+                    <div class="">
+                        <w style="text-align: center"><h4 style="color:#8b2433">Subsequent Intake Report(s)</h4></w>
+                    </div>
+                </div>
+                <div id="collapseSIR" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div id="SIR" class="col-lg-12">
+                            <div class="  ">
+                                @if (Model.ListofIntakeForms != null && Model.ListofIntakeForms.Any())
+                                {
+                                    foreach (var item in Model.ListofIntakeForms)
+                                    {
+                                        if (item.IntakeReportTypeId == 2)
+                                        {
+                                            <div id="error" class=" well container" style="font-size:small ; color:red;display:none">
+                                                <u>Complete to Close Intake</u><br>
+                                                <span id="error"></span>
+                                            </div>
+                                            <div class="panel-group" style="border-color:red" id="accordionSIR_@item.Id">
+                                                <div class="panel panel-primary" id="panelSIR_@item.Id">
+                                                    <div class="panel-heading intakesubheadings">
+                                                        <div class="">
+                                                            <div class="btn-group">
+                                                                <a rel="tooltip" class="btn btn-primary btn-sm" title="Forms" data-toggle="collapse" data-target="#collapseSIR_@item.Id">Forms</a>
+                                                                <a rel="tooltip" class="btn btn-default btn-sm" title="View Intake" href='@Url.Action("ViewIntake", "Intake", new { Id = item.Id, mode = "Case" })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                            </div>
+                                                            <b style="color: black">Intake Id: @item.Id &nbsp; Intake Date: @item.DateIntake.Value.ToShortDateString() </b>
+                                                            @*@if ((User.IsInRole("CMS_IDOAStaff") || User.IsInRole("CMS_Supervisor")) && (!(item.StatusId == 4 || item.StatusId == 5)))
+                                                                {
+
+                                                                    <a rel="tooltip" class="btn btn-primary btn-sm pull-right closeintake" data-transfer="@item.Id" title="Close Intake">Close Intake</a>
+
+                                                                }*@
+
+                                                            @if (User.IsInRole("CMS_Admin") || User.IsInRole("CMS_IDOAStaff"))
+                                                            {
+                                                                <button type="button" class="btn btn-primary btn-sm updateIntakeType pull-right" data-transfer="@item.Id"><span class="glyphicon glyphicon-circle-arrow-up"></span><span class="textspace"></span>Update </button>
+                                                                <div class="pull-right"> @Html.DropDownListFor(modelItem => item.IntakeReportTypeId, new SelectList(new[] { new AGE.CMS.Data.Models.LookupModels.viewIntakeReportType { Id = 0, Description = " Select Intake Type" } }.Union(Model.caselookup.ListOfIntakeReportTypes), "Id", "Description", item.IntakeReportTypeId), new { @class = "form-control " })</div>
+                                                                @Html.HiddenFor(model => item.Id)
+
+                                                            }
+
+
+                                                        </div>
+                                                    </div>
+                                                    <div id="collapseSIR_@item.Id" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+                                                            @if (item.StatusId == 28)
+                                                            {
+                                                                <a rel="tooltip" class="btn btn-block btn-outline btn-success" title="Billing Case is Approved"><span class="textspace"></span>Billing Case is Approved</a>
+
+                                                            }
+                                                            else if (item.StatusId == 27)
+                                                            {
+                                                                <a rel="tooltip" class="btn btn-block btn-outline btn-warning" title="Billing is Initiated"><span class="textspace"></span>Billing is Initiated</a>
+
+                                                            }
+                                                            else if (item.ListofCaseActivityTracker != null && item.ListofCaseActivityTracker.Any())
+                                                            {
+                                                                <div class="row nextline">
+                                                                    <a rel="tooltip" class="verifyintakebox btn btn-block btn-outline btn-danger" title="Please clear these errors to submit Case for Billing"><span class="textspace"></span>Verify Case (Errors : @item.validateintake.Messages.Count)</a>
+                                                                    <div class="intakecaseerrors" style="padding-left: 15px;">
+                                                                        @if (item.validateintake.IsValid)
+                                                                        {
+                                                                            <button type="button" class="btn btn-primary billingsubmit" data-transfer="@item.Id"><span class="glyphicon glyphicon-circle-arrow-up"></span><span class="textspace"></span>Please click here to Submit Case for Billing </button>
+                                                                        }
+
+                                                                        else
+                                                                        {
+                                                                            foreach (var message in item.validateintake.Messages)
+                                                                            {
+                                                                                <p>@message</p>
+                                                                            }
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            <br />
+
+                                                            <div class="row">
+                                                                <div class="ASP col-lg-4 zommable">
+                                                                    <div class="panel-group" id="accordionIRASP_@item.Id">
+                                                                        <div class="panel panel-default" id="panelIRASP_@item.Id">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff">Assessement Preparation</b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    @*@if (item.viewASP != null && item.viewASP.Id > 0)
+                                                                                        {
+                                                                                            if (item.viewASP.StatusDescription != AGE.CMS.Data.Models.ENums.CaseStatus.Approved.ToString() && item.viewASP.StatusDescription != AGE.CMS.Data.Models.ENums.CaseStatus.Closed.ToString())
+                                                                                            {
+                                                                                                <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Prep " href='@Url.Action("EditAssessmentPreparation", "Case", new { Id = item.viewASP.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                                                            }
+
+                                                                                            <a rel="tooltip" class="btn btn-default btn-sm" title="View Prep " href='@Url.Action("ViewAssessementPreperation", "Case", new { Id = item.viewASP.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                                                                            <b>Status : @item.viewASP.StatusDescription &nbsp; Date Created: @item.viewASP.DateCreated</b>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <a rel="tooltip" class="closable btn btn-success btn-outline" title="Create New Assessment Preparation Form" href='@Url.Action("EditAssessmentPreparation", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span>New Assessment Preparation</a>
+                                                                                            <div class="row nextline"></div>
+                                                                                        }*@
+
+
+                                                                                    @if (item.viewASP != null && item.viewASP.Id > 0)
+                                                                                    {
+                                                                                        if (item.viewASP.StatusDescription != AGE.CMS.Data.Models.ENums.CaseStatus.Approved.ToString() && (item.viewASP.StatusDescription != AGE.CMS.Data.Models.ENums.CaseStatus.Closed.ToString() || (!(item.StatusId == 4))))
+                                                                                        {
+                                                                                            <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Prep " href='@Url.Action("EditAssessmentPreparation", "Case", new { Id = item.viewASP.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                                                        }
+
+                                                                                        <a rel="tooltip" class="btn btn-default btn-sm" title="View Prep " href='@Url.Action("ViewAssessementPreperation", "Case", new { Id = item.viewASP.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                                                                        <b>Status : @item.viewASP.StatusDescription &nbsp; Date Created: @item.viewASP.DateCreated</b>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <a rel="tooltip" class="closable btn btn-success btn-outline" title="Create New Assessment Preparation Form" href='@Url.Action("EditAssessmentPreparation", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span>New Assessment Preparation</a>
+                                                                                        <div class="row nextline"></div>
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                @*<div class="Allegations col-lg-4 zommable">
+                                                                    <div class="panel-group" id="accordionIRAllegations_@item.Id">
+                                                                        <div class="panel panel-default" id="panelIRAllegations_@item.Id">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                            <b style="color:#fff" rel="tooltip" data-toggle="collapse" data-target="collapseIRAllegations_@item.Id">Allegations
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    @if (item.Allegations != null && item.Allegations.Any())
+                                                                                    {
+                                                                                        foreach (var allegation in item.Allegations)
+                                                                                        {
+                                                                                    <b>@Html.DisplayFor(x => allegation.Description)</b>  <br />
+                                                                                        }
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                    <h4>There are no Allegations</h4>
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    </div>*@
+                                                                <div class="Caseplan col-lg-4 zommable">
+                                                                    <div class="panel-group">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                                                                            Case Plan
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    @if (item.viewCasePlan.Id > 0)
+                                                                                    {
+
+                                                                                        <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Case Plan " href='@Url.Action("EditCasePlan", "Case", new { Id = item.viewCasePlan.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                                                        <a rel="tooltip" class="btn btn-default btn-sm" title="View Case Plan " href='@Url.Action("ViewCasePlan", "Case", new { Id = item.viewCasePlan.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                        <span class="textspace"></span><b>@*Status : @item.SuspiciousDeath.StatusDescription &nbsp;*@ Date Created: @item.viewCasePlan.DateCreated.Value.ToShortDateString() </b>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <a rel="tooltip" class="closable btn btn-success btn-outline" title="Create Case Plan" href='@Url.Action("EditCasePlan", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>Case Plan</a>
+                                                                                        <div class="row nextline"></div>
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row nextline">
+                                                                <div class="OSRA col-lg-4 zommable">
+                                                                    <div class="panel-group">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                                                                            Overall Substantiated Risk Assessement
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    @if (item.ListofOSRA != null && item.ListofOSRA.Any())
+                                                                                    {
+                                                                                        foreach (var osra in item.ListofOSRA)
+                                                                                        {
+
+                                                                                            if (osra.StatusDescription == "Incomplete" || osra.StatusDescription == "Open" || osra.StatusDescription == "Submitted")
+                                                                                            {
+                                                                                                <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit OSRA " href='@Url.Action("EditOSRA", "Case", new { Id = osra.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                                                                <a rel="tooltip" class="btn btn-default btn-sm" title="View OSRA " href='@Url.Action("ViewOSRA", "Case", new { Id = osra.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                <a rel="tooltip" class="btn btn-default btn-sm" title="View OSRA " href='@Url.Action("ViewOSRA", "Case", new { Id = osra.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                            }
+                                                                                            <b>Status : @osra.StatusDescription &nbsp; Date Created: @osra.DateCreated.Value.ToShortDateString() </b>
+                                                                                        }
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <a rel="tooltip" class="closable btn btn-success btn-outline" title="Create New OSRA" href='@Url.Action("EditOSRA", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>OSRA</a>
+                                                                                        <div class="row nextline"></div>
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="AllegedAbusers col-lg-4 zommable">
+                                                                    <div class="panel-group" id="accordionIRAllegedAbusers_@item.Id">
+                                                                        <div class="panel panel-default" id="panelIRAllegedAbusers_@item.Id">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color:#fff" rel="tooltip" data-toggle="collapse" data-target="collapseIRAllegedAbusers_@item.Id">AA(s)/Abuser(s)</b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    <a rel="tooltip" class="closable btn btn-success btn-outline" title="Create New Abuser" href='@Url.Action("EditAbuser", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span>New Alleged Abuser</a>
+                                                                                    <div class="row nextline"></div>
+                                                                                    @if (item.ListofCaseAbusers != null && item.ListofCaseAbusers.Any())
+                                                                                    {
+                                                                                        <table class="table table-striped table-hover ">
+                                                                                            <caption style="display: none">List of Abusers</caption>
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th class="col-md-1">&nbsp;</th>
+                                                                                                    <th class="col-md-1">AANumber</th>
+                                                                                                    <th class="col-lg-1">Alleged Abuser Name</th>
+
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+
+                                                                                                @foreach (var abuser in item.ListofCaseAbusers)
+                                                                                                {
+                                                                                                    if (abuser.FirstName != Model.Client.Person.FirstName || abuser.LastName != Model.Client.Person.LastName)
+                                                                                                    {
+                                                                                                        <tr class="">
+                                                                                                            <td>
+                                                                                                                <div class="btn-group">
+                                                                                                                    <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Abuser" href='@Url.Action("EditAbuser", "Case", new { Id = abuser.Id, IntakeId = @item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                                                                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Abuser" href='@Url.Action("ViewAbuser", "Case", new { Id = abuser.Id, IntakeId = @item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                                                </div>
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                @Html.DisplayFor(modelitem => abuser.AANumber)
+                                                                                                            </td>
+                                                                                                            <td>@Html.DisplayFor(modelItem => abuser.LastName),@Html.DisplayFor(modelItem => abuser.FirstName)</td>
+                                                                                                        </tr>
+                                                                                                    }
+                                                                                                }
+
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+
+                                                                                        <span>None. Add any new alleged abuser not listed on Intake</span>
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="Clientassessement col-lg-4 zommable">
+                                                                    <div class="panel-group">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                                                                            Client Assessement
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    @if (item.viewClientAssesssment.Id > 0)
+                                                                                    {
+
+                                                                                        @*if (item.viewClientAssesssment.StatusDescription == "Incomplete" || item.viewClientAssesssment.StatusDescription == "Open")
+                                                                                            {
+                                                                                                <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Client Assessment " href='@Url.Action("EditCA", "Case", new { Id = item.viewClientAssesssment.Id, IntakeId = item.Id, mode = "assessement" })'><span class="glyphicon glyphicon-edit"></span></a>
+
+                                                                                            }
+                                                                                            else if (item.viewClientAssesssment.StatusDescription == "Submitted")
+                                                                                            {
+                                                                                                if (User.IsInRole("CMS_Supervisor") || User.IsInRole("CMS_IDOAStaff"))
+                                                                                                {
+                                                                                                    <a rel="tooltip" class="closable btn btn-default btn-sm" title="Approve Client Assessement " href='@Url.Action("EditCA", "Case", new { Id = item.viewClientAssesssment.Id, IntakeId = item.Id, mode = "assessement" })'><span class="glyphicon glyphicon-ok"></span></a>
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Client Assessment " href='@Url.Action("ViewClientAssessementNew", "Case", new { Id = item.viewClientAssesssment.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                                }
+                                                                                            }
+                                                                                            else { }*@
+                                                                                        @*{
+                                                                                            <a rel="tooltip" class="btn btn-default btn-sm" title="View Client Assessement " href='@Url.Action("ViewClientAssessementNew", "Case", new { Id = item.viewClientAssesssment.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                                }*@
+                                                                                        <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Client Assessment " href='@Url.Action("EditCA", "Case", new { Id = item.viewClientAssesssment.Id, IntakeId = item.Id, mode = "assessement" })'><span class="glyphicon glyphicon-edit"></span></a>
+
+                                                                                        if (item.viewClientAssesssment.StatusDescription == "NewReport")
+                                                                                        {
+                                                                                            item.viewClientAssesssment.StatusDescription = "Approved";
+                                                                                        }
+
+
+                                                                                        <a rel="tooltip" class="btn btn-default btn-sm" title="View Client Assessment " href='@Url.Action("ViewClientAssessementNew", "Case", new { Id = item.viewClientAssesssment.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a> <span class="textspace"></span><b>Status : @item.viewClientAssesssment.StatusDescription &nbsp; Date Created: @item.viewClientAssesssment.DateCreated.Value.ToShortDateString() </b>
+
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <a rel="tooltip" class="closable btn btn-success btn-outline" title="Create Client Assessment" href='@Url.Action("EditCA", "Case", new { Id = 0, IntakeId = item.Id, mode = "initial" })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>Client Assessment</a>
+                                                                                        <div class="row nextline"></div>
+                                                                                    }
+
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row nextline">
+                                                                <div class="Updatedriskassessement col-lg-4 zommable">
+                                                                    <div class="panel-group">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                                                                            Updated Risk Assessement
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    <a rel="tooltip" class="closable btn btn-success btn-outline" title="Create New ORA " href='@Url.Action("EditORA", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>ORA</a><br />
+                                                                                    <div class="row nextline"></div>
+                                                                                    @if (item.ListofORA != null && item.ListofORA.Any())
+                                                                                    {
+                                                                                        foreach (var ora in item.ListofORA)
+                                                                                        {
+                                                                                            <br />
+                                                                                            <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit ORA " href='@Url.Action("EditORA", "Case", new { Id = ora.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+
+                                                                                            <a rel="tooltip" class="btn btn-default btn-sm" title="View ORA " href='@Url.Action("ViewORA", "Case", new { Id = ora.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                                                                            <span class="textspace"></span><b>Status : @ora.StatusDescription &nbsp; Date Created: @ora.DateCreated.Value.ToShortDateString() </b>
+                                                                                        }
+                                                                                    }
+                                                                                    else
+                                                                                    {
+
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="WaiverExtension col-lg-4 zommable">
+                                                                    <div class="panel-group">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                                                                            Waivers/Extension
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    @if (@User.IsInRole("CMS_RAAAdmin") || @User.IsInRole("CMS_IDOAStaff") || @User.IsInRole("CMS_Supervisor"))
+                                                                                    {
+                                                                                        <a rel="tooltip" class=" btn btn-success btn-outline" title="Create Waiver " href='@Url.Action("EditWaiverExtension", "Case", new { Id = 0, IntakeId = item.Id, mode = "ManageCase" })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>Waiver Extension</a><br />
+                                                                                    }
+                                                                                    <div class="row nextline"></div>
+                                                                                    @if (item.ListofWaiverExtensions != null && item.ListofWaiverExtensions.Any())
+                                                                                    {
+                                                                                        <table class="table table-striped table-hover ">
+                                                                                            <caption style="display: none">List of Waivers</caption>
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th class="col-md-1">&nbsp;</th>
+                                                                                                    <th class="col-md-1">Waiver Type</th>
+                                                                                                    <th class="col-md-1">Status</th>
+                                                                                                    <th class="col-md-1">Date Created</th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+
+                                                                                                @foreach (var waiver in item.ListofWaiverExtensions)
+                                                                                                {
+                                                                                                    <tr class="">
+                                                                                                        <td>
+                                                                                                            <div class="btn-group">
+                                                                                                                <a rel="tooltip" class="btn btn-default btn-sm" title="View Waiver " href='@Url.Action("ViewWaiverExtension", "Case", new { Id = waiver.Id, mode = "ManageCase" })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                                            </div>
+
+                                                                                                        </td>
+                                                                                                        <td>@Html.DisplayFor(modelItem => waiver.WaiverType)</td>
+                                                                                                        <td>@Html.DisplayFor(modelItem => waiver.StatusDescription)</td>
+                                                                                                        @if (@waiver.DateCreated != null)
+                                                                                                        {
+                                                                                                            <td>@waiver.DateCreated.Value.ToShortDateString()</td>
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            <td>@Html.DisplayFor(modelItem => waiver.DateCreated)</td>
+                                                                                                        }
+                                                                                                    </tr>
+                                                                                                }
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="CaseActivityTrackers col-lg-4 zommable">
+                                                                    <div class="panel-group">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                                                                            Case Activity Trackers
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    <div class="">
+
+                                                                                        @if (item.ListofCaseActivityTracker != null && item.ListofCaseActivityTracker.Any())
+                                                                                        {
+                                                                                            <table class="table table-striped table-hover ">
+                                                                                                <caption style="display: none">List of Abusers</caption>
+                                                                                                <thead>
+                                                                                                    <tr>
+                                                                                                        <th class="col-lg-1">&nbsp;</th>
+                                                                                                        <th class="col-lg-1">Substantiation Decision</th>
+                                                                                                        <th class="col-lg-1">Time Frame</th>
+                                                                                                        <th class="col-lg-1">Priority</th>
+                                                                                                        <th class="col-lg-1">Date Created</th>
+
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tbody>
+
+                                                                                                    @foreach (var caseactivity in item.ListofCaseActivityTracker)
+                                                                                                    {
+
+                                                                                                        <tr class="">
+                                                                                                            <td>
+
+                                                                                                                <div class="btn-group">
+                                                                                                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Case Activity" href='@Url.Action("ViewCaseActivityTracker", "Case", new { Id = caseactivity.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                                                                                                    <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Case Activity" href='@Url.Action("EditCaseActivityTracker", "Case", new { Id = caseactivity.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                                                                                </div>
+
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                @Html.DisplayFor(modelitem => caseactivity.SubstantiationDecisionDescription)
+                                                                                                            </td>
+                                                                                                            <td>@Html.DisplayFor(modelItem => caseactivity.ExceptionDescription)</td>
+                                                                                                            <td>
+                                                                                                                @Html.DisplayFor(modelitem => caseactivity.PriorityDescription)
+                                                                                                            </td>
+                                                                                                            @if (@caseactivity.DateCreated != null)
+                                                                                                            {
+                                                                                                                <td>@caseactivity.DateCreated.Value.ToShortDateString()</td>
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                <td>@Html.DisplayFor(modelItem => caseactivity.DateCreated)</td>
+                                                                                                            }
+                                                                                                        </tr>
+                                                                                                    }
+
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <a rel="tooltip" class="closable btn btn-success btn-outline" title="Add New Case Activity" href='@Url.Action("EditCaseActivityTracker", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>Case Activity</a>
+                                                                                        }
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row nextline">
+                                                                <div class="Lawenfrcement col-lg-6 zommable">
+                                                                    <div class="panel-group">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                                                                            Law Enforcement
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    <a rel="tooltip" class=" btn btn-success btn-outline" title="Create New Law Enforcement " href='@Url.Action("LawEnforcement", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>Law Enforcement</a>
+                                                                                    <br />
+                                                                                    <div class="row nextline"></div>
+                                                                                    @{ var approvemessage = ""; }
+                                                                                    @if (item.ListofLawEnforcement != null && item.ListofLawEnforcement.Any())
+                                                                                    {
+                                                                                        foreach (var lawenfo in item.ListofLawEnforcement)
+                                                                                        {
+                                                                                            if (lawenfo.Id > 0)
+                                                                                            {
+                                                                                                if (lawenfo.PartOneDone == true && lawenfo.PartTwoDone == true)
+                                                                                                {
+                                                                                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Law Enforcement " href='@Url.Action("ViewLawEnforcement", "Case", new { Id = lawenfo.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    <a rel="tooltip" class=" btn btn-default btn-sm" title="Edit Law Enforcement " href='@Url.Action("LawEnforcement", "Case", new { Id = lawenfo.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                                                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Law Enforcement " href='@Url.Action("ViewLawEnforcement", "Case", new { Id = lawenfo.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                                                }
+
+                                                                                                if (lawenfo.PartOneDone == null && lawenfo.PartTwoDone == null)
+                                                                                                {
+
+                                                                                                    approvemessage = "Part 1 is Incomplete and Part 2 is Incomplete";
+
+                                                                                                }
+
+                                                                                                else if (lawenfo.PartOneDone == false && lawenfo.PartTwoDone == null)
+                                                                                                {
+
+                                                                                                    approvemessage = "Part 1 is Submited and Part 2 Incomplete";
+
+                                                                                                }
+                                                                                                else if (lawenfo.PartOneDone == true && lawenfo.PartTwoDone == null)
+                                                                                                {
+                                                                                                    approvemessage = "Part 1 is Approved and Part 2 is Incomplete";
+                                                                                                }
+
+                                                                                                else if (lawenfo.PartTwoDone == false && lawenfo.PartOneDone == true)
+                                                                                                {
+
+                                                                                                    approvemessage = "Part 2 is Submited part 1 is Approved";
+
+                                                                                                }
+                                                                                                else if (lawenfo.PartTwoDone == true && lawenfo.PartOneDone == true)
+                                                                                                {
+                                                                                                    approvemessage = "Completed";
+                                                                                                }
+
+
+                                                                                                <span class="textspace"></span><b>Status  : @approvemessage  &nbsp; Date Created: @lawenfo.DateCreated.Value.ToShortDateString() </b> <br />
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="Suspiciousdeath col-lg-6 zommable">
+                                                                    <div class="panel-group">
+                                                                        <div class="panel panel-default">
+                                                                            <div class="panel-heading subheadings">
+                                                                                <div class="">
+                                                                                    <div class="btn-group">
+                                                                                        <b style="color: #fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                                                                            Suspicious Death
+                                                                                        </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="panel-body">
+                                                                                    @if (item.SuspiciousDeath.Id > 0)
+                                                                                    {
+                                                                                        <a rel="tooltip" class="btn btn-default btn-sm" title="Edit Suspicious Death" href='@Url.Action("SuspiciousDeath", "Case", new { Id = item.SuspiciousDeath.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                                                        <a rel="tooltip" class=" btn btn-default btn-sm" title="View Suspicious Death" href='@Url.Action("ViewSuspiciousDeath", "Case", new { Id = item.SuspiciousDeath.Id, IntakeId = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+
+                                                                                        if (item.SuspiciousDeath.PartOneDone == null && item.SuspiciousDeath.PartTwoDone == null)
+                                                                                        {
+
+                                                                                            approvemessage = "Part 1 is Incomplete and Part 2 is Incomplete";
+
+                                                                                        }
+
+                                                                                        else if (item.SuspiciousDeath.PartOneDone == false && item.SuspiciousDeath.PartTwoDone == null)
+                                                                                        {
+
+                                                                                            approvemessage = "Part 1 is Submited and Part 2 Incomplete";
+
+                                                                                        }
+                                                                                        else if (item.SuspiciousDeath.PartOneDone == true && item.SuspiciousDeath.PartTwoDone == null)
+                                                                                        {
+                                                                                            approvemessage = "Part 1 is Approved and Part 2 is Incomplete";
+                                                                                        }
+
+                                                                                        else if (item.SuspiciousDeath.PartTwoDone == false && item.SuspiciousDeath.PartOneDone == true)
+                                                                                        {
+
+                                                                                            approvemessage = "Part 2 is Submited part 1 is Approved";
+
+                                                                                        }
+                                                                                        else if (item.SuspiciousDeath.PartTwoDone == true && item.SuspiciousDeath.PartOneDone == true)
+                                                                                        {
+                                                                                            approvemessage = "Completed";
+                                                                                        }
+
+
+                                                                                        <span class="textspace"></span><b>Status : @approvemessage &nbsp; Date Created: @item.SuspiciousDeath.DateCreated.Value.ToShortDateString() </b>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <a rel="tooltip" class=" btn btn-success btn-outline" title="Create Suspicious Death" href='@Url.Action("SuspiciousDeath", "Case", new { Id = 0, IntakeId = item.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>Suspicious Death</a>
+                                                                                        <div class="row nextline"></div>
+                                                                                    }
+
+
+
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                }
+
+                                else
+                                {
+                                    <p>There is no SIR yet</p>
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-group" id="accordionRIR">
+            <div class="panel panel-default" id="panelRIR">
+                <div class="panel-heading intakeheadings " data-toggle="collapse" data-target="#collapseRIR" href="#collapseRIR">
+                    <w style="text-align: center"><h4 style="color:#8b2433">Related Intake Report(s)</h4></w>
+
+                </div>
+                <div id="collapseRIR" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div id="RIR" class="col-lg-12">
+                            <div class="  ">
+                                @if (Model.ListofIntakeForms != null && Model.ListofIntakeForms.Any())
+                                {
+                                    foreach (var item in Model.ListofIntakeForms)
+                                    {
+                                        if (item.IntakeReportTypeId == 3)
+                                        {
+
+                                            <div class="panel-heading" style="border: 1px solid #337ab7; padding-top: 3px; padding-bottom: 3px">
+                                                <div class="">
+                                                    <div class="btn-group">
+                                                        <a rel="tooltip" class="btn btn-default btn-sm" title="View Intake" href='@Url.Action("ViewIntake", "Intake", new { ClientId = Model.Id, Id = item.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                    </div>
+                                                    <b style="color: black">Intake Id: @item.Id &nbsp; Intake Date: @item.DateIntake.Value.ToShortDateString() </b>
+                                                    @if (User.IsInRole("CMS_Admin") || User.IsInRole("CMS_IDOAStaff"))
+                                                    {
+                                                        <button type="button" class="btn btn-primary btn-sm updateIntakeType pull-right" data-transfer="@item.Id"><span class="glyphicon glyphicon-circle-arrow-up"></span><span class="textspace"></span>Update </button>
+                                                        <div class="pull-right"> @Html.DropDownListFor(modelItem => item.IntakeReportTypeId, new SelectList(new[] { new AGE.CMS.Data.Models.LookupModels.viewIntakeReportType { Id = 0, Description = " Select Intake Type" } }.Union(Model.caselookup.ListOfIntakeReportTypes), "Id", "Description", item.IntakeReportTypeId), new { @class = "form-control " })</div>
+                                                        @Html.HiddenFor(model => item.Id)
+
+                                                    }
+
+
+                                                </div>
+                                            </div>
+                                            <br />
+                                        }
+                                    }
+
+                                }
+                                else
+                                {
+                                    <p>There is no RIR yet</p>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,1489 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewOSRA
+
+@{
+    ViewBag.Title = "Edit OSRA";
+    var errorclass = "";
+
+    List<SelectListItem> ClutterImageRating = new List<SelectListItem>();
+    ClutterImageRating.Add(new SelectListItem { Text = "Select Rating", Value = "0" });
+    ClutterImageRating.Add(new SelectListItem { Text = "1", Value = "1" });
+    ClutterImageRating.Add(new SelectListItem { Text = "2", Value = "2" });
+    ClutterImageRating.Add(new SelectListItem { Text = "3", Value = "3" });
+    ClutterImageRating.Add(new SelectListItem { Text = "4", Value = "4" });
+    ClutterImageRating.Add(new SelectListItem { Text = "5", Value = "5" });
+    ClutterImageRating.Add(new SelectListItem { Text = "6", Value = "6" });
+    ClutterImageRating.Add(new SelectListItem { Text = "7", Value = "7" });
+    ClutterImageRating.Add(new SelectListItem { Text = "8", Value = "8" });
+    ClutterImageRating.Add(new SelectListItem { Text = "9", Value = "9" });
+}
+
+
+<script src="~/Assets/Basic/Scripts/CMS/Case/EditOSRA.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.disablediv').find("select, input, textarea").attr("disabled", "disabled")
+        $("#SaveOSRAform").click(function (e) {
+            e.preventDefault();
+            $("#IsAjax").val(true);
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveOSRA", "Case")',
+                dataType: "json",
+                data: $('#alldiv').find('select, textarea, input').serialize(),
+                success: function (data) {
+                    console.log(data);
+                    $('#Id').val(data.Id);
+                    $("#IsAjax").val(false);
+                    notification("<strong>Success</strong> Saved!");
+                }
+
+            });
+
+        });
+
+
+        $("#SubmitOSRA").click(function (e) {
+            e.preventDefault();
+
+
+            $("#IsAjax").val(true);
+            $("#IsSubmit").val(true);
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveOSRA", "Case")',
+                dataType: "json",
+                data: $('#alldiv').find('select, textarea, input').serialize(),
+                success: function (data) {
+                    console.log(data);
+                    $('#Id').val(data.Id);
+                    $("#IsAjax").val(false);
+                    $("#IsSubmit").val(false);
+                    notification("<strong>Success</strong> Submitted!");
+                    window.location.href = data.url
+                }
+
+            });
+
+        });
+
+
+
+        $("#ApproveOSRA").click(function (e) {
+            e.preventDefault();
+
+            if ($("#SupervisorSignature").val() == "" || $("#SupervisorSignatureDate").val() == "") {
+                noti("<b>Please fill Supervisor signature and Date</b> at the end of the Form", "info")
+                $(window).scrollTop($('#SupervisorSignature').offset().top);
+                $('#SupervisorSignature').focus();
+            }
+            else {
+                $("#IsAjax").val(true);
+                $("#IsApprove").val(true);
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SaveOSRA", "Case")',
+                    dataType: "json",
+                    data: $('#alldiv').find('select, textarea, input').serialize(),
+                    success: function (data) {
+                        console.log(data);
+                        $('#Id').val(data.Id);
+                        $("#IsAjax").val(false);
+                        $("#IsApprove").val(false);
+                        notification("<strong>Success</strong> Approved!");
+                        window.location.href = data.url
+                    }
+
+                });
+            }
+        });
+
+
+
+
+
+
+
+    });
+</script>
+<style>
+    button.accordion {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        transition: 0.4s;
+    }
+
+        button.accordion.active, button.accordion:hover {
+            background-color: #ccc;
+        }
+
+    .btn-xl {
+        align-content: center;
+        width: 100%;
+        text-decoration-color: #fff;
+        font-size: 18px;
+        background-color: #949382;
+        border: 1px solid #949382;
+    }
+
+        .btn-xl:focus {
+            background-color: #c4c3ab;
+            border: 2px solid #949382;
+        }
+
+        .btn-xl:active {
+            background-color: #868575;
+            border: 2px solid #949382;
+        }
+
+        .btn-xl:hover {
+            background-color: #c4c3ab;
+            border: 2px solid #949382;
+        }
+
+
+        .btn-xl:active:hover,
+        .btn-xl.active:hover,
+        .btn-xl:active:focus,
+        .btn-xl.active:focus {
+            background-color: #868575;
+            border: 2px solid #949382;
+        }
+</style>
+
+<div class="container" id="alldiv">
+    <div class="panel panel-warning">
+
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="titletextbegin">
+                    <span class="glyphicon glyphicon-edit"></span><span class="textspace">
+                        <text>Overall Substantiated Risk Assessment</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+
+        <div class="panel-body">
+
+
+
+
+            @using (Html.BeginForm("SaveOSRA", "Case", FormMethod.Post))
+            {
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.viewIntake.CaseheaderId)
+                @Html.HiddenFor(model => model.IntakeId)
+                @Html.HiddenFor(model => model.IsAjax)
+                @Html.HiddenFor(model => model.IsSubmit)
+                @Html.HiddenFor(model => model.IsApprove)
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsDateFTF)
+                {
+                    <span class="danger">Please select FTF Date</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsPhysicalDisability)
+                {
+                    <span class="danger">Functional Abilities - Please select Physical Disabilities</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsPhysicalDisabilityOptions)
+                {
+                    <span class="danger">Functional Abilities - Please check all that apply under Physical Disabilities Options</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsPhysicalIsPhysicalCapacity)
+                {
+                    <span class="danger">Functional Abilities - Please select Physical Capacity</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientCanReact)
+                {
+                    <span class="danger">Functional Abilities - Please select whether client can react</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientCanReactOptions)
+                {
+                    <span class="danger">Functional Abilities - Please check all that apply under Client Reaction Options</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientNeedsDressingOptions)
+                {
+                    <span class="danger">Functional Abilities - Please select either one of Met/Unmet</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientNeedsDressingOptionsAssistant)
+                {
+                    <span class="danger">Functional Abilities - Please select Assistant</span><br />
+                }
+
+
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsMentalCondition)
+                {
+                    <span class="danger">Mental Conditions - MentalCondition.Please select atleast one from Yes/No/Unknown</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsMentalConditionOptions)
+                {
+                    <span class="danger">Mental Conditions - MentalCondition.Please check all that apply</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsMentalCapacityNo)
+                {
+                    <span class="danger">Mental Conditions - MentalCapacity.Please select atleast one from Yes/No/Unknown</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsMentalCapacityNoOptions)
+                {
+                    <span class="danger">Mental Conditions - MentalCapacity.Please check all that apply</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsMentalCapacityNoOptionsOther)
+                {
+                    <span class="danger">Mental Conditions - MentalCapacity.Please enter Other</span><br />
+                }
+                @*if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientHasPsychologicalSymptoms)
+                    {
+                        <span class="danger">Please</span><br />
+                    }
+                    if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientHasPsychologicalSymptomsOptions)
+                    {
+                        <span class="danger">Please</span><br />
+                    }*@
+
+
+
+
+
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientLivingSituation)
+                {
+                    <span class="danger">Environment - Please select atleast one from Yes/No/Unknown - Is the clients's living situation appropriate</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientLivingSituationNoOptions)
+                {
+                    <span class="danger">Environment - Please enter living situation</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientPlaceSafe)
+                {
+                    <span class="danger">Environment - Please select atleast one from Yes/No/Unknown - Client has a place to live that is physically and structurally safe</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientPlaceSafeNoOptions)
+                {
+                    <span class="danger">Environment - Please check all that apply - Client has a place to live that is physically and structurally safe</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientPlaceSafeNoOptionsOther)
+                {
+                    <span class="danger">Environment - Please enter other place</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientPlacePosesBarriers)
+                {
+                    <span class="danger">Environment - Please select atleast one from Yes/No/Unknown</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientPlacePosesBarriersNoOptions)
+                {
+                    <span class="danger">Environment - Please select whether Residence meets minimum standards</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClutterImageRatingNotApplicableOptions)
+                {
+                    <span class="danger">Environment - Please check Clutter Image Rating</span><br />
+                }
+
+                @*if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClutterImageRatingValues)
+                    {
+                        <span class="danger">Please</span><br />
+                    }*@
+
+
+
+
+
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientSuffersSubstanceAbuse)
+                {
+                    <span class="danger">Substance Abuse - Please select atleast one from Yes/No/Unknown</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientSuffersSubstanceAbuseOptions)
+                {
+                    <span class="danger">Substance Abuse - Please check all that apply</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientCheminallyAbusive)
+                {
+                    <span class="danger">Substance Abuse - Please select atleast one from Yes/No/Unknown</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientCheminallyAbusiveOptions)
+                {
+                    <span class="danger">Substance Abuse - Please check all that apply</span><br />
+                }
+
+
+
+
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsEmploymentStatusId)
+                {
+                    <span class="danger">Financial Resources - Please select Employment status</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientHaveFinancialResources)
+                {
+                    <span class="danger">Financial Resources - Please select atleast one from Yes/No/Unknown</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsCaregiverProvidingBasicNeeds)
+                {
+                    <span class="danger">Financial Resources - Please select atleast one from Yes/No/Unknown</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsCaregiverProvidingBasicNeedsNoOptions)
+                {
+                    <span class="danger">Financial Resources - Please check all that apply</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientAssetsProperlyManaged)
+                {
+                    <span class="danger">Financial Resources - Please select atleast one from Yes/No/Unknown</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientAssetsProperlyManagedNoExplain)
+                {
+                    <span class="danger">Financial Resources - Please explain</span><br />
+                }
+
+
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientHasSupportiveFriendship)
+                {
+                    <span class="danger">Formal and Informal Services - Please select atleast one from Yes/No/Unknown</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsNeighborsArrangeForServices)
+                {
+                    <span class="danger">Formal and Informal Services - Please select atleast one FROM Yes/No/Unknown</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsNeighborsArrangeForServicesOptions)
+                {
+                    <span class="danger">Formal and Informal Services - Please check all that apply</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientReceivingCommunitySupport)
+                {
+                    <span class="danger">Formal and Informal Services - Please select atleast one from Yes/No/Unknown</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientReceivingCommunitySupportNoExplain)
+                {
+                    <span class="danger">Formal and Informal Services - Please explain</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientHasAdvocate)
+                {
+                    <span class="danger">Formal and Informal Services - Please select atleast one from Yes/No/Unknown</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientHasAdvocateNoOptions)
+                {
+                    <span class="danger">Formal and Informal Services - Please check all that apply</span><br />
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientHasAdvocateNoOptionsOther)
+                {
+                    <span class="danger">Formal and Informal Services - Please enter other</span><br />
+                }
+
+
+
+                @*if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsAbuserOptions)
+                    {
+                        <span class="danger">Abusers Factors - Please check all that apply</span><br />
+                    }*@
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsAbuserOptionsOther)
+                {
+                    <span class="danger">Abusers Factors - Please enter other</span><br />
+                }
+
+
+
+
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsRationale)
+                {
+                    <span class="danger">Please enter Rationale</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsANE)
+                {
+                    <span class="danger">Please select Risk Level</span><br />
+                }
+                @*if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsSN)
+                    {
+                        <span class="danger">Please select SN</span><br />
+                    }*@
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsCaseworkerSignature)
+                {
+                    <span class="danger">Please Sign</span><br />
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsCaseworkerSignatureDate)
+                {
+                    <span class="danger">Please enter Date</span><br />
+                }
+
+                <div class="well">
+
+                    @{
+                errorclass = "";
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsDateFTF)
+                {
+                    errorclass = "has-error";
+                }
+
+
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsPhysicalDisability)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsPhysicalDisabilityOptions)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsPhysicalIsPhysicalCapacity)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientCanReact)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientCanReactOptions)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsIsClientDirectOwnCare)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientNeedsDressingOptions)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientNeedsDressingOptionsAssistant)
+                {
+                    errorclass = "has-error";
+                }
+
+
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsMentalCondition)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsMentalConditionOptions)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsMentalCapacityNo)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsMentalCapacityNoOptions)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsMentalCapacityNoOptionsOther)
+                {
+                    errorclass = "has-error";
+                }
+                //if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientHasPsychologicalSymptoms)
+                //{
+                //    errorclass = "has-error";
+                //}
+                //if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientHasPsychologicalSymptomsOptions)
+                //{
+                //    errorclass = "has-error";
+                //}
+
+
+
+
+
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientLivingSituation)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientLivingSituationNoOptions)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientPlaceSafe)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientPlaceSafeNoOptions)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientPlaceSafeNoOptionsOther)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientPlacePosesBarriers)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientPlacePosesBarriersNoOptions)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClutterImageRatingNotApplicableOptions)
+                {
+                    errorclass = "has-error";
+                }
+
+                //if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClutterImageRatingValues)
+                //{
+                //    errorclass = "has-error";
+                //}
+
+
+
+
+
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientSuffersSubstanceAbuse)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientSuffersSubstanceAbuseOptions)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientCheminallyAbusive)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientCheminallyAbusiveOptions)
+                {
+                    errorclass = "has-error";
+                }
+
+
+
+
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsEmploymentStatusId)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientHaveFinancialResources)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsCaregiverProvidingBasicNeeds)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsCaregiverProvidingBasicNeedsNoOptions)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientAssetsProperlyManaged)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientAssetsProperlyManagedNoExplain)
+                {
+                    errorclass = "has-error";
+                }
+
+
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientHasSupportiveFriendship)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsNeighborsArrangeForServices)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsNeighborsArrangeForServicesOptions)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientReceivingCommunitySupport)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientReceivingCommunitySupportNoExplain)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientHasAdvocate)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientHasAdvocateNoOptions)
+                {
+                    errorclass = "has-error";
+                }
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsClientHasAdvocateNoOptionsOther)
+                {
+                    errorclass = "has-error";
+                }
+
+
+
+                //if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsAbuserOptions)
+                //{
+                //    errorclass = "has-error";
+                //}
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsIsAbuserOptionsOther)
+                {
+                    errorclass = "has-error";
+                }
+
+
+
+
+
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsRationale)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsANE)
+                {
+                    errorclass = "has-error";
+                }
+                //if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsSN)
+                //{
+                //    errorclass = "has-error";
+                //}
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsCaseworkerSignature)
+                {
+                    errorclass = "has-error";
+                }
+                if (Model.InCompleteErrors.ErrorsInOSRA && Model.InCompleteErrors.HasErrorsCaseworkerSignatureDate)
+                {
+                    errorclass = "has-error";
+                }
+                    }
+
+
+                    <div class="row">
+                        <div class="col-md-12 pull-right">
+                            <div class="btn-group pull-right" style="margin-right: 10px;">
+                                <button id="SaveOSRAform" rel="tooltip" class="btn btn-success btn-md" title=" Save ">Save</button>
+                                <button id="saveOSRA" rel="tooltip" type="submit" class="btn btn-success btn-outline btn-md" title=" Save ">Save & Close</button>
+
+                                @if (Model.StatusId == 3)
+                                {
+                                    <button id="SubmitOSRA" rel="tooltip" class="btn btn-primary btn-md" title=" Submit ">Submit</button>
+                                }
+                                @if (Model.StatusDescription == "Submitted")
+                                {
+                                    <button id="ApproveOSRA" rel="tooltip" class="btn btn-primary btn-outline btn-md" title=" Approve ">Approve</button>
+                                }
+                                <a id="cancelOSRA" rel="tooltip" class="btn btn-default btn-md" title=" Cancel " href='@Url.Action("ManageCase", "Case", new { CaseheaderId = @Model.viewIntake.CaseheaderId})'>Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row nextline" id="Client">
+                        @Html.Partial("_ViewClientCMS", Model.viewIntake.viewCaseHeader.Client)
+                    </div>
+
+
+                    <div class="panel-heading" style="border: groove; background-color: #efeed6; margin: 10px;">
+                        The Risk Assessment is an ongoing evaluation process in which each factual observation and each piece of evidence is analyzed to determine the extent to which the client is in danger of harm, injury, or loss. Risk is to be considered at the time the caseworker made the substantiation decision.
+                        <br />
+                        This form is only completed when the allegations are substantiated.
+                        For the following questions the caseworker should, based on his/her professional judgment, choose a response that most closely reflects the client’s circumstances. Caseworkers should consider these questions as aids to assist them in determining the level of risk that exists for the client in each category.
+                    </div>
+                </div>
+
+                <div class="row nextline">
+                    <div class="col-md-3 @errorclass">
+                        @Html.LabelFor(model => model.DateFTF)
+                        <div>
+                            @Html.TextBoxFor(model => model.DateFTF, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", @placeholder = "Date", @style = "width:50%" })
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="well container">
+
+                    <div class="form-group">
+                        <div class="container">
+                            <button type="button" class="btn btn-xl btn-primary" data-toggle="collapse" data-target="#FunctionalAbilities" aria-expanded="false" aria-controls="collapseExample">Functional Abilities</button>
+                        </div>
+                        <div class="nextline"></div>
+                        <div class=" well container collapse" id="FunctionalAbilities" style="background-color: #fff">
+                            <div class="row">
+                                <span><b style="text-decoration: underline">Functional Abilities </b>- Client's functional ability is defined as a client's ability to complete activities of daily living.</span>
+                                <br />
+                            </div>
+
+                            <div class="container">
+                                <div class="row nextline @errorclass " id="PhysicalDisabilities">
+                                    <div class="col-md-10">
+                                        @Html.LabelFor(model => model.IsPhysicalDisability)
+                                        @Html.RadioButtonFor(model => model.IsPhysicalDisability, "y", new { @id = "IsPhysicalDisabilityYes" }) Yes
+                                        @Html.RadioButtonFor(model => model.IsPhysicalDisability, "n", new { @id = "IsPhysicalDisabilityNo" }) No
+                                        @Html.RadioButtonFor(model => model.IsPhysicalDisability, "u", new { @id = "IsPhysicalDisabilityUnknown" }) Unknown
+                                    </div>
+                                    <div class="row nextline @errorclass " id="PhysicalDisabilitiesOptions">
+                                        <div class="col-md-8">
+                                            @Html.CheckBoxFor(model => model.IsPhysicalDisabilitySevere) @Html.LabelFor(model => model.IsPhysicalDisabilitySevere)
+                                            <br />
+
+                                            @Html.CheckBoxFor(model => model.IsPhysicalDisabilityModerate) @Html.LabelFor(model => model.IsPhysicalDisabilityModerate)<br />
+
+                                            @Html.CheckBoxFor(model => model.IsPhysicalDisabilityMild) @Html.LabelFor(model => model.IsPhysicalDisabilityMild)
+                                            <br />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row nextline @errorclass " id="PhysicalCapacity">
+                                    <div class="col-md-10">
+                                        @Html.LabelFor(model => model.IsPhysicalCapacity)
+                                        @Html.RadioButtonFor(model => model.IsPhysicalCapacity, "y") Yes
+                                        @Html.RadioButtonFor(model => model.IsPhysicalCapacity, "n") No
+                                        @Html.RadioButtonFor(model => model.IsPhysicalCapacity, "u") Unknown
+                                    </div>
+                                </div>
+                                <div class="row nextline @errorclass " id="React">
+                                    <div class="col-md-10">
+                                        @Html.LabelFor(model => model.IsClientCanReact)
+                                        @Html.RadioButtonFor(model => model.IsClientCanReact, "y", new { @id = "IsClientCanReactYes" }) Yes
+                                        @Html.RadioButtonFor(model => model.IsClientCanReact, "n", new { @id = "IsClientCanReactNo" }) No
+                                        @Html.RadioButtonFor(model => model.IsClientCanReact, "u", new { @id = "IsClientCanReactUnknown" }) Unknown
+                                    </div>
+                                    <div class="row nextline @errorclass " id="ReactOptions">
+                                        <div class="col-md-5">
+                                            @Html.CheckBoxFor(model => model.IsClientCanReactForSelf) @Html.LabelFor(model => model.IsClientCanReactForSelf)
+                                            <br />
+
+                                            @Html.CheckBoxFor(model => model.IsClientCanReactDial911) @Html.LabelFor(model => model.IsClientCanReactDial911)
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="row nextline"></div>
+
+
+                                <div class="row nextline @errorclass " id="DirectingOwnCare">
+                                    @Html.LabelFor(model => model.IsClientDirectOwnCare, new { @class = "@errorclass" })
+                                    <table class="table table-striped table-hover" style="width: 70%">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-md-2">&nbsp;</th>
+                                                <th class="col-md-1">Yes</th>
+                                                <th class="col-md-1">No</th>
+                                                <th class="col-md-1">Unknown</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            <tr>
+                                                <td>1)@Html.LabelFor(model => model.IsClientCanMakeAppointments)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientCanMakeAppointments, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientCanMakeAppointments, "n")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientCanMakeAppointments, "u")</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2)@Html.LabelFor(model => model.IsClientCanPayBills)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientCanPayBills, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientCanPayBills, "n")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientCanPayBills, "u")</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3)@Html.LabelFor(model => model.IsClientCanMaintainLivingEnvironment)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientCanMaintainLivingEnvironment, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientCanMaintainLivingEnvironment, "n")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientCanMaintainLivingEnvironment, "u")</td>
+                                            </tr>
+                                            <tr>
+                                                <td>4)@Html.LabelFor(model => model.IsClientCanDecidePersonalCare)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientCanDecidePersonalCare, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientCanDecidePersonalCare, "n")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientCanDecidePersonalCare, "u")</td>
+                                            </tr>
+                                            <tr>
+                                                <td>5)@Html.LabelFor(model => model.IsClientCanUnderstandConsequences)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientCanUnderstandConsequences, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientCanUnderstandConsequences, "n")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientCanUnderstandConsequences, "u")</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row nextline @errorclass " id="Assistance">
+                                    <table class="table table-striped table-hover " style="width: 70%">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-md-1">Client needs assistance with</th>
+                                                <th class="col-md-1">Met</th>
+                                                <th class="col-md-1">Unmet</th>
+                                                <th class="col-md-1">Assistant</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>@Html.LabelFor(model => model.IsClientNeedsDressing)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsDressing, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsDressing, "n")</td>
+                                                <td>@Html.TextBoxFor(model => model.ClientNeedsDressingAssistant, new { @class = "form-control" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(model => model.IsClientNeedsBathing)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsBathing, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsBathing, "n")</td>
+                                                <td>@Html.TextBoxFor(model => model.ClientNeedsBathingAssistant, new { @class = "form-control" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(model => model.IsClientNeedsGrooming)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsGrooming, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsGrooming, "n")</td>
+                                                <td>@Html.TextBoxFor(model => model.ClientNeedsGroomingAssistant, new { @class = "form-control" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(model => model.IsClientNeedsFoodShopping)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsFoodShopping, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsFoodShopping, "n")</td>
+                                                <td>@Html.TextBoxFor(model => model.ClientNeedsFoodShoppingAssistant, new { @class = "form-control" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(model => model.IsClientNeedsMealsPreparing)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsMealsPreparing, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsMealsPreparing, "n")</td>
+                                                <td>@Html.TextBoxFor(model => model.ClientNeedsMealsPreparingAssistant, new { @class = "form-control" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(model => model.IsClientNeedsEating)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsEating, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsEating, "n")</td>
+                                                <td>@Html.TextBoxFor(model => model.ClientNeedsEatingAssistant, new { @class = "form-control" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(model => model.IsClientNeedsUsingToilet)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsUsingToilet, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsUsingToilet, "n")</td>
+                                                <td>@Html.TextBoxFor(model => model.ClientNeedsUsingToiletAssistant, new { @class = "form-control" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(model => model.IsClientNeedsHouseKeeping)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsHouseKeeping, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsHouseKeeping, "n")</td>
+                                                <td>@Html.TextBoxFor(model => model.ClientNeedsHouseKeepingAssistant, new { @class = "form-control" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(model => model.IsClientNeedsTransportation)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsTransportation, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsTransportation, "n")</td>
+                                                <td>@Html.TextBoxFor(model => model.ClientNeedsTransportationAssistant, new { @class = "form-control" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(model => model.IsClientNeedsAppliance)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsAppliance, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsAppliance, "n")</td>
+                                                <td>@Html.TextBoxFor(model => model.ClientNeedsApplianceAssistant, new { @class = "form-control" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(model => model.IsClientNeedsTelephone)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsTelephone, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsTelephone, "n")</td>
+                                                <td>@Html.TextBoxFor(model => model.ClientNeedsTelephoneAssistant, new { @class = "form-control" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(model => model.IsClientNeedsMedicalCare)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsMedicalCare, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsMedicalCare, "n")</td>
+                                                <td>@Html.TextBoxFor(model => model.ClientNeedsMedicalCareAssistant, new { @class = "form-control" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(model => model.IsClientNeedsSelfAdminMedication)</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsSelfAdminMedication, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsSelfAdminMedication, "n")</td>
+                                                <td>@Html.TextBoxFor(model => model.ClientNeedsSelfAdminMedicationAssistant, new { @class = "form-control" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    @Html.LabelFor(model => model.IsClientNeedsOther)
+                                                    @Html.TextAreaFor(model => model.ClientNeedsOther, new { @class = "form-control" })
+                                                </td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsOther, "y")</td>
+                                                <td>@Html.RadioButtonFor(model => model.IsClientNeedsOther, "n")</td>
+                                                <td>@Html.TextBoxFor(model => model.ClientNeedsOtherAssistant, new { @class = "form-control" })</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <button type="button" class="btn btn-xl btn-primary" data-toggle="collapse" data-target="#MentalAbilities">Emotional Status, Mental Functioning and Depression</button>
+
+                        </div>
+                        <div class="nextline"></div>
+                        <div class="well container collapse" id="MentalAbilities" style="background-color: #fff">
+                            <div class="row">
+                                <h4 style="text-decoration: underline">Emotional Status, Mental Functioning and Depression</h4>
+                                <br />
+                            </div>
+                            <div class="container">
+                                <div class="row nextline @errorclass " id="MentalConditions">
+                                    @Html.LabelFor(model => model.IsMentalCondition)
+                                    @Html.RadioButtonFor(model => model.IsMentalCondition, "y", new { @id = "IsMentalConditionYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsMentalCondition, "n", new { @id = "IsMentalConditionNo" }) No
+                                    @Html.RadioButtonFor(model => model.IsMentalCondition, "u", new { @id = "IsMentalConditionUnknown" }) Unknown
+                                </div>
+                                <div class="row nextline col-md-10 @errorclass " id="MentalConditionsOptions">
+                                    @Html.CheckBoxFor(model => model.IsMentalConditionProfound) @Html.LabelFor(model => model.IsMentalConditionProfound)<br />
+                                    @Html.CheckBoxFor(model => model.IsMentalConditionModerate) @Html.LabelFor(model => model.IsMentalConditionModerate)<br />
+
+                                </div>
+                                <div class="row nextline @errorclass " id="MentalCapacity">
+                                    @Html.LabelFor(model => model.IsMentalCapacity)
+                                    @Html.RadioButtonFor(model => model.IsMentalCapacity, "y", new { @id = "IsMentalCapacityYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsMentalCapacity, "n", new { @id = "IsMentalCapacityNo" }) No
+                                    @Html.RadioButtonFor(model => model.IsMentalCapacity, "u", new { @id = "IsMentalCapacityUnknown" }) Unknown
+                                </div>
+
+
+                                <div class="row nextline col-md-12 @errorclass " id="MentalCapacityOptions">
+                                    @Html.CheckBoxFor(model => model.IsMentalCapacityCognitiveImpairement) @Html.LabelFor(model => model.IsMentalCapacityCognitiveImpairement)<br />
+                                    @Html.CheckBoxFor(model => model.IsMentalCapacityDevelopmentalDisability) @Html.LabelFor(model => model.IsMentalCapacityDevelopmentalDisability)<br />
+                                    @Html.CheckBoxFor(model => model.IsMentalCapacityEmotionalProblems) @Html.LabelFor(model => model.IsMentalCapacityEmotionalProblems)<br />
+                                    @Html.CheckBoxFor(model => model.IsMentalCapacityTraumaticBrainInjury) @Html.LabelFor(model => model.IsMentalCapacityTraumaticBrainInjury)<br />
+                                    @Html.CheckBoxFor(model => model.IsMentalCapacityOther) @Html.LabelFor(model => model.IsMentalCapacityOther)
+                                    <div class="row nextline">
+                                        <div class="col-md-5 @errorclass " id="MentalCapacityOptionsOther">
+                                            @Html.TextAreaFor(model => model.MentalCapacityOther, new { @class = "form-control", @rows = 5 })
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+                                <div class="row nextline"></div>
+
+                                <div class="row nextline" id="Psychological">
+                                    @Html.LabelFor(model => model.IsClientHasPsychologicalSymptoms)
+                                    @Html.RadioButtonFor(model => model.IsClientHasPsychologicalSymptoms, "y", new { @id = "IsClientHasPsychologicalSymptomsYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsClientHasPsychologicalSymptoms, "n", new { @id = "IsClientHasPsychologicalSymptomsNo" }) No
+                                    @Html.RadioButtonFor(model => model.IsClientHasPsychologicalSymptoms, "u", new { @id = "IsClientHasPsychologicalSymptomsUnknown" }) Unknown
+                                </div>
+                                <div class="row nextline col-md-10" id="PsychologicalOptions">
+                                    @Html.CheckBoxFor(model => model.IsClientMentallyIll) @Html.LabelFor(model => model.IsClientMentallyIll)<br />
+                                    @Html.CheckBoxFor(model => model.IsClientHasPersonalityDisorder) @Html.LabelFor(model => model.IsClientHasPersonalityDisorder)<br />
+                                    @Html.CheckBoxFor(model => model.IsClientDangerousToSelf) @Html.LabelFor(model => model.IsClientDangerousToSelf)<br />
+                                    @Html.CheckBoxFor(model => model.IsClientDangerousToOthers) @Html.LabelFor(model => model.IsClientDangerousToOthers)<br />
+                                </div>
+                                <div class="row nextline"></div>
+                                <div class="row nextline">
+                                    <div class="col-md-4" id="MentalStatus">
+                                        <b style="text-decoration: underline">Mental Status</b><br />
+                                        @Html.CheckBoxFor(model => model.IsClientDisorientedToTime) @Html.LabelFor(model => model.IsClientDisorientedToTime)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientDisorientedToPlace) @Html.LabelFor(model => model.IsClientDisorientedToPlace)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientDisorientedToPerson) @Html.LabelFor(model => model.IsClientDisorientedToPerson)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientIncoherent) @Html.LabelFor(model => model.IsClientIncoherent)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientPoorMemory) @Html.LabelFor(model => model.IsClientPoorMemory)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientConfused) @Html.LabelFor(model => model.IsClientConfused)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientSeverelyAnxious) @Html.LabelFor(model => model.IsClientSeverelyAnxious)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientUnreasonablyFearful) @Html.LabelFor(model => model.IsClientUnreasonablyFearful)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientCannotFollowConversation) @Html.LabelFor(model => model.IsClientCannotFollowConversation)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientFaultyJudgement) @Html.LabelFor(model => model.IsClientFaultyJudgement)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientMMSEScore) @Html.LabelFor(model => model.IsClientMMSEScore)<br />
+                                    </div>
+                                    <div class="col-md-4" id="Depression">
+                                        <b style="text-decoration: underline">Depression</b><br />
+                                        @Html.CheckBoxFor(model => model.IsClientChangeinEatingHabits) @Html.LabelFor(model => model.IsClientChangeinEatingHabits)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientChangeinSleepingHabits) @Html.LabelFor(model => model.IsClientChangeinSleepingHabits)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientRecentLoss) @Html.LabelFor(model => model.IsClientRecentLoss)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientDecreasedSocialInteraction) @Html.LabelFor(model => model.IsClientDecreasedSocialInteraction)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientLossOfInterest) @Html.LabelFor(model => model.IsClientLossOfInterest)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientWithdrawn) @Html.LabelFor(model => model.IsClientWithdrawn)<br />
+                                    </div>
+                                    <div class="col-md-4" id="MentalIllness">
+                                        <b style="text-decoration: underline">Mental Illness</b><br />
+                                        @Html.CheckBoxFor(model => model.IsClientPsychiatricHistory) @Html.LabelFor(model => model.IsClientPsychiatricHistory)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientBizarreBehavior) @Html.LabelFor(model => model.IsClientBizarreBehavior)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientHearVoices) @Html.LabelFor(model => model.IsClientHearVoices)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientVisualHallucinations) @Html.LabelFor(model => model.IsClientVisualHallucinations)<br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <button type="button" class="btn btn-xl btn-primary " data-toggle="collapse" data-target="#Environment">Environment</button>
+                        </div>
+                        <div class="nextline"></div>
+                        <div class="well container collapse" id="Environment" style="background-color: #fff">
+                            <div class="row">
+                                <h4 style="text-decoration: underline">Environment</h4>
+                                <br />
+                            </div>
+                            <div class="container">
+                                <div class="row nextline  @errorclass" id="LivingSituation">
+                                    @Html.LabelFor(model => model.IsClientLivingSituation)
+                                    @Html.RadioButtonFor(model => model.IsClientLivingSituation, "y", new { @id = "IsClientLivingSituationYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsClientLivingSituation, "n", new { @id = "IsClientLivingSituationNo" }) No
+                                    @Html.RadioButtonFor(model => model.IsClientLivingSituation, "u", new { @id = "IsClientLivingSituationUnknown" }) Unknown
+                                </div>
+                                <div class="row nextline @errorclass" id="LivingSituationOptions">
+                                    @Html.TextAreaFor(model => model.ClientLivingSituation, new { @class = "form-control" })
+                                </div>
+
+                                <div class="row nextline @errorclass" id="SafePlace">
+                                    @Html.LabelFor(model => model.IsClientPlaceSafe)
+                                    @Html.RadioButtonFor(model => model.IsClientPlaceSafe, "y", new { @id = "IsClientPlaceSafeYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsClientPlaceSafe, "n", new { @id = "IsClientPlaceSafeNo" }) No
+                                    @Html.RadioButtonFor(model => model.IsClientPlaceSafe, "u", new { @id = "IsClientPlaceSafeunknown" }) Unknown
+
+                                    <div id="SafePlaceOptions" class="@errorclass ">
+                                        @Html.CheckBoxFor(model => model.IsClientPlaceUtilities) @Html.LabelFor(model => model.IsClientPlaceUtilities)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientPlacePosesBarriers) @Html.LabelFor(model => model.IsClientPlacePosesBarriers)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientPlaceSettingUnsafe) @Html.LabelFor(model => model.IsClientPlaceSettingUnsafe)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientPlaceOther) @Html.LabelFor(model => model.IsClientPlaceOther)
+                                        <div id="SafePlaceOptionsOther">@Html.TextBoxFor(model => model.ClientPlaceOther, new { @class = "form-control" })</div>
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="row nextline @errorclass" id="Cleanliness">
+                                    @Html.LabelFor(model => model.IsClientResidenceMeetsStandards)
+                                    @Html.RadioButtonFor(model => model.IsClientResidenceMeetsStandards, "y", new { @id = "IsClientResidenceMeetsStandardsYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsClientResidenceMeetsStandards, "n", new { @id = "IsClientResidenceMeetsStandardsNo" }) No
+                                    @Html.RadioButtonFor(model => model.IsClientResidenceMeetsStandards, "u", new { @id = "IsClientResidenceMeetsStandardsUnknown" }) Unknown
+
+                                    <div id="CleanlinessOptions">
+                                        @Html.CheckBoxFor(model => model.IsClientResidenceTrashDisposed) @Html.LabelFor(model => model.IsClientResidenceTrashDisposed)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientResidenceGrossHealthViolations) @Html.LabelFor(model => model.IsClientResidenceGrossHealthViolations)<br />
+                                    </div>
+                                </div>
+
+
+                                <div class="row nextline @errorclass" id="ClutterImage">
+                                    <label for="Clutter">Clutter image rating:</label>
+                                    <font color="red"> (Upload related photographs under supporting documentation-screening tools)</font>
+
+                                    <br />
+
+                                    @Html.CheckBoxFor(model => model.IsClutterImageRatingNotApplicable) @Html.LabelFor(model => model.IsClutterImageRatingNotApplicable)<br />
+                                    <div id="clusterrating" class="row nextline">
+                                        <div class="col-md-2">
+                                            @Html.CheckBoxFor(model => model.IsClutterImageRatingKitchen) @Html.LabelFor(model => model.IsClutterImageRatingKitchen)<br />
+                                            <div id="KitchenRating">
+                                                @Html.DropDownListFor(model => model.ClutterImageRatingKitchen, ClutterImageRating, new { @class = "form-control", @required = "false" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            @Html.CheckBoxFor(model => model.IsClutterImageRatingBedRoom) @Html.LabelFor(model => model.IsClutterImageRatingBedRoom)<br />
+                                            <div id="BedRoomRating">
+                                                @Html.DropDownListFor(model => model.ClutterImageRatingBedRoom, ClutterImageRating, new { @class = "form-control", @required = "false" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            @Html.CheckBoxFor(model => model.IsClutterImageRatingLivingRoom) @Html.LabelFor(model => model.IsClutterImageRatingLivingRoom)<br />
+                                            <div id="LivingRoomRating">
+                                                @Html.DropDownListFor(model => model.ClutterImageRatingLivingRoom, ClutterImageRating, new { @class = "form-control", @required = "false" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="row nextline">
+                                    <b style="text-decoration: underline">Check all that apply</b><br />
+                                    <div class="col-md-4">
+                                        @*<b style="text-decoration: underline">Mental Status</b><br />*@
+                                        @Html.CheckBoxFor(model => model.IsClientHomeless) @Html.LabelFor(model => model.IsClientHomeless)<br />
+                                        @*@Html.CheckBoxFor(model => model.IsClientInadequate) @Html.LabelFor(model => model.IsClientInadequate)<br />*@
+                                        @Html.CheckBoxFor(model => model.IsClientNoRefrigerator) @Html.LabelFor(model => model.IsClientNoRefrigerator)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientNoVentilation) @Html.LabelFor(model => model.IsClientNoVentilation)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientLackingUtilities) @Html.LabelFor(model => model.IsClientLackingUtilities)<br />
+                                    </div>
+                                    <div class="col-md-4">
+                                        @*<b style="text-decoration: underline">Depression</b><br />*@
+                                        @Html.CheckBoxFor(model => model.IsFireSafety) @Html.LabelFor(model => model.IsFireSafety)<br />
+                                        @Html.CheckBoxFor(model => model.IsAnimalInfestation) @Html.LabelFor(model => model.IsAnimalInfestation)<br />
+                                        @Html.CheckBoxFor(model => model.IsHomeInNeedOfRepair) @Html.LabelFor(model => model.IsHomeInNeedOfRepair)<br />
+                                        @Html.CheckBoxFor(model => model.IsHomeEvictionNotice) @Html.LabelFor(model => model.IsHomeEvictionNotice)<br />
+                                        @Html.CheckBoxFor(model => model.IsHomeAccumulatedPersonalItems) @Html.LabelFor(model => model.IsHomeAccumulatedPersonalItems)<br />
+                                    </div>
+                                    <div class="col-md-4">
+                                        @*<b style="text-decoration: underline">Mental Illness</b><br />*@
+                                        @Html.CheckBoxFor(model => model.IsUnmanageableStairs) @Html.LabelFor(model => model.IsUnmanageableStairs)<br />
+                                        @Html.CheckBoxFor(model => model.IsHomeModificationsNeeded) @Html.LabelFor(model => model.IsHomeModificationsNeeded)<br />
+                                        @Html.CheckBoxFor(model => model.IsHomeInHighCrimeArea) @Html.LabelFor(model => model.IsHomeInHighCrimeArea)<br />
+                                        @Html.CheckBoxFor(model => model.IsHomeUsedforCriminalActivity) @Html.LabelFor(model => model.IsHomeUsedforCriminalActivity)<br />
+                                        @Html.CheckBoxFor(model => model.IsHomeInappropriate) @Html.LabelFor(model => model.IsHomeInappropriate)<br />
+                                        @Html.CheckBoxFor(model => model.IsHomeEnvironmentOther) @Html.LabelFor(model => model.IsHomeEnvironmentOther)<div id="HomeEnvironmentOther">@Html.TextAreaFor(model => model.HomeEnvironmentOther, new { @class = "form-control", @rows = 4 })</div>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <button type="button" class="btn btn-xl btn-primary " data-toggle="collapse" data-target="#SubstanceAbuse">Substance Abuse and Other Endangering Behavior</button>
+                        </div>
+                        <div class="nextline"></div>
+                        <div class="well container collapse" id="SubstanceAbuse" style="background-color: #fff">
+                            <div class="row">
+                                <h4 style="text-decoration: underline">Substance Abuse and Other Endangering Behavior</h4>
+                                <br />
+                            </div>
+                            <div class="container">
+                                <div class="row nextline@errorclass" id="EndangeringBehaviours">
+                                    @Html.LabelFor(model => model.IsClientSuffersSubstanceAbuse)
+                                    @Html.RadioButtonFor(model => model.IsClientSuffersSubstanceAbuse, "y", new { @id = "IsClientSuffersSubstanceAbuseYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsClientSuffersSubstanceAbuse, "n", new { @id = "IsClientSuffersSubstanceAbuseNo" }) No
+                                    @Html.RadioButtonFor(model => model.IsClientSuffersSubstanceAbuse, "u", new { @id = "IsClientSuffersSubstanceAbuseUnknown" }) Unknown
+
+                                    <div id="EndangeringBehavioursOptions" class="@errorclass">
+                                        @Html.CheckBoxFor(model => model.IsClientSuffersActiveSubstanceAbuse) @Html.LabelFor(model => model.IsClientSuffersActiveSubstanceAbuse)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientSuffersPeriodicSubstanceAbuse) @Html.LabelFor(model => model.IsClientSuffersPeriodicSubstanceAbuse)<br />
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="row nextline @errorclass" id="ChemicallyAbusive">
+                                    @Html.LabelFor(model => model.IsClientCheminallyAbusive)
+                                    @Html.RadioButtonFor(model => model.IsClientCheminallyAbusive, "y", new { @id = "IsClientCheminallyAbusiveYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsClientCheminallyAbusive, "n", new { @id = "IsClientCheminallyAbusiveNo" }) No
+                                    @Html.RadioButtonFor(model => model.IsClientCheminallyAbusive, "u", new { @id = "IsClientCheminallyAbusiveUnknown" }) Unknown
+
+                                    <div id="ChemicallyAbusiveOptions" class="@errorclass">
+                                        @Html.CheckBoxFor(model => model.IsClientChemicalThreatensHealth) @Html.LabelFor(model => model.IsClientChemicalThreatensHealth)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientSuffersThreatensMedication) @Html.LabelFor(model => model.IsClientSuffersThreatensMedication)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientEnrolledInSubstanceAbuseTreatment) @Html.LabelFor(model => model.IsClientEnrolledInSubstanceAbuseTreatment)<br />
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="row nextline">
+                                    <div class="col-md-6">
+                                        <b>Substance Abuse</b>(Check all that apply)<br />
+                                        @Html.CheckBoxFor(model => model.IsPreviousHistory) @Html.LabelFor(model => model.IsPreviousHistory)<br />
+                                        @Html.CheckBoxFor(model => model.IsAlcoholSmell) @Html.LabelFor(model => model.IsAlcoholSmell)<br />
+                                        @Html.CheckBoxFor(model => model.IsSlurredSpeech) @Html.LabelFor(model => model.IsSlurredSpeech)<br />
+                                        @Html.CheckBoxFor(model => model.IsDialtedPupils) @Html.LabelFor(model => model.IsDialtedPupils)<br />
+                                        @Html.CheckBoxFor(model => model.IsFrequentFalls) @Html.LabelFor(model => model.IsFrequentFalls)<br />
+                                        @Html.CheckBoxFor(model => model.IsBottlesPresent) @Html.LabelFor(model => model.IsBottlesPresent)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuseofRxMedications) @Html.LabelFor(model => model.IsAbuseofRxMedications)<br />
+                                        @Html.CheckBoxFor(model => model.IsSubstanceAbuseOther) @Html.LabelFor(model => model.IsSubstanceAbuseOther)<div id="substanceAbuseOther">@Html.TextAreaFor(model => model.SubstanceAbuseOther, new { @class = "form-control", @rows = 4 })</div>
+                                        <br />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <b>Other Endangering Behaviors</b>(Check all that apply)<br />
+                                        @Html.CheckBoxFor(model => model.IsSuicidalActs) @Html.LabelFor(model => model.IsSuicidalActs)<br />
+                                        @Html.CheckBoxFor(model => model.IsWandering) @Html.LabelFor(model => model.IsWandering)<br />
+                                        @Html.CheckBoxFor(model => model.IsFrequenstDangerousPlaces) @Html.LabelFor(model => model.IsFrequenstDangerousPlaces)<br />
+                                        @Html.CheckBoxFor(model => model.IsLifeThreateningBehaviors) @Html.LabelFor(model => model.IsLifeThreateningBehaviors)<br />
+                                        @Html.CheckBoxFor(model => model.IsRefusesMedicalTreatment) @Html.LabelFor(model => model.IsRefusesMedicalTreatment)<br />
+                                        @Html.CheckBoxFor(model => model.IsEndangeringBehaviorOther) @Html.LabelFor(model => model.IsEndangeringBehaviorOther)<div id="endangeringBehaviorOther">@Html.TextAreaFor(model => model.EndangeringBehaviorOther, new { @class = "form-control", @rows = 4 })</div>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <button type="button" class="btn btn-xl btn-primary " data-toggle="collapse" data-target="#FinancialResources">Financial Resources</button>
+                        </div>
+                        <div class="nextline"></div>
+                        <div class="well container collapse" id="FinancialResources" style="background-color: #fff">
+                            <div class="row">
+                                <h4 style="text-decoration: underline">Income/Financial Resources</h4>
+                                <br />
+                            </div>
+                            <div class="container">
+                                <div class="row nextline" id="Employment">
+                                    <div class="col-md-3 form-group  @errorclass" id="EmploymentStatus">
+                                        @Html.ValidationMessageFor(model => model.EmploymentStatusId)
+                                        @Html.LabelFor(m => m.EmploymentStatusId)
+                                        @Html.DropDownListFor(model => model.EmploymentStatusId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewEmploymentType { Id = 0, Description = " Select Employment Status" } }.Union(Model.caselookup.listofemploymenttypes), "Id", "Description", Model.EmploymentStatusId), new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="row nextline  @errorclass" id="FinancialAssets">
+                                    @Html.LabelFor(model => model.IsClientHaveFinancialResources)
+                                    @Html.RadioButtonFor(model => model.IsClientHaveFinancialResources, "y", new { @id = "IsClientHaveFinancialResourcesYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsClientHaveFinancialResources, "n", new { @id = "IsClientHaveFinancialResourcesNo" }) No
+                                    @Html.RadioButtonFor(model => model.IsClientHaveFinancialResources, "u", new { @id = "IsClientHaveFinancialResourcesUnknown" }) Unknown
+                                </div>
+                                <div class="row nextline  @errorclass" id="BasicNeeds">
+                                    @Html.LabelFor(model => model.IsCaregiverProvidingBasicNeeds)
+                                    @Html.RadioButtonFor(model => model.IsCaregiverProvidingBasicNeeds, "y", new { @id = "IsCaregiverProvidingBasicNeedsYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsCaregiverProvidingBasicNeeds, "n", new { @id = "IsCaregiverProvidingBasicNeedsNo" }) No
+                                    @Html.RadioButtonFor(model => model.IsCaregiverProvidingBasicNeeds, "u", new { @id = "IsCaregiverProvidingBasicNeedsUnknown" }) Unknown
+
+                                    <div id="BasicNeedsOptions" class="@errorclass ">
+                                        @Html.CheckBoxFor(model => model.IsClienthasInsufficientAssets) @Html.LabelFor(model => model.IsClienthasInsufficientAssets)<br />
+                                        @Html.CheckBoxFor(model => model.IsCaregiverNotUtilizeServices) @Html.LabelFor(model => model.IsCaregiverNotUtilizeServices)<br />
+                                        @Html.CheckBoxFor(model => model.IsNoResourcesAvailable) @Html.LabelFor(model => model.IsNoResourcesAvailable)<br />
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="row nextline  @errorclass" id="AssetsManagement">
+                                    @Html.LabelFor(model => model.IsClientAssetsProperlyManaged)
+                                    @Html.RadioButtonFor(model => model.IsClientAssetsProperlyManaged, "y", new { @id = "IsClientAssetsProperlyManagedYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsClientAssetsProperlyManaged, "n", new { @id = "IsClientAssetsProperlyManagedNo" }) No
+                                    @Html.RadioButtonFor(model => model.IsClientAssetsProperlyManaged, "u", new { @id = "IsClientAssetsProperlyManagedUnknown" }) Unknown
+
+                                    <div id="AssetsManagementOptions" class="@errorclass ">
+                                        @Html.LabelFor(model => model.ClientAssetsProperlyManaged) @Html.TextAreaFor(model => model.ClientAssetsProperlyManaged, new { @class = "form-control", @rows = 4 })
+                                        <br />
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="row nextline">
+                                    <div class="col-md-4">
+                                        <b>Client</b><br />
+                                        @Html.CheckBoxFor(model => model.IsClientFinaciallyDependent) @Html.LabelFor(model => model.IsClientFinaciallyDependent)<br />
+                                        @Html.CheckBoxFor(model => model.IsChooseAmongNecessities) @Html.LabelFor(model => model.IsChooseAmongNecessities)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientVulnerableToFutureExploitation) @Html.LabelFor(model => model.IsClientVulnerableToFutureExploitation)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientUnableToManageFinances) @Html.LabelFor(model => model.IsClientUnableToManageFinances)<br />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <b>Abuser</b><br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserFinanciallyDependentOnClientResources) @Html.LabelFor(model => model.IsAbuserFinanciallyDependentOnClientResources)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserMismanagmementOfFinancesResources) @Html.LabelFor(model => model.IsAbuserMismanagmementOfFinancesResources)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserQuestionableOfResources) @Html.LabelFor(model => model.IsAbuserQuestionableOfResources)<br />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <b>Other</b><br />
+                                        @Html.CheckBoxFor(model => model.IsOtherUnpaidBills) @Html.LabelFor(model => model.IsOtherUnpaidBills)<br />
+                                        @Html.CheckBoxFor(model => model.IsOtherUtilitiesCutoff) @Html.LabelFor(model => model.IsOtherUtilitiesCutoff)<br />
+                                        @Html.CheckBoxFor(model => model.IsOthersFinanciallyDependentOnClient) @Html.LabelFor(model => model.IsOthersFinanciallyDependentOnClient)<br />
+                                        @Html.CheckBoxFor(model => model.IsOthersother) @Html.LabelFor(model => model.IsOthersother)<div id="Othersother">@Html.TextAreaFor(model => model.Othersother, new { @class = "form-control", @rows = 4 })</div>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <button type="button" class="btn btn-xl btn-primary " data-toggle="collapse" data-target="#FormalAndInformalServices">Formal And Informal Services</button>
+                        </div>
+                        <div class="nextline"></div>
+                        <div class="well container collapse" id="FormalAndInformalServices" style="background-color: #fff">
+                            <div class="row">
+                                <h4 style="text-decoration: underline">Formal and Informal Support Services</h4>
+                                <br />
+                            </div>
+                            <div class="container">
+                                <div class="row nextline  @errorclass" id="Supportive">
+                                    @Html.LabelFor(model => model.IsClientHasSupportiveFriendship)
+                                    @Html.RadioButtonFor(model => model.IsClientHasSupportiveFriendship, "y", new { @id = "IsClientHasSupportiveFriendshipYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsClientHasSupportiveFriendship, "n", new { @id = "IsClientHasSupportiveFriendshipNo" }) No
+                                    @Html.RadioButtonFor(model => model.IsClientHasSupportiveFriendship, "u", new { @id = "IsClientHasSupportiveFriendshipUnknown" }) Unknown
+                                </div>
+                                <div class="row nextline  @errorclass" id="ArrangeServices">
+                                    @Html.LabelFor(model => model.IsNeighborsArrangeForServices, new { @class = "control-lable" })
+                                    @Html.RadioButtonFor(model => model.IsNeighborsArrangeForServices, "y", new { @id = "IsNeighborsArrangeForServicesYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsNeighborsArrangeForServices, "n", new { @id = "IsNeighborsArrangeForServicesNo" }) No
+                                    @Html.RadioButtonFor(model => model.IsNeighborsArrangeForServices, "u", new { @id = "IsNeighborsArrangeForServicesUnknown" }) Unknown
+                                    @Html.RadioButtonFor(model => model.IsNeighborsArrangeForServices, "x", new { @id = "IsNeighborsArrangeForServicesNA" }) NA - No assistance needed
+
+                                    <div id="ArrangeServicesOptions" class="@errorclass ">
+                                        @Html.CheckBoxFor(model => model.IsNoDependableFamily) @Html.LabelFor(model => model.IsNoDependableFamily)<br />
+                                        @Html.CheckBoxFor(model => model.IsLacksAdequateInformalCare) @Html.LabelFor(model => model.IsLacksAdequateInformalCare)<br />
+                                        @Html.CheckBoxFor(model => model.IsLacksAdequateFormalCare) @Html.LabelFor(model => model.IsLacksAdequateFormalCare)<br />
+                                        @Html.CheckBoxFor(model => model.IsIsolated) @Html.LabelFor(model => model.IsIsolated)<br />
+                                    </div>
+                                </div>
+                                <div class="row nextline  @errorclass" id="CommunitySupportServices">
+                                    @Html.LabelFor(model => model.IsClientReceivingCommunitySupport)
+                                    @Html.RadioButtonFor(model => model.IsClientReceivingCommunitySupport, "y", new { @id = "IsClientReceivingCommunitySupportYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsClientReceivingCommunitySupport, "n", new { @id = "IsClientReceivingCommunitySupportNo" }) No
+                                    @Html.RadioButtonFor(model => model.IsClientReceivingCommunitySupport, "u", new { @id = "IsClientReceivingCommunitySupportUnknown" }) Unknown
+                                </div>
+                                <div class="row nextline">
+                                    <div class="col-md-3  @errorclass" id="CommunitySupportServicesOptions">
+                                        @Html.TextAreaFor(model => model.ClientReceivingCommunitySupport, new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+                                <div class="row nextline  @errorclass" id="Advocate">
+                                    @Html.LabelFor(model => model.IsClientHasAdvocate)
+                                    @Html.RadioButtonFor(model => model.IsClientHasAdvocate, "y", new { @id = "IsClientHasAdvocateYes" }) Yes
+                                    @Html.RadioButtonFor(model => model.IsClientHasAdvocate, "n", new { @id = "IsClientHasAdvocateNo" }) No
+                                    @Html.RadioButtonFor(model => model.IsClientHasAdvocate, "u", new { @id = "IsClientHasAdvocateUnknown" }) Unknown
+                                    @Html.RadioButtonFor(model => model.IsClientHasAdvocate, "x", new { @id = "IsClientHasAdvocateNA" }) NA - No assistance needed
+
+                                    <div id="AdvocateOptions" class="@errorclass ">
+                                        @Html.CheckBoxFor(model => model.IsClientCaregiverToOthers) @Html.LabelFor(model => model.IsClientCaregiverToOthers)<br />
+                                        @Html.CheckBoxFor(model => model.IsClientReliesOnOtherToCommunicate) @Html.LabelFor(model => model.IsClientReliesOnOtherToCommunicate)<br />
+                                        @Html.CheckBoxFor(model => model.IsFormalother) @Html.LabelFor(model => model.IsFormalother)
+                                        <div class="row nextline @errorclass " id="Formalother">
+                                            <div class=" col-md-3">@Html.TextAreaFor(model => model.Formalother, new { @class = "form-control", @rows = 4 })</div>
+                                        </div>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <button type="button" class="btn btn-xl btn-primary " data-toggle="collapse" data-target="#AbuserFactors">Abuser Factors</button>
+                        </div>
+                        <div class="nextline"></div>
+
+                        <div class="well container collapse" id="AbuserFactors" style="background-color: #fff">
+                            <div class="row  @errorclass">
+                                <h4 style="text-decoration: underline">Abuser Factors</h4>
+                                <br />
+                            </div>
+                            <div class="container">
+                                <div class="row nextline">
+                                    <div class="col-md-4">
+                                        @Html.CheckBoxFor(model => model.IsAbuserEmotionallyDependentOnClient) @Html.LabelFor(model => model.IsAbuserEmotionallyDependentOnClient)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserFinanciallyDependentOnClient) @Html.LabelFor(model => model.IsAbuserFinanciallyDependentOnClient)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserUnreliable) @Html.LabelFor(model => model.IsAbuserUnreliable)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserPoorCaregivingSkills) @Html.LabelFor(model => model.IsAbuserPoorCaregivingSkills)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserPoorCopingSkills) @Html.LabelFor(model => model.IsAbuserPoorCopingSkills)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserIsolatesClient) @Html.LabelFor(model => model.IsAbuserIsolatesClient)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserCognitiveLimitations) @Html.LabelFor(model => model.IsAbuserCognitiveLimitations)<br />
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.CheckBoxFor(model => model.IsAbuserPhysicalLimitations) @Html.LabelFor(model => model.IsAbuserPhysicalLimitations)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserSubstanceAbuseAlcohol) @Html.LabelFor(model => model.IsAbuserSubstanceAbuseAlcohol)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserSubstanceAbuseDrugs) @Html.LabelFor(model => model.IsAbuserSubstanceAbuseDrugs)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserPresentsOverburdend) @Html.LabelFor(model => model.IsAbuserPresentsOverburdend)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserWillNotPermitServices) @Html.LabelFor(model => model.IsAbuserWillNotPermitServices)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserUncooperative) @Html.LabelFor(model => model.IsAbuserUncooperative)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserUndueInfluence) @Html.LabelFor(model => model.IsAbuserUndueInfluence)<br />
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.CheckBoxFor(model => model.IsAbuserUnrestricted) @Html.LabelFor(model => model.IsAbuserUnrestricted)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserHistoryOfAbuse) @Html.LabelFor(model => model.IsAbuserHistoryOfAbuse)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserPetAbuse) @Html.LabelFor(model => model.IsAbuserPetAbuse)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserPreviousAbuser) @Html.LabelFor(model => model.IsAbuserPreviousAbuser)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserCriminalHistory) @Html.LabelFor(model => model.IsAbuserCriminalHistory)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserNone) @Html.LabelFor(model => model.IsAbuserNone)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserUnknown) @Html.LabelFor(model => model.IsAbuserUnknown)<br />
+                                        @Html.CheckBoxFor(model => model.IsAbuserOther) @Html.LabelFor(model => model.IsAbuserOther)<div id="AbuserOther">@Html.TextAreaFor(model => model.AbuserOther, new { @class = "form-control", @rows = 4 })</div>
+                                        <br />
+                                        <br />
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <button type="button" class="btn btn-xl btn-primary " data-toggle="collapse" data-target="#OverallRiskAssessment">Overall Risk Assessment</button>
+                        </div>
+                        <div class="well container collapse" id="OverallRiskAssessment" style="background-color: #fff">
+                            <div class="row nextline" id="Risk Definitions Substantiated">
+                                <div class="col-md-12 form-group">
+                                    <h4 style="text-decoration: underline">To reflect conditions prior to interventions / APS involvement:</h4>
+                                    <br />
+                                    <br />
+
+                                    <b>Low Risk:</b>
+                                    @*<text>Client's social environmental and functional status support that the client is not at risk of ANE and/or SN in his/her living situation</text>*@
+                                    <text>Overall the situation is not likely to recur or to escalate in severity.</text>
+                                    <br />
+                                    <br />
+                                    <b>Meduium Risk:</b>
+                                    @*<text>There are factors present that suggest that the client may be at some risk of ANE and/or SN in his/her living situation</text>*@
+                                    <text>In general, there is some possibility  the situation will continue and probably escalate in the future.</text>
+                                    <br />
+                                    <br />
+                                    <b>High Risk:</b>
+                                    @*<text>There are indications that the client is very likely to be at risk of ANE and/or SN in his/her living situation</text>*@
+                                    <text>It is very likely the situation will continue and probably escalate in the future.</text>
+                                    <br />
+                                </div>
+                            </div>
+                            <div class="row nextline" id="Substantiated Risk Level">
+                                <div class="col-md-6  @errorclass">
+                                    <b><u>Risk Assessment - Overall Risk Level:</u></b><br />
+                                    <div>
+                                        @Html.CheckBoxFor(model => model.IsANENA) @Html.LabelFor(model => model.IsANENA) /   @Html.CheckBoxFor(model => model.IsSNNA) @Html.LabelFor(model => model.IsSNNA)
+                                        <br />
+                                        @Html.CheckBoxFor(model => model.IsLowANE) @Html.LabelFor(model => model.IsLowANE) /   @Html.CheckBoxFor(model => model.IsLowSN) @Html.LabelFor(model => model.IsLowSN)
+                                        <br />
+                                        @Html.CheckBoxFor(model => model.IsMediumANE) @Html.LabelFor(model => model.IsMediumANE) / @Html.CheckBoxFor(model => model.IsMediumSN) @Html.LabelFor(model => model.IsMediumSN)
+                                        <br />
+                                        @Html.CheckBoxFor(model => model.IsHighANE) @Html.LabelFor(model => model.IsHighANE) /   @Html.CheckBoxFor(model => model.IsHighSN) @Html.LabelFor(model => model.IsHighSN)
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-md-12 form-group  @errorclass">
+                                    @Html.LabelFor(model => model.Rationale) (Provide a brief rationale for the overall risk level highlighting the risk categories/indicators that had a bearing on the overall score. Note any significant changes from the last risk assessment that was administered. Based on your professional judgement, indicate why you believe the person may or may not be at continued risk of ANE and/or SN)
+                                    <div>
+                                        @Html.TextAreaFor(model => model.Rationale, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-md-3 @errorclass">
+                                    @Html.LabelFor(model => model.CaseworkerSignature)
+                                    <div>
+                                        @Html.TextBoxFor(model => model.CaseworkerSignature, new { @class = "form-control", @placeholder = "Sign" })
+                                    </div>
+                                </div>
+                                <div class="col-md-3 @errorclass">
+                                    @Html.LabelFor(model => model.CaseworkerSignatureDate)
+                                    <div>
+                                        @Html.TextBoxFor(model => model.CaseworkerSignatureDate, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", @placeholder = "Date" })
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="@(User.IsInRole("CMS_Supervisor") || User.IsInRole("CMS_IDOAStaff") ? "enablediv" : "disablediv") row nextline">
+                                <text>Supervisor has reviewed and approved the risk level assigned and agrees information is complete and accurate.</text>
+                                <div class="col-md-3 @errorclass">
+                                    @Html.LabelFor(model => model.SupervisorSignature)
+                                    <div>
+                                        @Html.TextBoxFor(model => model.SupervisorSignature, new { @class = "form-control", @placeholder = "Sign" })
+                                    </div>
+                                </div>
+                                <div class="col-md-3 @errorclass">
+                                    @Html.LabelFor(model => model.SupervisorSignatureDate)
+                                    <div>
+                                        @Html.TextBoxFor(model => model.SupervisorSignatureDate, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", @placeholder = "Date" })
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

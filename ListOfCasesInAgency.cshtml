@@ -1,0 +1,133 @@
+﻿@model AGE.CMS.Data.Models.Dashboard.ViewOpenClosedTransferedCasesModel 
+
+@{
+    ViewBag.Title = "Cases In Agency";
+}
+
+<script>
+
+
+    function FilterData(){
+        var lastName = document.getElementById("FilterLastName").value;
+        var firstName = document.getElementById("FilterFirstName").value;
+        var dob = document.getElementById("FilterDOB").value;
+        var ssn = document.getElementById("FilterSSN").value;
+        var cw = document.getElementById("FilterCW").value;
+
+
+        var isabuser;
+
+        if ($('#IsAbuserSearch').is(":checked")) {
+            isabuser = true;
+        }
+        else {
+            isabuser = false;
+        }
+
+        var target = '@Url.Action("FilterAgencyCaseLists")?' + 'FirstName=' + firstName + '&LastName=' + lastName + '&DOB=' + dob + '&SSN=' + ssn + '&CW=' + cw + '&IsAbuser=' + isabuser;
+        window.location.replace(target);
+    }
+
+
+    function ClearFilter() {
+        window.location.replace('@Url.Action("ListOfCasesInAgency", new { page = -1 })');
+    }
+</script>
+
+<div class="container">
+    
+    @Html.Partial("Search")
+
+    <hr />
+
+    <div class="panel panel-warning">
+        <div class="panel-heading">
+            <h2 class="panel-title"><span class="titletextbegin"><span class="glyphicon glyphicon-search"></span><span class="textspace"></span>Filter Cases in Agency</span></h2>
+        </div>
+        <div class="panel-body">
+
+            <div class="row">
+
+                <div class="col-lg-9">
+
+                    <form action="/CMS/Case/" method="post">
+                        <div class="row">
+                            <div class="col-lg-2"><input class="form-control" id="FilterLastName" type="text" placeholder="Last Name" value="@Model.FilterLastName"></div>
+                            <div class="col-lg-2"><input class="form-control" id="FilterFirstName" type="text" placeholder="First Name" value="@Model.FilterFirstName"></div>
+                            <div class="col-lg-2"><input class="form-control dob" id="FilterDOB" type="text" placeholder="DOB MM/DD/YYYY" value="@Model.FilterDOB"></div>
+                            <div class="col-lg-2"><input class="form-control ssn" id="FilterSSN" type="text" placeholder="SSN" value="@Model.FilterSSN"></div>
+                            <div class="col-lg-2"><input class="form-control" id="FilterCW" type="text" placeholder="CW Name" value="@Model.FilterCWLastName"></div>
+                           @*<div class="col-lg-2"><input id="IsAbuserSearch" type="checkbox" value="@Model.IsAbuserSearch">Abuser Search?</div>*@
+
+                           
+                        </div>
+                </div>
+                <div class="col-lg-3">
+
+                    <div class="pull-right" style="padding-right: 50px;">
+                        @*                    <button id="filterList" class="btn btn-success" type="button" onclick="location.href='@Url.Action("FilterAgencyCaseLists", "Case")'"><span class="glyphicon glyphicon-search"></span><span style="margin-left: 5px;">Filter</span></button>*@
+                        
+                        
+                        <button id="filterList" class="btn btn-success" type="button" onclick="FilterData()"><span class="glyphicon glyphicon-search"></span><span style="margin-left: 5px;">Filter</span></button>
+                        <button id="clearlist" class="btn btn-danger" type="button" onclick="ClearFilter()"><span class="glyphicon glyphicon-remove"></span><span style="margin-left: 5px;">Clear</span></button>
+                    </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+  @*  </div>
+</div>
+
+
+<div class="container"> 
+
+    <div class="panel panel-warning"> *@
+
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="titletextbegin">
+                    <span class="glyphicon glyphicon-th-list"></span><span class="textspace">
+                        <text>List Of Open Cases In Agency</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+
+        <div class="panel-body">
+            @Html.Partial("ListOfOpenCasesPaged", Model)
+        </div>
+
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="titletextbegin">
+                    <span class="glyphicon glyphicon-th-list"></span><span class="textspace">
+                        <text>List Of Closed Cases</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+
+        <div class="panel-body">
+            @Html.Partial("ListOfClosedCasesInAgency", Model)
+        </div>
+
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="titletextbegin">
+                    <span class="glyphicon glyphicon-th-list"></span><span class="textspace">
+                        <text>List Of Transferred Cases</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+
+        <div class="panel-body">
+            @Html.Partial("ListOfTransferredCasesInAgency", Model)
+        </div>
+
+    </div>
+
+</div>
+
+
+

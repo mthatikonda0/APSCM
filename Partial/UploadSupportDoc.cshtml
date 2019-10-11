@@ -1,0 +1,103 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewCaseHeader
+
+@*TLH - 20190222 took out, not found so it's not get loaded.  causing exception?
+    @Scripts.Render("~/bundles/notify")
+*@
+
+<script>
+    $body = $("body");
+    $(document).on({
+        ajaxStart: function () { $body.addClass("loading"); },
+        ajaxStop: function () { $body.removeClass("loading"); }
+    });
+
+    $(document).ready(function () {
+        $("#upload").click(function () {
+            debugger;
+            var data = new FormData();
+
+            //Add the Multiple selected files into the data object
+            var files = $("#files").get(0).files;
+            for (i = 0; i < files.length; i++) {
+                data.append("files" + i, files[i]);
+            }
+
+            var folderid = $('#document_FolderTypeId').val();
+            data.append("folderid", folderid);
+
+            var caseheaderId = $('#Id').val();
+            data.append("caseheaderId", caseheaderId);
+
+            //Post the data (files) to the server
+            if (files.length > 0 && $("#document_FolderTypeId").val() != "") {
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("UploadSupportDocs", "SupportDoc")",
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert("Successfully Uploaded!");
+                        window.location.href = data.Url;
+                    },
+                    error: function () {
+                        alert("An error occurred!");
+                    },
+                });
+            }
+            else {
+                notification("please select the folder")
+            }
+        });
+    });
+
+
+
+
+    function notification(message) {
+        var notify = $.notify({ icon: 'glyphicon glyphicon-warning-sign', message: message }, {
+            allow_dismiss: true,
+            type: 'danger',
+            offset: {
+                X: 0,
+                y: 200
+            },
+            z_index: 10000000,
+            placement: {
+                from: "top",
+                align: "center"
+            }
+        });
+    }
+
+</script>
+
+
+@Html.HiddenFor(model => model.Id)
+<div class="well">
+    <div class="row">
+        <b>Select File to Upload</b>
+    </div>
+
+    <div class="row nextline">
+        <div class="col-lg-4 form-group">
+            @Html.TextBoxFor(c => c.document.File, new { type = "file", multiple = "true", @id = "files" })
+        </div>
+
+    </div>
+    <div class="row nextline">
+        <div class="col-lg-6 form-group">
+            <div>
+                @Html.DropDownListFor(c => c.document.FolderTypeId, new SelectList(new[] { new AGE.CMS.Data.Models.SupportDocs.viewFolder { Id = null, Description = " Select Folder" } }.Union(Model.caselookup.listoffolders), "Id", "Description", Model.document.FolderTypeId), new { @class = "form-control" })
+                <br />
+            </div>
+        </div>
+        <div class="col-lg-3 form-group">
+            <button type="button" class=" btn btn-primary btn-outline" id="upload" value="upload"><span class="glyphicon glyphicon-upload"></span><span class="textspace"></span>Upload</button>
+        </div>
+    </div>
+
+    </div>
+
+
+

@@ -1,0 +1,176 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewClientCMS
+
+<script>
+
+    $(document).ready(function () {
+  
+        $('#AddGoal').on('click', function () {
+
+                var count = $("div.goal").length;
+                var template = $('#Goal_0').clone();
+                //alert(count);
+                template.attr('id', 'Goal_' + count);
+                template.find('input[type=text]').val(null);
+                template.find('input[type=button]').attr('style', '');
+                template.find('input[type=number]').val(null);
+                template.find('textarea').val(null);
+                template.find('input[type=hidden]').val(0);
+                template.find('input[type=datetime]').val(null);
+                template.find('input[type=checkbox]').prop('checked', false);
+                template.find('.invoice-case').attr('disabled', 'true');
+
+                $.each(template.find('input[type=number]'), function () {
+                    var name = $(this).attr('name');
+                    name = name.replace('0', count);
+                    $(this).attr('name', name);
+
+                    var id = $(this).attr('id');
+                    id = id.replace('0', count);
+                    $(this).attr('id', id);
+                });
+
+                $.each(template.find('input[type=checkbox]'), function () {
+                    var name = $(this).attr('name');
+                    name = name.replace('0', count);
+                    $(this).attr('name', name);
+
+                    var id = $(this).attr('id');
+                    id = id.replace('0', count);
+                    $(this).attr('id', id);
+                });
+
+                $.each(template.find('input[type=hidden]'), function () {
+                    var name = $(this).attr('name');
+                    name = name.replace('0', count);
+                    $(this).attr('name', name);
+
+                    var id = $(this).attr('id');
+                    id = id.replace('0', count);
+                    $(this).attr('id', id);
+                });
+                $.each(template.find('input[type=radio]'), function () {
+                    var name = $(this).attr('name');
+                    name = name.replace('0', count);
+                    $(this).attr('name', name);
+
+                    var id = $(this).attr('id');
+                    id = id.replace('0', count);
+                    $(this).attr('id', id);
+                });
+
+                $.each(template.find('input[type=text]'), function () {
+                    var name = $(this).attr('name');
+                    name = name.replace('0', count);
+                    $(this).attr('name', name);
+
+                    var id = $(this).attr('id');
+                    id = id.replace('0', count);
+                    $(this).attr('id', id);
+                });
+
+                $.each(template.find('select'), function () {
+                    var name = $(this).attr('name');
+                    name = name.replace('0', count);
+                    $(this).attr('name', name);
+
+                    var id = $(this).attr('id');
+                    id = id.replace('0', count);
+                    $(this).attr('id', id);
+                });
+
+                $.each(template.find('textarea'), function () {
+                    var name = $(this).attr('name');
+                    name = name.replace('0', count);
+                    $(this).attr('name', name);
+
+                    var id = $(this).attr('id');
+                    id = id.replace('0', count);
+                    $(this).attr('id', id);
+                });
+
+                template.find("input[name *= '.Deleted']").val('False');
+
+                template.find(".cke_skin_kama").remove();
+                var id = template.find(".ckeditor").attr("id");
+                template.find('#' + id).removeClass('ckeditor').removeAttr('style');
+
+                $('#Goals').append(template);
+        });
+
+        $(document).on('click', '.delete-goal', function () {
+          
+            if (confirm('Are you sure want to delete record?\nOnce deleted, Changes cannot be undone.')) {
+                $(this).closest("div[id*='Goal_']").find("input[name *= 'Deleted']").val(true);
+                $(this).closest("div[id*='Goal_']").css('display', 'none');
+            }           
+        });
+  
+ });
+
+</script>
+
+ <div class="row nextline" id="risk">
+               <div class="col-lg-3">
+
+                   <b>Risk Categories </b>
+                   <br />
+
+                   @for (int idx = 0; idx < Model.viewcaseplan.ListOfCasePlanTimesChecked.Count; idx++)
+                   {   
+                       for (int i = 0; i < Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].Risk.Count; i++)
+                       {                      
+                       @Html.HiddenFor(x => Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].Risk[i].Id)
+                       @Html.HiddenFor(x => Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].Risk[i].Code)                           
+                       @Html.CheckBoxFor(x => Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].Risk[i].IsChecked) @Html.DisplayFor(x => Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].Risk[i].Description)
+                       <br />
+                     
+                       @Html.HiddenFor(x => Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].Risk[i].Description)    
+                                             
+                       
+                       <div class="row next-line">
+                           <div class="well">
+                               <fieldset id="Goals">
+                                   <legend>Goals</legend>
+
+                                   @for (int m = 0; i < Model.viewcaseplan.ListOfCasePlanTimesChecked[idx].Risk[i].Goals.Count; i++)
+                                   {
+                                       <div id=@("Goal_" + m) class="goal">
+                                           <div class="row">
+                                               <div class="col-lg-2 pull-right">
+                                                   <button type="button" class="btn delete-goal btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                                                       <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                                   </button>
+                                               </div>
+                                           </div>
+                                           <div class="row">
+                                               <div class="col-md-2">
+                                                   @Html.LabelFor(model => model.viewcaseplan.ListOfCasePlanTimesChecked[idx].Risk[i].Goals[m].ExplainGoal, htmlAttributes: new { @class = "" })
+                                                   <br />
+                                                   @Html.TextBoxFor(model => model.viewcaseplan.ListOfCasePlanTimesChecked[idx].Risk[i].Goals[m].ExplainGoal, new { @class = "form-control zero-Zindex", @style = "width:50%" })
+                                               </div>                                              
+                                           </div>
+                                       </div>
+                                   }
+
+                               </fieldset>
+
+                               <div class="row next-line">
+                                   <div class="col-md-2 pull-right">
+                                       <button type="button" id="AddGoal" value="Plus" class="btn btn-default zero-Zindex" data-toggle="tooltip" title="Add">
+                                           <span class="glyphicon glyphicon-plus" style="color: blue"></span>
+                                       </button>
+
+                                   </div>
+                               </div>
+                           </div>
+                       </div>                                   
+
+                       }
+                       
+                     
+                    }
+                      
+
+               </div>
+
+           </div>

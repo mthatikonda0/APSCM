@@ -1,0 +1,36 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewClientCMS
+
+<h2>Referrals</h2>
+
+ 
+
+
+
+
+    @*  <div id="viewclient">
+                @Html.Partial("_viewClientCMS", Model)
+            </div>   *@
+
+    
+        <div class="panel panel-default nextline">
+            <div class="panel-body ">
+                <div id="content">
+                    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                        <li class="active"><a href="#tabs-m1" data-toggle="tab">DHS Referral</a></li>
+                        <li> <a href="~/Content/Documents/GeneralReferral.pdf" target ="_blank" download>General Referral</a></li>
+                        <li><a href="~/Content/Documents/MoneyManagementReferral.pdf" target="_blank"download>Money Management Referral</a></li>
+                    </ul>
+
+                    <div id="managecontent1" class="tab-content">
+                        <div id="tabs-m1" class="tab-pane active">
+                            @Html.Partial("PartialListDHSReferral", Model)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+   
+       

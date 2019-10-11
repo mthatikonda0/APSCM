@@ -1,0 +1,533 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewCaseHeader
+@*<style>
+    .zommable:hover {
+            -ms-transform: scale(1.15);
+            -webkit-transform: scale(1.15);
+        transform: scale(1.15);
+        -webkit-transition: transform 0.3s ease-in-out;
+        z-index: 100;
+    }
+    </style>*@
+
+
+<div class="well container" id="caseformsdiv" style="background-color:#fff">
+    @Html.HiddenFor(m => m.viewCaseclosure.StatusId)
+
+    <div class="row nextline">
+        <div class="OIRA col-lg-4 zommable">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading subheadings">
+                        <div class="">
+                            <div class="btn-group">
+                                <b style="color:#fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                    Overall Initial Risk Assessement
+                                </b>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="panel-body">
+                            @if (Model.OIRA.Id > 0)
+                            {
+                                <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit OIRA " href='@Url.Action("EditOIRA", "Case", new { Id = Model.OIRA.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                <a rel="tooltip" class="btn btn-default btn-sm" title="View OIRA " href='@Url.Action("ViewOIRA", "Case", new { Id = Model.OIRA.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+
+                                @*if (Model.OIRA.StatusDescription == "Incomplete")
+                                    {
+                                        <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit OIRA " href='@Url.Action("EditOIRA", "Case", new { Id = Model.OIRA.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                    }
+                                    else
+                                    {
+                                        <a rel="tooltip" class="btn btn-default btn-sm" title="View OIRA " href='@Url.Action("ViewOIRA", "Case", new { Id = Model.OIRA.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                    }*@
+                                <b>Status : @Model.OIRA.StatusDescription &nbsp; Date Created: @Model.OIRA.DateCreated.Value.ToShortDateString() </b>
+                            }
+                            else
+                            {
+                                <a rel="tooltip" class="closable btn btn-success btn-outline" title="New OIRA " href='@Url.Action("EditOIRA", "Case", new { Id = 0, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>Initial Risk Assessment Form</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="caserecording col-lg-4 zommable">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading subheadings">
+                        <div class="">
+                            <div class="btn-group">
+                                <b style="color:#fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                    Case Recording
+                                </b>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="panel-body">
+                            @if (Model.CaseRecording.Id > 0)
+                            {
+                                if (Model.StatusDescription == "Closed" || Model.StatusDescription == "Transfered")
+                                {
+                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Case Recording " href='@Url.Action("PrintCaseRecording", "Case", new { Id = Model.CaseRecording.Id})'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                }
+                                else
+                                {
+                                    <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Case Recording " href='@Url.Action("EditCaseRecording", "Case", new { Id = Model.CaseRecording.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Case Recording " href='@Url.Action("PrintCaseRecording", "Case", new { Id = Model.CaseRecording.Id})'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                }
+                                if(Model.CaseRecording.StatusId == 4 || Model.CaseRecording.StatusId == 5)
+                                {
+                                <b>Status : @Model.CaseRecording.StatusDescription  &nbsp;</b>
+                                } <b> Date Created: @Model.CaseRecording.DateCreated.Value.ToShortDateString() </b>
+                                
+                            }
+                            else
+                            {
+                                <a rel="tooltip" class="closable btn btn-success btn-outline" title="New Case Recording " href='@Url.Action("EditCaseRecording", "Case", new { Id = 0, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>Case Recording</a>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ClientStatus col-lg-4 zommable">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading subheadings">
+                        <div class="">
+                            <div class="btn-group">
+                                <b style="color:#fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                    Client Status
+                                </b>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="panel-body">
+                            @if (Model.viewClientStatus.Id > 0)
+                            {
+                                if (Model.StatusDescription == "Closed" || Model.StatusDescription == "Transfered")
+                                {
+                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Client Status" href='@Url.Action("ViewClientStatus", "Case", new { Id = Model.viewClientStatus.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                }
+                                else
+                                {
+                                    <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Client Status" href='@Url.Action("EditClientStatus", "Case", new { Id = Model.viewClientStatus.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Client Status" href='@Url.Action("ViewClientStatus", "Case", new { Id = Model.viewClientStatus.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                }
+
+                                <b>Status : @Model.viewClientStatus.StatusDescription &nbsp; Date Created: @Model.viewClientStatus.DateCreated.Value.ToShortDateString() </b>
+
+                            }
+                            else
+                            {
+                                <a rel="tooltip" class="closable btn btn-success btn-outline" title="New Client Status" href='@Url.Action("EditClientStatus", "Case", new { Id = 0, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>Client Status</a>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row nextline">
+        <div class="Referrals col-lg-4 zommable">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading subheadings">
+                        <div class="">
+                            <div class="btn-group">
+                                <b style="color:#fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                    Referrals
+                                </b>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="panel-body">
+                           @if (!Model.ListOfDHSReferrals.Any())
+                           {
+                               <a rel="tooltip" class="closable btn btn-success btn-outline" title="Create New DHS Referral" href='@Url.Action("EditReferrals", "Case", new { Id = 0, CaseheaderId = Model.Id, intakeID = Model.ListofIntakeForms[0].Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span> DHS Referral</a>
+
+                           }
+                            <div class="row nextline"></div>
+                            @if (Model.ListOfDHSReferrals != null && Model.ListOfDHSReferrals.Any())
+                            {
+                                <table class="table table-striped table-hover">
+                                    <caption style="display: none">List of DHS Referrals</caption>
+                                    <thead>
+                                        <tr>
+                                            <th class="col-md-1">&nbsp;</th>
+                                            @*<th class="col-md-1">DHS ReferralId</th>*@
+                                            <th class="col-md-1">Date Created</th>
+                                            <th class="col-md-1">Date Updated</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @foreach (var item in Model.ListOfDHSReferrals)
+                                        {
+
+                                            <tr class="">
+                                                <td>
+
+                                                    <div class="btn-group">
+                                                        @if (Model.viewCaseclosure.StatusDescription == "Closed" || item.StatusDescription == "Transfered")
+                                                        {
+                                                            <a rel="tooltip" class="btn btn-default btn-sm" title="View DHS Referral " href='@Url.Action("ViewReferrals", "Case", new { Id = item.Id, CaseheaderId = Model.Id, intakeID = Model.ListofIntakeForms[0].Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                                        }
+                                                        else
+                                                        {
+                                                        <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit DHS Referral " href='@Url.Action("EditReferrals", "Case", new { Id = item.Id, CaseheaderId = Model.Id, intakeID = Model.ListofIntakeForms[0].Id  })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                            <a rel="tooltip" class="btn btn-default btn-sm" title="View DHS Referral " href='@Url.Action("ViewReferrals", "Case", new { Id = item.Id, CaseheaderId = Model.Id, intakeID = Model.ListofIntakeForms[0].Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                        }
+
+                                                    </div>
+
+                                                </td>
+                                                @*<td>@Html.DisplayFor(modelItem => item.Id)</td>*@
+                                                @if (@item.DateCreated != null)
+                                                {
+                                                    <td>@item.DateCreated.Value.ToShortDateString()</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                                                }
+                                                @if (@item.DateUpdated != null)
+                                                {
+                                                    <td>@item.DateUpdated.Value.ToShortDateString()</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@Html.DisplayFor(modelItem => item.DateUpdated)</td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+
+                            }
+
+                            <div style="border-top:groove">
+                                <br />
+                                <script>
+                                    function DownloadReferral(filename) {
+                                        $("#hfFilename").val(filename);
+                                        $("#btnreferralDownload")[0].click();
+                                    };
+
+                                </script>
+                                @using (Html.BeginForm("DownloadCaseResource", "AdditionalResources", FormMethod.Post))
+                                {
+                                    <input type="hidden" id="hfFilename" name="filename" />
+                                    <input type="submit" id="btnreferralDownload" value="Download" style="display: none" />
+                                    <button type="button" class="closable btn btn-primary btn-outline" onclick="DownloadReferral('GeneralReferral.pdf')">General Referral</button>
+                                    <button type="button" class=" closable btn btn-primary btn-outline" onclick="DownloadReferral('MoneyManagementReferral.doc')">Money Management Referral</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="CaseClosure col-lg-4 zommable">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading subheadings">
+                        <div class="">
+                            <div class="btn-group">
+                                <b style="color:#fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                    Case Closure
+                                </b>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="panel-body">
+                            @if (Model.viewCaseclosure.Id > 0)
+                            {
+                                if (User.IsInRole("CMS_Supervisor") || User.IsInRole("CMS_IDOAStaff"))
+                                {
+                                    if (Model.viewCaseclosure.StatusDescription != "Closed")
+                                    {
+                                        <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Case Closure" href='@Url.Action("EditCaseClosure", "Case", new { Id = Model.viewCaseclosure.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                        <a rel="tooltip" class="btn btn-default btn-sm" title="View Case Closure" href='@Url.Action("ViewCaseClosure", "Case", new { Id = Model.viewCaseclosure.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                    }
+                                    else
+                                    {
+                                        <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Case Closure" href='@Url.Action("EditCaseClosure", "Case", new { Id = Model.viewCaseclosure.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+
+                                        <a rel="tooltip" class="btn btn-default btn-sm" title="View Case Closure" href='@Url.Action("ViewCaseClosure", "Case", new { Id = Model.viewCaseclosure.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                    }
+
+                                }
+                                if (User.IsInRole("CMS_Caseworker"))
+                                {
+                                    if (Model.viewCaseclosure.StatusDescription == "Incomplete")
+                                    {
+
+                                        <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Case Closure" href='@Url.Action("EditCaseClosure", "Case", new { Id = Model.viewCaseclosure.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                    }
+                                    else if (Model.viewCaseclosure.StatusDescription == "Submitted")
+                                    {
+                                        <a rel="tooltip" class="btn btn-default btn-sm" title="View Case Closure" href='@Url.Action("ViewCaseClosure", "Case", new { Id = Model.viewCaseclosure.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                    }
+                                    else
+                                    {
+                                        <a rel="tooltip" class="closable btn btn-default btn-sm" title="Edit Case Closure" href='@Url.Action("EditCaseClosure", "Case", new { Id = Model.viewCaseclosure.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                        <a rel="tooltip" class="btn btn-default btn-sm" title="View Case Closure" href='@Url.Action("ViewCaseClosure", "Case", new { Id = Model.viewCaseclosure.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+
+                                    }
+
+
+                                }
+
+                                <b>Status : @Model.viewCaseclosure.StatusDescription &nbsp; Date Created: @Model.viewCaseclosure.DateCreated.Value.ToShortDateString() </b>
+                            }
+                            else
+                            {
+                                <a rel="tooltip" class="closable btn btn-success btn-outline" title="Edit Case Closure" href='@Url.Action("EditCaseClosure", "Case", new { Id = 0, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span>Case Closure</a>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row nextline">
+        @*<div class="Reconciliation col-lg-4 zommable">
+            <div class="panel-group">
+            <div class="panel panel-default">
+            <div class="panel-heading subheadings">
+            <div class="">
+            <div class="btn-group">
+            <b style="color:#fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+            Reconciliation
+            </b>
+            </div>
+            </div>
+            </div>
+            <div>
+            <div class="panel-body">
+            <a rel="tooltip" class="btn btn-success btn-outline" title="Create New Reconciliation" href='@Url.Action("EditReconciliation", "Case", new { Id = 0, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span> Reconciliation</a>
+            <div class="row nextline"></div>
+            @if (Model.ListofReconciliationForms != null && Model.ListofReconciliationForms.Any())
+            {
+            <table class="table table-striped table-hover ">
+            <caption style="display: none">List of Reconciliations</caption>
+            <thead>
+            <tr>
+            <th class="col-md-1">&nbsp;</th>
+            @*<th class="col-md-1">Id</th>
+            <th class="col-md-1">Date Created</th>
+            <th class="col-md-1">Date Updated</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.ListofReconciliationForms)
+            {
+
+            <tr class="">
+            <td>
+
+            <div class="btn-group">
+            @if (item.StatusDescription == "Incomplete")
+            {
+            <a rel="tooltip" class="btn btn-default btn-sm" title="Edit Reconciliation " href='@Url.Action("EditReconciliation", "Case", new { Id = item.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+            }
+            else
+            {
+            <a rel="tooltip" class="btn btn-default btn-sm" title="view Reconciliation " href='@Url.Action("ViewReconciliation", "Case", new { Id = item.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+
+            }
+            </div>
+            </td>
+            @*<td>@Html.DisplayFor(modelItem => item.Id)</td>
+            <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+            <td>@Html.DisplayFor(modelItem => item.DateUpdated)</td>
+            </tr>
+            }
+            </tbody>
+            </table>
+            }
+            else
+            {
+
+            }
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>*@
+
+        <div class="Documents col-lg-6 zommable">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading subheadings">
+                        <div class="">
+                            <div class="btn-group">
+                                <b style="color:#fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                    Documents
+                                </b>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="panel-body">
+
+                            @Html.Partial("PartialListDocuments", Model)
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="Recordrelease col-lg-6 zommable">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading subheadings">
+                        <div class="">
+                            <div class="btn-group">
+                                <b style="color:#fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                    Record Release
+                                </b>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="panel-body">
+                            <a rel="tooltip" class=" btn btn-success btn-outline" title="Create New Record Release" href='@Url.Action("EditRecordRelease", "Case", new { Id = 0, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-plus"></span><span class="textspace"></span> Record Release</a>
+                            <div class="row nextline"></div>
+                            @if (Model.ListofRecordReleases != null && Model.ListofRecordReleases.Any())
+                            {
+                                <table class="table table-striped table-hover ">
+                                    <caption style="display: none">List of Record Releases</caption>
+                                    <thead>
+                                        <tr>
+                                            <th class="col-md-1">&nbsp;</th>
+                                            @*<th class="col-md-1">DHS ReferralId</th>*@
+                                            <th class="col-md-1">Date Created</th>
+                                            <th class="col-md-1">Requestor</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @foreach (var item in Model.ListofRecordReleases)
+                                        {
+
+                                            <tr class="">
+                                                <td>
+
+                                                    <div class="btn-group">
+                                                        @if (item.StatusDescription == "Incomplete")
+                                                        {
+                                                            <a rel="tooltip" class="btn btn-default btn-sm" title="Edit Record Release " href='@Url.Action("EditRecordRelease", "Case", new { Id = item.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                                            <a rel="tooltip" class="btn btn-default btn-sm" title="View Record Release " href='@Url.Action("ViewRecordRelease", "Case", new { Id = item.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a rel="tooltip" class="btn btn-default btn-sm" title="View Record Release " href='@Url.Action("ViewRecordRelease", "Case", new { Id = item.Id, CaseheaderId = Model.Id })'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                        }
+                                                    </div>
+
+                                                </td>
+                                               
+                                                <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                                                @if (item.RecordReleaseRequestorId != null && item.RecordReleaseRequestorId != 0)
+                                                {
+                                                <td>@Model.caselookup.listofRecordReleaseRequestors.FirstOrDefault(rr => rr.Id == item.RecordReleaseRequestorId).Description.ToString() </td>     
+                                                }                                     
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+
+                            }
+                            <div id="RedactedRelease" class="">
+                                @if (Model.CaseRecording.StatusId != 4)
+                                {
+                                    @Html.Partial("PartialRedactedReleases", Model)
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row nextline">
+        <div class="Risksummary col-lg-6 ">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading subheadings" data-toggle="collapse" data-target="#risksummary">
+                        <div class="">
+                            <div class="btn-group">
+                                <b style="color:#fff" rel="tooltip" href="">
+                                    Risk Summary
+                                </b>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="panel-body panel-collapse  " id="risksummary">
+                            @Html.Partial("GetRiskSummary", Model.viewRiskSummary)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ServicesSummary col-lg-6 ">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading subheadings" data-toggle="collapse" data-target="">
+                        <div class="">
+                            <div class="btn-group">
+                                <b style="color:#fff" rel="tooltip" data-toggle="collapse" data-target="" href="">
+                                    Services Summary
+                                </b>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class=" panel-collapse panel-body" id="servicesummary">
+                            @Html.Partial("GetServiceSummary", Model.viewServiceSummary)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

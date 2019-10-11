@@ -1,0 +1,138 @@
+﻿@model AGE.CMS.Data.Models.Case.viewReconciliation
+
+@{
+    ViewBag.Title = "Reconciliation";
+}
+<script src="~/Assets/Basic/Scripts/CMS/Case/EditReconciliation.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#print').on('click', function () {
+            var template = $('#Reconciliation').clone();
+            template.find("#heading").show();
+            template.find('.noprint').remove();
+            Print(template);
+        });
+        $("#editclientbutton").hide();
+        function Print(template) {
+            //alert(template.html());
+            //var w = window.open();
+            var w = window.open("", "popupWindow", "width=600, height=400, scrollbars=yes");
+            var html = template.html();
+
+            $(w.document.body).html(html);
+            w.print();
+
+
+
+
+        }
+
+        //$("#heading").hide();
+
+    });
+</script>
+
+
+<div class="container">
+    <div class="panel panel-warning">
+
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="titletextbegin">
+                    <span class="glyphicon glyphicon-eye-open"></span><span class="textspace">
+                        <text>Reconciliation</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-1 pull-right">
+                    <input type="button" class="btn btn-warning noprint" id="print" value="Print" />
+                </div>
+            </div>
+
+
+
+            <br />
+
+            @using (Html.BeginForm("SaveReconciliation", "Case", FormMethod.Post))
+            {
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.CaseheaderId)
+               
+                @Html.HiddenFor(model => model.DateIntake)
+
+                <br />
+                <fieldset>
+                    <div class="well container" id="Reconciliation" style="background-color: #fff">
+                        <h2 id="heading">Reconciliation</h2>
+                        <div class="row nextline" style="margin: 1px">
+                            @Html.Partial("_ViewClient", Model.viewCaseHeader.Client)
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3 form-group" style="padding-top: 25px">
+                                @Html.LabelFor(model => model.DateIntake, new { @class = "control-label" })
+                                @Html.DisplayFor(model => model.DateIntake, new { @class = "form-control" })
+                            </div>
+                            <div class="col-lg-3 form-group">
+                                @Html.LabelFor(model => model.DateFirstFTF, new { @class = "control-label" })
+                                @*@Html.EditorFor(model => model.DateFirstFTF)*@
+                                @Html.TextBoxFor(m => m.DateFirstFTF, new { @class = "form-control DateFTF", placeholder = "First FTF Date", @disabled = "disabled" })
+                            </div>
+                            <div class="col-lg-3 form-group">
+                                @Html.LabelFor(model => model.DateBill, new { @class = "control-label" })
+                                @*@Html.EditorFor(model => model.DateBill)*@
+                                @Html.TextBoxFor(m => m.DateBill, new { @class = "form-control DateBill", placeholder = "Bill Date", @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="row nextline">
+                            <div class="col-lg-3">
+                                @Html.LabelFor(model => model.ReconciliationVouchers)<br />
+                                @for (int idx = 0; idx < Model.ReconciliationVouchers.Count; idx++)
+                                {
+                                    @Html.HiddenFor(x => Model.ReconciliationVouchers[idx].Id)
+                                    @Html.CheckBoxFor(x => Model.ReconciliationVouchers[idx].IsChecked, new { @class = "zero-Zindex", @disabled = "disabled" })  <span><textspace></textspace></span>@Html.DisplayFor(x => Model.ReconciliationVouchers[idx].Description)
+                                    @Html.HiddenFor(x => Model.ReconciliationVouchers[idx].Description)
+
+                                    <div id="voucheramount_@(idx)" class="form-group">
+                                        @Html.LabelFor(model => model.ReconciliationVouchers[idx].VoucherAmount)
+                                        @Html.TextBoxFor(model => model.ReconciliationVouchers[idx].VoucherAmount, new { @class = "form-control", @disabled = "disabled" })
+                                    </div>
+
+                                    <br />
+                                }
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row next-line">
+                            <div class="col-lg-6 form-group">
+                                @Html.LabelFor(model => model.NeedForReconciliation)
+                                <div>
+                                    @Html.DisplayFor(model => model.NeedForReconciliation, new { @class = "form-control ExplainReconciliation", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row nextline">
+                            <div class="col-lg-3 ">
+                                @Html.LabelFor(model => model.SupervisorSignature)
+                                <div>
+                                    @Html.TextBoxFor(model => model.SupervisorSignature, new { @class = "form-control", @placeholder = "Sign", @disabled = "disabled" })
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                @Html.LabelFor(model => model.SupervisorSignatureDate)
+                                <div>
+                                    @Html.TextBoxFor(model => model.SupervisorSignatureDate, new { @class = "form-control datepicker", @placeholder = "Date", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            }
+
+        </div>
+
+    </div>
+</div>

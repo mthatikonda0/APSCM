@@ -1,0 +1,189 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewClientStatus
+
+<script src="~/Assets/Basic/Scripts/CMS/Case/PartialServices.js"></script>
+
+
+<div class="">
+    <div class="container">
+        <div class="well">
+            <div id="ServicesAtStartBox">
+                <legend>Services Already Received by Client at Start of Investigation</legend>
+                Enter information about agencies already involved based on caseworker's knowledge at the first FTF.<br />
+                <div class="row next-line">
+                    <div class="col-lg-10">
+                        @Html.LabelFor(model => model.IsServicesPresentAtStart, htmlAttributes: new { @class = "" })
+
+                        @Html.RadioButtonFor(model => model.IsServicesPresentAtStart, "n") None
+
+                        @Html.RadioButtonFor(model => model.IsServicesPresentAtStart, "u") Unknown
+                    </div>
+                </div>
+                <button type="button" id="AddServiceAtStart" value="Plus" class="btn btn-primary zero-Zindex pull-right" data-toggle="tooltip" title="Add">
+                    <span class="glyphicon glyphicon-plus" style="color:white"></span>
+                </button>
+
+                <br />
+                <div id="servicesatstart">
+                    @for (int n = 0; n < Model.ListOfServicesAtStart.Count; n++)
+                    {
+                        <div id=@("ServicesAtStart_" + n) class="servicesAtStart well container" style="background-color:white;max-width:90%">
+                            <div class="row nextline">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.ListOfServicesAtStart[n].AgencyName, htmlAttributes: new { @class = "" })
+                                    <br />
+                                    @Html.TextBoxFor(model => model.ListOfServicesAtStart[n].AgencyName, new { @class = "form-control zero-Zindex" })
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.ListOfServicesAtStart[n].ServiceTypeId, htmlAttributes: new { @class = "" })
+                                    <br />
+                                    @*@Html.DropDownListFor(model => model.ListOfServicesAtStart[n].ServiceTypeId, (List<SelectListItem>)ViewBag.Services, "Select", new { @class = "form-control ddlType zero-Zindex" })*@
+                                    @Html.DropDownListFor(model => model.ListOfServicesAtStart[n].ServiceTypeId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewServices { Id = 0, Description = " Select Service" } }.Union(Model.caselookup.listofservices.OrderBy(s => s.Code)), "Id", "Description", Model.ListOfServicesAtStart[n].ServiceTypeId), new { @class = "form-control zero-Zindex" })
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.ListOfServicesAtStart[n].AgencyContactPerson, htmlAttributes: new { @class = "" })
+                                    <br />
+                                    @Html.TextBoxFor(model => model.ListOfServicesAtStart[n].AgencyContactPerson, new { @class = "form-control zero-Zindex " })
+                                </div>
+
+
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.ListOfServicesAtStart[n].AgencyAddress, htmlAttributes: new { @class = "" })
+                                    <br />
+                                    @Html.TextAreaFor(model => model.ListOfServicesAtStart[n].AgencyAddress, new { @class = "form-control zero-Zindex" })
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.LabelFor(model => model.ListOfServicesAtStart[n].AgencyPhone, htmlAttributes: new { @class = "" })
+                                    <br />
+                                    @Html.TextBoxFor(model => model.ListOfServicesAtStart[n].AgencyPhone, new { @class = "form-control  phonenumber" })
+                                    @Html.ValidationMessageFor(model => model.ListOfServicesAtStart[n].AgencyPhone)
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.LabelFor(model => model.ListOfServicesAtStart[n].IsROI, htmlAttributes: new { @class = "" })
+                                    <br />
+
+                                    @Html.RadioButtonFor(model => model.ListOfServicesAtStart[n].IsROI, "y", new { onclick = "ROIYes(" + n + ")" }) Yes
+
+                                    @Html.RadioButtonFor(model => model.ListOfServicesAtStart[n].IsROI, "n", new { onclick = "ROINo(" + n + ")" }) No
+
+                                    @Html.RadioButtonFor(model => model.ListOfServicesAtStart[n].IsROI, "u", new { onclick = "ROIUnknown(" + n + ")" }) Unknown
+                                </div>
+                                <div class="col-md-2 verbal" style="padding-top:25px;display:block" id="IfROIYes_@(n)">
+                                    @Html.CheckBoxFor(model => model.ListOfServicesAtStart[n].IsROIVerbal, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListOfServicesAtStart[n].IsROIVerbal, htmlAttributes: new { @class = "" })
+                                    @Html.CheckBoxFor(model => model.ListOfServicesAtStart[n].IsROIWritten, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListOfServicesAtStart[n].IsROIWritten, htmlAttributes: new { @class = "" })
+                                </div>
+                                <div class="col-md-1" style="padding-left:20%;padding-top:25px">
+                                    <button type="button" id="AtStartRed_@(n)" class="btn delete-servicesatstart btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                                        <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="row next-line">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="well" style="background-color:#f5f5f5">
+            <div id="ServicesReferredBox">
+                <legend>Services To Which the Client Was Referred by APS</legend>
+
+                <div class="row next-line">
+                    <div class="col-lg-8">
+                        @Html.LabelFor(model => model.IsServicesReferredByAPS, htmlAttributes: new { @class = "" })
+
+                        @Html.RadioButtonFor(model => model.IsServicesReferredByAPS, "n") None
+
+
+
+                    </div>
+
+                    <div class="col-md-4" style="padding-left:30%">
+                        <button type="button" id="AddServiceReferred" value="Plus" class="btn btn-primary zero-Zindex" data-toggle="tooltip" title="Add">
+                            <span class="glyphicon glyphicon-plus" style="color: white"></span>
+                        </button>
+
+                    </div>
+
+                </div>
+                <br />
+
+                <div id="servicesreferredbyaps">
+
+                    @for (int n = 0; n < Model.ListOfServicesReferredByAPS.Count; n++)
+                    {
+                        <div id=@("ServicesReferred_" + n) class="servicesReferred well container" style="background-color:#fff;max-width:90%">
+
+                            <div class="row nextline">
+
+
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.ListOfServicesReferredByAPS[n].AgencyName, htmlAttributes: new { @class = "" })
+                                    <br />
+                                    @Html.TextBoxFor(model => model.ListOfServicesReferredByAPS[n].AgencyName, new { @class = "form-control zero-Zindex", })
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.ListOfServicesReferredByAPS[n].ServiceTypeId, htmlAttributes: new { @class = "" })
+                                    @*@Html.Hidden("Type1_" + n, Model.ListOfServices[n].ServiceTypeId, new { @class = "ddlValue" })*@
+                                    <br />
+                                    @*@Html.DropDownListFor(model => model.ListOfServicesReferredByAPS[n].ServiceTypeId, (List<SelectListItem>)ViewBag.Services, "Select", new { @class = "form-control ddlType zero-Zindex" })*@
+                                    @Html.DropDownListFor(model => model.ListOfServicesReferredByAPS[n].ServiceTypeId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewServices { Id = 0, Description = " Select Service" } }.Union(Model.caselookup.listofservices.OrderBy(s => s.Code)), "Id", "Description", Model.ListOfServicesReferredByAPS[n].ServiceTypeId), new { @class = "form-control zero-Zindex" })
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.ListOfServicesReferredByAPS[n].AgencyContactPerson, htmlAttributes: new { @class = "" })
+                                    <br />
+                                    @Html.TextBoxFor(model => model.ListOfServicesReferredByAPS[n].AgencyContactPerson, new { @class = "form-control zero-Zindex" })
+                                </div>
+
+
+                            </div>
+
+                            <div class="row nextline">
+
+                                <div class="col-md-3">
+                                    @Html.LabelFor(model => model.ListOfServicesReferredByAPS[n].AgencyAddress, htmlAttributes: new { @class = "" })
+                                    <br />
+                                    @Html.TextAreaFor(model => model.ListOfServicesReferredByAPS[n].AgencyAddress, new { @class = "form-control zero-Zindex" })
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.LabelFor(model => model.ListOfServicesReferredByAPS[n].AgencyPhone, htmlAttributes: new { @class = "" })
+                                    <br />
+                                    @Html.TextBoxFor(model => model.ListOfServicesReferredByAPS[n].AgencyPhone, new { @class = "form-control phonenumber" })
+                                    @Html.ValidationMessageFor(model => model.ListOfServicesReferredByAPS[n].AgencyPhone)
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.LabelFor(model => model.ListOfServicesReferredByAPS[n].IsROI, htmlAttributes: new { @class = "" })
+                                    <br />
+
+                                    @Html.RadioButtonFor(model => model.ListOfServicesReferredByAPS[n].IsROI, "y") Yes
+
+                                    @Html.RadioButtonFor(model => model.ListOfServicesReferredByAPS[n].IsROI, "n") No
+
+                                    @Html.RadioButtonFor(model => model.ListOfServicesReferredByAPS[n].IsROI, "u") Unknown
+                                </div>
+                                <div class="col-md-2 written" style="padding-top:25px">
+                                    @Html.CheckBoxFor(model => model.ListOfServicesReferredByAPS[n].IsROIVerbal, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListOfServicesReferredByAPS[n].IsROIVerbal, htmlAttributes: new { @class = "" })
+                                    @Html.CheckBoxFor(model => model.ListOfServicesReferredByAPS[n].IsROIWritten, new { @class = "zero-Zindex" }) @Html.LabelFor(model => model.ListOfServicesReferredByAPS[n].IsROIWritten, htmlAttributes: new { @class = "" })
+                                </div>
+                                <div class="col-md-1 " style="padding-left:20%;padding-top:25px">
+                                    <button type="button" id="AtReferreRed_@(n)" class="btn delete-servicesreferred btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                                        <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

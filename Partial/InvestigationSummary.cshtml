@@ -1,0 +1,1998 @@
+﻿@model AGE.CMS.Data.Models.ClientAssessment.viewClientAssesssment
+
+@{
+    var errorclass = "";
+}
+
+
+@{
+    errorclass = "";
+
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsPhysicalAbuseComments)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsSexualAbuseComments)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsEmotionalAbuseComments)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsConfinementAbuseComments)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsPassiveNeglectAbuseComments)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsWillfulDeprivationAbuseComments)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsFinancialExploitationAbuseComments)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsGeneralBehaviorAbuseComments)
+    {
+        errorclass = "has-error";
+    }
+    if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsSelfNeglectAbuseComments)
+    {
+        errorclass = "has-error";
+    }
+
+}
+<div class="panel-heading" style="border: groove; background-color: #efeed6; margin: 10px;">
+    <h3>Investigation Summary </h3>
+    This section serves as an aid to the caseworker in weighing the facts related to the allegations that have been investigated.
+    The completed summary should support the substantiation decision that the caseworker presents to the supervisor. <br />
+    The caseworker should be thorough in listing accurately all the evidence that led to a substantiation decision.
+</div>
+
+
+<div id="physicalabuse" class="container">
+
+
+    @if (
+        Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuseHelper.Any() ||
+        Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse_Helper.Any() ||
+        Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse_Helper.Any() ||
+        Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse_Helper.Any() ||
+        Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint_Helper.Any() ||
+        Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse_Helper.Any() ||
+        Model.IndicatorsOfPhysicalAbuse.IsOthers == true)
+    {
+
+        if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsPhysicalAbuseComments)
+        {
+            <span class="danger">Please enter allegations under Physical Abuse</span><br />
+        }
+
+        <div class="subheadings" style="border: groove; background-color: #f9f8ef">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Physical Abuse: </h4>
+            </div>
+        </div>
+
+        <div class="row nextline">
+            <div class="col-lg-12 @errorclass">
+                <h5 style="font-weight:bold" class="@errorclass">Allegations:  </h5>
+                <div class="@errorclass">
+                    @Html.TextAreaFor(model => model.IndicatorsOfPhysicalAbuse.Comments, new { @class = "form-control", placeholder = "Write Comments" })
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.IndicatorsOfPhysicalAbuse.IsOthers == true)
+    {
+
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Others: </h4>
+                </div>
+                <br />
+                <div class="container" style="border: groove; border-bottom-color: #efeed6">
+                    <div style="font-weight:bold; text-decoration:underline">
+                    </div>
+                    <br />
+                    <b>  @Html.LabelFor(model => model.IndicatorsOfPhysicalAbuse.OtherRefutingFacts) </b>
+                    @Html.TextAreaFor(model => model.IndicatorsOfPhysicalAbuse.OtherRefutingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+
+
+                    <b> @Html.LabelFor(model => model.IndicatorsOfPhysicalAbuse.OtherSupportingFacts)</b>
+                    @Html.TextAreaFor(model => model.IndicatorsOfPhysicalAbuse.OtherSupportingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+                    <br />
+                </div>
+                <div class="row nextline"></div>
+            </div>
+        </div>
+    }
+
+    @if (Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuseHelper != null && Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuseHelper.Any())
+    {
+
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Injuries: </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuseHelper.Count; idx++)
+                {
+
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuseHelper[idx].LookupInjuriesId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuseHelper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuseHelper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6">
+                        <div style="font-weight:bold; text-decoration:underline">
+                            @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuseHelper[idx].Description)
+                        </div>
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuseHelper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuseHelper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuseHelper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+    <div class="row nextline"></div>
+
+    @if (Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse_Helper != null && Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse_Helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Pattern Of Injuries: </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse_Helper.Count; idx++)
+                {
+
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse_Helper[idx].LookuppatternofInjuriesId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse_Helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse_Helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight:bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse_Helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse_Helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse_Helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse_Helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+    <div class="row nextline"></div>
+
+    @if (Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse_Helper != null && Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse_Helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Behaviour of Client:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse_Helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse_Helper[idx].LookupBehaviourOfClientId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse_Helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse_Helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight:bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse_Helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse_Helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse_Helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse_Helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+    <div class="row nextline"></div>
+
+
+
+    @if (Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse_Helper != null && Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse_Helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Violent Actions Against Client:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse_Helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse_Helper[idx].LookupViolentActionsId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse_Helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse_Helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight:bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse_Helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse_Helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse_Helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse_Helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+    @if (Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint_Helper != null && Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint_Helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Inappropriate Use of Restraints: </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint_Helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint_Helper[idx].LookupChemicalrestrainId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint_Helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint_Helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight:bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint_Helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint_Helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint_Helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint_Helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+    @if (Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse_Helper != null && Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse_Helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4> Medical Evidence:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse_Helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse_Helper[idx].LookupMedicalEvidenceId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse_Helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse_Helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight:bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse_Helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse_Helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse_Helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse_Helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+   
+</div>
+
+<div id="sexualabuse" class="container">
+
+
+    @if (
+        Model.IndicatorsOfSexualAbuse.MedicalEvidence_helper.Any() ||
+        Model.IndicatorsOfSexualAbuse.BehaviorOfClient_helper.Any() ||
+        Model.IndicatorsOfSexualAbuse.ViolentActions_helper.Any() ||
+        Model.IndicatorsOfSexualAbuse.BehaviorOfAA_helper.Any() ||
+        Model.IndicatorsOfSexualAbuse.IsOthers == true
+       )
+    {
+        if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsSexualAbuseComments)
+        {
+            <span class="danger">Please enter allegations under Sexual Abuse</span><br />
+        }
+        <div class="subheadings" style="border: groove; background-color: #f9f8ef">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Sexual Abuse: </h4>
+            </div>
+        </div>
+
+
+
+
+        <div class="row nextline">
+            <div class="col-lg-12 @errorclass">
+                <h5 style=" font-weight:bold" class="@errorclass"> Allegations:  </h5>
+                <div class="@errorclass">
+                    @Html.TextAreaFor(model => model.IndicatorsOfSexualAbuse.Comments, new { @class = "form-control" })
+                </div>
+            </div>
+
+
+        </div>
+    }
+    @if (Model.IndicatorsOfSexualAbuse.MedicalEvidence_helper != null && Model.IndicatorsOfSexualAbuse.MedicalEvidence_helper.Any())
+    {
+
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Medical Evidence:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfSexualAbuse.MedicalEvidence_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence_helper[idx].LookupMedicalEvidenceId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+
+    @if (Model.IndicatorsOfSexualAbuse.BehaviorOfClient_helper != null && Model.IndicatorsOfSexualAbuse.BehaviorOfClient_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Behaviors of Client:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfSexualAbuse.BehaviorOfClient_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient_helper[idx].LookuBehaviouOfClientId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+
+    @if (Model.IndicatorsOfSexualAbuse.ViolentActions_helper != null && Model.IndicatorsOfSexualAbuse.ViolentActions_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Violent Actions Against Client:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfSexualAbuse.ViolentActions_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions_helper[idx].LookuViolentActionsId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+    @if (Model.IndicatorsOfSexualAbuse.BehaviorOfAA_helper != null && Model.IndicatorsOfSexualAbuse.BehaviorOfAA_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Behavior of AA:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfSexualAbuse.BehaviorOfAA_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA_helper[idx].LookuBehaviouOfAAId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+    @if (Model.IndicatorsOfSexualAbuse.IsOthers == true)
+    {
+
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Others: </h4>
+                </div>
+                <br />
+                <div class="container" style="border: groove; border-bottom-color: #efeed6">
+                    <div style="font-weight:bold; text-decoration:underline">
+                    </div>
+                    <br />
+                    <b>  @Html.LabelFor(model => model.IndicatorsOfSexualAbuse.OtherRefutingFacts) </b>
+                    @Html.TextAreaFor(model => model.IndicatorsOfSexualAbuse.OtherRefutingFacts, new { @class = "form-control" })
+
+
+                    <b> @Html.LabelFor(model => model.IndicatorsOfSexualAbuse.OtherSupportingFacts)</b>
+                    @Html.TextAreaFor(model => model.IndicatorsOfSexualAbuse.OtherSupportingFacts, new { @class = "form-control" })
+                    <br />
+                </div>
+                <div class="row nextline"></div>
+            </div>
+        </div>
+    }
+
+
+
+    @* @if (
+           Model.IndicatorsOfSexualAbuse.MedicalEvidence_helper.Any() ||
+           Model.IndicatorsOfSexualAbuse.BehaviorOfClient_helper.Any() ||
+           Model.IndicatorsOfSexualAbuse.ViolentActions_helper.Any() ||
+           Model.IndicatorsOfSexualAbuse.BehaviorOfAA_helper.Any()
+          )
+        {
+
+                           <div class="row nextline">
+                           <div class="col-lg-12">
+                               @Html.LabelFor(m => m.IndicatorsOfSexualAbuse.Comments, new { @class = "control-label" })
+                               <div>
+                                   @Html.TextAreaFor(model => model.IndicatorsOfSexualAbuse.Comments, new { @class = "form-control" })
+                               </div>
+                           </div>
+
+
+                       </div>
+        }*@
+
+</div>
+
+<div id="emotionalabuse" class="container">
+
+    @if (
+        Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser_helper.Any() ||
+      Model.IndicatorsOfEmotionalAbuse.IsOthers == true
+       )
+    {
+        if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsEmotionalAbuseComments)
+        {
+            <span class="danger">Please enter allegations under Emotional Abuse</span><br />
+        }
+        <div class="subheadings" style="border: groove; background-color: #f9f8ef">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Emotional Abuse: </h4>
+            </div>
+        </div>
+
+
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <h5 style="font-weight:bold" class="@errorclass">Allegations:  </h5>
+                <div class="@errorclass">
+                    @Html.TextAreaFor(model => model.IndicatorsOfEmotionalAbuse.Comments, new { @class = "form-control" })
+                </div>
+            </div>
+
+
+        </div>
+    }
+    @if (Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser_helper != null && Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser_helper.Any())
+    {
+
+
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Violent Actions Against Client:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser_helper[idx].LookuActionOfAbuserId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+    @if (Model.IndicatorsOfEmotionalAbuse.IsOthers == true)
+    {
+
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Others: </h4>
+                </div>
+                <br />
+                <div class="container" style="border: groove; border-bottom-color: #efeed6">
+                    <div style="font-weight:bold; text-decoration:underline">
+                    </div>
+                    <br />
+                    <b>  @Html.LabelFor(model => model.IndicatorsOfEmotionalAbuse.OtherRefutingFacts) </b>
+                    @Html.TextAreaFor(model => model.IndicatorsOfEmotionalAbuse.OtherRefutingFacts, new { @class = "form-control" })
+
+
+                    <b> @Html.LabelFor(model => model.IndicatorsOfEmotionalAbuse.OtherSupportingFacts)</b>
+                    @Html.TextAreaFor(model => model.IndicatorsOfEmotionalAbuse.OtherSupportingFacts, new { @class = "form-control" })
+                    <br />
+                </div>
+                <div class="row nextline"></div>
+            </div>
+        </div>
+    }
+
+
+    @* @if (
+           Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser_helper.Any()
+          )
+        {
+            <div class="row nextline">
+                    <div class="col-lg-12">
+                        @Html.LabelFor(m => m.IndicatorsOfEmotionalAbuse.Comments, new { @class = "control-label" })
+                        <div>
+                            @Html.TextAreaFor(model => model.IndicatorsOfEmotionalAbuse.Comments, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+
+                </div>
+        }*@
+</div>
+
+<div id="Confinement" class="container">
+
+    @if (
+        Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint_Helper.Any() ||
+         Model.IndicatorsOfConfinment.IsOthers == true
+       )
+    {
+        if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsConfinementAbuseComments)
+        {
+            <span class="danger">Please enter allegations under Confinement</span><br />
+        }
+        <div class="subheadings" style="border: groove; background-color: #f9f8ef">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Confonement: </h4>
+            </div>
+        </div>
+
+        <div class="row nextline">
+            <div class="col-lg-12 @errorclass">
+                <h5 style="font-weight:bold" class="@errorclass">Allegations:  </h5>
+                <div class="@errorclass">
+                    @Html.TextAreaFor(model => model.IndicatorsOfConfinment.Comments, new { @class = "form-control" })
+                </div>
+            </div>
+
+
+        </div>
+
+    }
+    @if (Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint_Helper != null && Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint_Helper.Any())
+    {
+
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Inappropriate Physical Restraint: </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint_Helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint_Helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint_Helper[idx].LookuInappropriatePhysicalRestraintId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint_Helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint_Helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint_Helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint_Helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint_Helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+    @if (Model.IndicatorsOfConfinment.IsOthers == true)
+    {
+
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Others: </h4>
+                </div>
+                <br />
+                <div class="container" style="border: groove; border-bottom-color: #efeed6">
+                    <div style="font-weight:bold; text-decoration:underline">
+                    </div>
+                    <br />
+                    <b>  @Html.LabelFor(model => model.IndicatorsOfConfinment.OtherRefutingFacts) </b>
+                    @Html.TextAreaFor(model => model.IndicatorsOfConfinment.OtherRefutingFacts, new { @class = "form-control" })
+
+
+                    <b> @Html.LabelFor(model => model.IndicatorsOfConfinment.OtherSupportingFacts)</b>
+                    @Html.TextAreaFor(model => model.IndicatorsOfConfinment.OtherSupportingFacts, new { @class = "form-control" })
+                    <br />
+                </div>
+                <div class="row nextline"></div>
+            </div>
+        </div>
+    }
+
+    @* @if (
+           Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint_Helper.Any()
+          )
+        {
+             <div class="row nextline">
+                    <div class="col-lg-12">
+                        @Html.LabelFor(m => m.IndicatorsOfConfinment.Comments, new { @class = "control-label" })
+                        <div>
+                            @Html.TextAreaFor(model => model.IndicatorsOfConfinment.Comments, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+
+                </div>
+        }*@
+</div>
+
+<div id="Passive neglect" class="container">
+
+    @if (
+        Model.IndicatorsofPassiveNeglect.Skin_helper.Any() ||
+        Model.IndicatorsofPassiveNeglect.Nutrition_helper.Any() ||
+        Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson_helper.Any() ||
+        Model.IndicatorsofPassiveNeglect.BehavioursOfPerson_helper.Any() ||
+        Model.IndicatorsofPassiveNeglect.SocialIsolation_helper.Any() ||
+        Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson_helper.Any() ||
+        Model.IndicatorsofPassiveNeglect.ConditionsOfHome_helper.Any() ||
+        Model.IndicatorsofPassiveNeglect.BehavioursOfAA_helper.Any() ||
+         Model.IndicatorsofPassiveNeglect.IsOthers == true
+         )
+    {
+        if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsPassiveNeglectAbuseComments)
+        {
+            <span class="danger">Please enter allegations under Passive Neglect</span><br />
+        }
+        <div class="subheadings" style="border: groove; background-color: #f9f8ef">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Passive Neglect: </h4>
+            </div>
+        </div>
+
+
+        <div class="row nextline">
+            <div class="col-lg-12 @errorclass">
+                <h5 style="font-weight:bold" class="@errorclass">Allegations:  </h5>
+                <div class="@errorclass">
+                    @Html.TextAreaFor(model => model.IndicatorsofPassiveNeglect.Comments, new { @class = "form-control" })
+                </div>
+            </div>
+
+
+        </div>
+    }
+    @if (Model.IndicatorsofPassiveNeglect.Skin_helper != null && Model.IndicatorsofPassiveNeglect.Skin_helper.Any())
+    {
+
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Skin:   </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.Skin_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.Skin_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.Skin_helper[idx].LookupSkinId)
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.Skin_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.Skin_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.Skin_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofPassiveNeglect.Skin_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofPassiveNeglect.Skin_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+    @if (Model.IndicatorsofPassiveNeglect.Nutrition_helper != null && Model.IndicatorsofPassiveNeglect.Nutrition_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Nutrition:   </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.Nutrition_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.Nutrition_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.Nutrition_helper[idx].LookupNutritionId)
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.Nutrition_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.Nutrition_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.Nutrition_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofPassiveNeglect.Nutrition_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofPassiveNeglect.Nutrition_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+    @if (Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson_helper != null && Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Physical Care of Person:   </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson_helper[idx].LookupPhysicalCareOfPersonId)
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+
+    @if (Model.IndicatorsofPassiveNeglect.BehavioursOfPerson_helper != null && Model.IndicatorsofPassiveNeglect.BehavioursOfPerson_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Behaviors of Person:   </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.BehavioursOfPerson_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson_helper[idx].LookupBehaviourOfPersonId)
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+
+    @if (Model.IndicatorsofPassiveNeglect.SocialIsolation_helper != null && Model.IndicatorsofPassiveNeglect.SocialIsolation_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Behaviors of Person:   </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.SocialIsolation_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation_helper[idx].LookupSocialisolationId)
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+
+    @if (Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson_helper != null && Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Medical Care of Person:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson_helper[idx].LookupMedicalCareId)
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+    @if (Model.IndicatorsofPassiveNeglect.ConditionsOfHome_helper != null && Model.IndicatorsofPassiveNeglect.ConditionsOfHome_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Conditions of Home:   </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.ConditionsOfHome_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome_helper[idx].LookupConditionOfHomeId)
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+
+    @if (Model.IndicatorsofPassiveNeglect.BehavioursOfAA_helper != null && Model.IndicatorsofPassiveNeglect.BehavioursOfAA_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Behaviors of Alleged Abuser:    </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.BehavioursOfAA_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA_helper[idx].LookupBehaviourOfAAId)
+                    @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+
+    @if (Model.IndicatorsofPassiveNeglect.IsOthers == true)
+    {
+
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Others: </h4>
+                </div>
+                <br />
+                <div class="container" style="border: groove; border-bottom-color: #efeed6">
+                    <div style="font-weight:bold; text-decoration:underline">
+                    </div>
+                    <br />
+                    <b>  @Html.LabelFor(model => model.IndicatorsofPassiveNeglect.OtherRefutingFacts) </b>
+                    @Html.TextAreaFor(model => model.IndicatorsofPassiveNeglect.OtherRefutingFacts, new { @class = "form-control" })
+
+
+                    <b> @Html.LabelFor(model => model.IndicatorsofPassiveNeglect.OtherSupportingFacts)</b>
+                    @Html.TextAreaFor(model => model.IndicatorsofPassiveNeglect.OtherSupportingFacts, new { @class = "form-control" })
+                    <br />
+                </div>
+                <div class="row nextline"></div>
+            </div>
+        </div>
+    }
+
+    @* @if (
+           Model.IndicatorsofPassiveNeglect.Skin_helper.Any() ||
+           Model.IndicatorsofPassiveNeglect.Nutrition_helper.Any() ||
+           Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson_helper.Any() ||
+           Model.IndicatorsofPassiveNeglect.BehavioursOfPerson_helper.Any() ||
+           Model.IndicatorsofPassiveNeglect.SocialIsolation_helper.Any() ||
+           Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson_helper.Any() ||
+           Model.IndicatorsofPassiveNeglect.ConditionsOfHome_helper.Any() ||
+           Model.IndicatorsofPassiveNeglect.BehavioursOfAA_helper.Any())
+        {
+                  <div class="row nextline">
+                    <div class="col-lg-12">
+                        @Html.LabelFor(m => m.IndicatorsofPassiveNeglect.Comments, new { @class = "control-label" })
+                        <div>
+                            @Html.TextAreaFor(model => model.IndicatorsofPassiveNeglect.Comments, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+
+                </div>
+
+        }*@
+</div>
+
+<div id="willful deprivation" class="container">
+    @if (
+        Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse_helper.Any() ||
+     Model.IndicatorsofWillfulDeprivations.IsOthers == true
+       )
+    {
+        if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsWillfulDeprivationAbuseComments)
+        {
+            <span class="danger">Please enter allegations under Willful Deprivation</span><br />
+        }
+        <div class="subheadings" style="border: groove; background-color: #f9f8ef">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Willful Deprivation: </h4>
+            </div>
+        </div>
+
+        <div class="row nextline">
+            <div class="col-lg-12 @errorclass">
+                <h5 style="font-weight:bold" class="@errorclass">Allegations:  </h5>
+                <div class="@errorclass">
+                    @Html.TextAreaFor(model => model.IndicatorsofWillfulDeprivations.Comments, new { @class = "form-control" })
+                </div>
+            </div>
+
+
+        </div>
+    }
+
+
+    @if (Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse_helper != null && Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Behaviors of Abuser:    </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse_helper[idx].Id)
+
+                    @Html.HiddenFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse_helper[idx].LookupBehaviourOfAbusereId)
+                    @Html.HiddenFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+    @if (Model.IndicatorsofWillfulDeprivations.IsOthers == true)
+    {
+
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Others: </h4>
+                </div>
+                <br />
+                <div class="container" style="border: groove; border-bottom-color: #efeed6">
+                    <div style="font-weight:bold; text-decoration:underline">
+                    </div>
+                    <br />
+                    <b>  @Html.LabelFor(model => model.IndicatorsofWillfulDeprivations.OtherRefutingFacts) </b>
+                    @Html.TextAreaFor(model => model.IndicatorsofWillfulDeprivations.OtherRefutingFacts, new { @class = "form-control" })
+
+
+                    <b> @Html.LabelFor(model => model.IndicatorsofWillfulDeprivations.OtherSupportingFacts)</b>
+                    @Html.TextAreaFor(model => model.IndicatorsofWillfulDeprivations.OtherSupportingFacts, new { @class = "form-control" })
+                    <br />
+                </div>
+                <div class="row nextline"></div>
+            </div>
+        </div>
+    }
+
+    @* @if (
+            Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse_helper.Any()
+           )
+        {
+             <div class="row nextline">
+                     <div class="col-lg-12">
+                         @Html.LabelFor(m => m.IndicatorsofWillfulDeprivations.Comments, new { @class = "control-label" })
+                         <div>
+                             @Html.TextAreaFor(model => model.IndicatorsofWillfulDeprivations.Comments, new { @class = "form-control" })
+                         </div>
+                     </div>
+
+
+                 </div>
+        }*@
+
+</div>
+
+<div id="fiantial exploitation" class="container">
+    @if (
+        Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities_helper.Any() ||
+        Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors_helper.Any() ||
+        Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking_helper.Any() ||
+        Model.IndicatorsOfFinantialExploitation.Theft_helper.Any() ||
+        Model.IndicatorsOfFinantialExploitation.IsOthers == true ||
+        Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions_helper.Any() ||
+        Model.IndicatorsOfFinantialExploitation.Abusercontrolscash_helper.Any() ||
+        Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser_helper.Any())
+    {
+        if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsFinancialExploitationAbuseComments)
+        {
+            <span class="danger">"Please enter allegations under Financial Exploitation</span><br />
+        }
+        <div class="subheadings" style="border: groove; background-color: #f9f8ef">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Financial Exploitation: </h4>
+            </div>
+        </div>
+
+        <div class="row nextline">
+            <div class="col-lg-12 @errorclass">
+                <h5 style="font-weight:bold" class="@errorclass">Allegations:  </h5>
+                <div class="@errorclass">
+                    @Html.TextAreaFor(model => model.IndicatorsOfFinantialExploitation.Comments, new { @class = "form-control" })
+                </div>
+            </div>
+
+
+        </div>
+    }
+
+    @if (Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities_helper != null && Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Unusual/inappropriate bank activities of person:   </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities_helper[idx].LookupUnusualBankId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+    @if (Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors_helper != null && Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Unusual cash transactions/Behaviors of person:   </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors_helper[idx].LookupUnusualCashId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+
+    @if (Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking_helper != null && Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Inappropriate decision-making by abuser:   </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking_helper[idx].Id)
+
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking_helper[idx].LookupInappropriateId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+    @if (Model.IndicatorsOfFinantialExploitation.Theft_helper != null && Model.IndicatorsOfFinantialExploitation.Theft_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Theft:   </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Theft_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Theft_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Theft_helper[idx].LookupTheftId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Theft_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Theft_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Theft_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfFinantialExploitation.Theft_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfFinantialExploitation.Theft_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+    @if (Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions_helper != null && Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Abuser controls banking decisions:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions_helper[idx].LookupAbuserBankId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+
+    @if (Model.IndicatorsOfFinantialExploitation.Abusercontrolscash_helper != null && Model.IndicatorsOfFinantialExploitation.Abusercontrolscash_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Abuser controls cash:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Abusercontrolscash_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash_helper[idx].LookupAbuserCashId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+
+
+    @if (Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser_helper != null && Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Vandalism by abuser:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser_helper[idx].LookupVandalismId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+    @if (Model.IndicatorsOfFinantialExploitation.IsOthers == true)
+    {
+
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Others: </h4>
+                </div>
+                <br />
+                <div class="container" style="border: groove; border-bottom-color: #efeed6">
+                    <div style="font-weight:bold; text-decoration:underline">
+                    </div>
+                    <br />
+                    <b>  @Html.LabelFor(model => model.IndicatorsOfFinantialExploitation.OtherRefutingFacts) </b>
+                    @Html.TextAreaFor(model => model.IndicatorsOfFinantialExploitation.OtherRefutingFacts, new { @class = "form-control" })
+
+
+                    <b> @Html.LabelFor(model => model.IndicatorsOfFinantialExploitation.OtherSupportingFacts)</b>
+                    @Html.TextAreaFor(model => model.IndicatorsOfFinantialExploitation.OtherSupportingFacts, new { @class = "form-control" })
+                    <br />
+                </div>
+                <div class="row nextline"></div>
+            </div>
+        </div>
+    }
+
+
+    @* @if (
+           Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities_helper.Any() ||
+           Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors_helper.Any() ||
+           Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking_helper.Any() ||
+           Model.IndicatorsOfFinantialExploitation.Theft_helper.Any() ||
+           Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions_helper.Any() ||
+           Model.IndicatorsOfFinantialExploitation.Abusercontrolscash_helper.Any() ||
+           Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser_helper.Any())
+        {
+             <div class="row nextline">
+                    <div class="col-lg-12">
+                        @Html.LabelFor(m => m.IndicatorsOfFinantialExploitation.Comments, new { @class = "control-label" })
+                        <div>
+                            @Html.TextAreaFor(model => model.IndicatorsOfFinantialExploitation.Comments, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+
+                </div>
+        }*@
+
+</div>
+
+<div id="general behaviour" class="container">
+    @if (
+        Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser_helper.Any() ||
+        Model.IndicatorsOfGeneralBehavior.Statementsofabuser_helper.Any() ||
+        Model.IndicatorsOfGeneralBehavior.StatementsofPerson_helper.Any() ||
+         Model.IndicatorsOfGeneralBehavior.IsOthers == true)
+    {
+        if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsGeneralBehaviorAbuseComments)
+        {
+            <span class="danger">Please enter allegations under General Behavior Indicators</span><br />
+        }
+        <div class="subheadings" style="border: groove; background-color: #f9f8ef">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline">General Behaviour Indicators: </h4>
+            </div>
+        </div>
+
+        <div class="row nextline">
+            <div class="col-lg-12 @errorclass">
+                <h5 style="font-weight:bold" class="@errorclass">Allegations:  </h5>
+                <div class="@errorclass">
+                    @Html.TextAreaFor(model => model.IndicatorsOfGeneralBehavior.Comments, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    }
+    @if (Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser_helper != null && Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Behaviors of Abuser:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser_helper[idx].LookupBehaviourOfAbuserId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+
+
+
+    @if (Model.IndicatorsOfGeneralBehavior.Statementsofabuser_helper != null && Model.IndicatorsOfGeneralBehavior.Statementsofabuser_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Statements of abuser:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfGeneralBehavior.Statementsofabuser_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser_helper[idx].LookupStatementOfAbuserId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+    @if (Model.IndicatorsOfGeneralBehavior.StatementsofPerson_helper != null && Model.IndicatorsOfGeneralBehavior.StatementsofPerson_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Statements of person:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfGeneralBehavior.StatementsofPerson_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson_helper[idx].LookupStatementofPersonId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+    @if (Model.IndicatorsOfGeneralBehavior.IsOthers == true)
+    {
+
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Others: </h4>
+                </div>
+                <br />
+                <div class="container" style="border: groove; border-bottom-color: #efeed6">
+                    <div style="font-weight:bold; text-decoration:underline">
+                    </div>
+                    <br />
+                    <b>  @Html.LabelFor(model => model.IndicatorsOfGeneralBehavior.OtherRefutingFacts) </b>
+                    @Html.TextAreaFor(model => model.IndicatorsOfGeneralBehavior.OtherRefutingFacts, new { @class = "form-control" })
+
+
+                    <b> @Html.LabelFor(model => model.IndicatorsOfGeneralBehavior.OtherSupportingFacts)</b>
+                    @Html.TextAreaFor(model => model.IndicatorsOfGeneralBehavior.OtherSupportingFacts, new { @class = "form-control" })
+                    <br />
+                </div>
+                <div class="row nextline"></div>
+            </div>
+        </div>
+    }
+
+    @* @if (
+                Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser_helper.Any() ||
+                Model.IndicatorsOfGeneralBehavior.Statementsofabuser_helper.Any() ||
+                Model.IndicatorsOfGeneralBehavior.StatementsofPerson_helper.Any() )
+        {
+
+            <div class="row nextline">
+                         <div class="col-lg-12">
+                             @Html.LabelFor(m => m.IndicatorsOfGeneralBehavior.Comments, new { @class = "control-label" })
+                             <div>
+                                 @Html.TextAreaFor(model => model.IndicatorsOfGeneralBehavior.Comments, new { @class = "form-control" })
+                             </div>
+                         </div>
+                     </div>
+
+             }*@
+</div>
+
+<div id="selfNeglect" class="container">
+
+    @if (
+        Model.IndicatorsOfSelfNeglect.Food_helper.Any() ||
+        Model.IndicatorsOfSelfNeglect.Clothing_helper.Any() ||
+         Model.IndicatorsOfSelfNeglect.Shelter_helper.Any() ||
+        Model.IndicatorsOfSelfNeglect.HealthCare_helper.Any() ||
+         Model.IndicatorsOfSelfNeglect.IsOthers == true)
+    {
+        if (Model.InCompleteErrors.ErrorsInClientAssessment && Model.InCompleteErrors.HasErrorsSelfNeglectAbuseComments)
+        {
+            <span class="danger">"Please enter allegations under Self Neglect</span><br />
+        }
+        <div class="subheadings" style="border: groove; background-color: #f9f8ef">
+
+            <div class="ma">
+                <h4 style="font-weight: bold; text-decoration: underline" >Indicators of Self Neglect: </h4>
+            </div>
+        </div>
+
+        <div class="row nextline ">
+            <div class="col-lg-12 @errorclass">
+                <h5 style="font-weight:bold" class="@errorclass">Allegations:  </h5>
+                <div class="@errorclass">
+                    @Html.TextAreaFor(model => model.IndicatorsOfSelfNeglect.Comments, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    }
+    <br />
+
+    @if (Model.IndicatorsOfSelfNeglect.Food_helper != null && Model.IndicatorsOfSelfNeglect.Food_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Food:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfSelfNeglect.Food_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Food_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Food_helper[idx].LookupFoodId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Food_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.Food_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Food_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfSelfNeglect.Food_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfSelfNeglect.Food_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+
+    @if (Model.IndicatorsOfSelfNeglect.Clothing_helper != null && Model.IndicatorsOfSelfNeglect.Clothing_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Clothing:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfSelfNeglect.Clothing_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Clothing_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Clothing_helper[idx].LookupClothingId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Clothing_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.Clothing_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Clothing_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfSelfNeglect.Clothing_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfSelfNeglect.Clothing_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+
+
+    @if (Model.IndicatorsOfSelfNeglect.Shelter_helper != null && Model.IndicatorsOfSelfNeglect.Shelter_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Shelter:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfSelfNeglect.Shelter_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Shelter_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Shelter_helper[idx].LookupShelterId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Shelter_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.Shelter_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Shelter_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfSelfNeglect.Shelter_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfSelfNeglect.Shelter_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+
+
+    @if (Model.IndicatorsOfSelfNeglect.HealthCare_helper != null && Model.IndicatorsOfSelfNeglect.HealthCare_helper.Any())
+    {
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Healthcare:  </h4>
+                </div>
+                <br />
+                @for (int idx = 0; idx < Model.IndicatorsOfSelfNeglect.HealthCare_helper.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.HealthCare_helper[idx].Id)
+                    @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.HealthCare_helper[idx].LookupHealthCareId)
+                    @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.HealthCare_helper[idx].Code)
+                    <div class="container" style="border: groove; border-bottom-color: #efeed6; border-radius: 20px; font-weight: bold">
+                        @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.HealthCare_helper[idx].Description)
+                        <br />
+                        @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.HealthCare_helper[idx].Description)
+                        <br />
+                        <b>Refuting Facts:  </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfSelfNeglect.HealthCare_helper[idx].RefutingFacts, new { @class = "form-control" })
+                        <br />
+                        <b>Supporting Facts: </b>
+                        @Html.TextAreaFor(x => Model.IndicatorsOfSelfNeglect.HealthCare_helper[idx].SupportingFacts, new { @class = "form-control" })
+                        <br />
+                    </div>
+                    <div class="row nextline"></div>
+
+                }
+
+
+
+            </div>
+        </div>
+    }
+
+
+
+
+    @if (Model.IndicatorsOfSelfNeglect.IsOthers == true)
+    {
+
+        <div class="row nextline">
+            <div class="col-lg-12">
+                <div style="border-bottom: groove">
+                    <h4>Others: </h4>
+                </div>
+                <br />
+                <div class="container" style="border: groove; border-bottom-color: #efeed6">
+                    <div style="font-weight:bold; text-decoration:underline">
+                    </div>
+                    <br />
+                    <b>  @Html.LabelFor(model => model.IndicatorsOfSelfNeglect.OtherRefutingFacts) </b>
+                    @Html.TextAreaFor(model => model.IndicatorsOfSelfNeglect.OtherRefutingFacts, new { @class = "form-control" })
+
+
+                    <b> @Html.LabelFor(model => model.IndicatorsOfSelfNeglect.OtherSupportingFacts)</b>
+                    @Html.TextAreaFor(model => model.IndicatorsOfSelfNeglect.OtherSupportingFacts, new { @class = "form-control" })
+                    <br />
+                </div>
+                <div class="row nextline"></div>
+            </div>
+        </div>
+    }
+
+
+
+    @* @if (
+                Model.IndicatorsOfSelfNeglect.Food_helper.Any() ||
+                Model.IndicatorsOfSelfNeglect.Clothing_helper.Any() ||
+                 Model.IndicatorsOfSelfNeglect.Shelter_helper.Any() ||
+                Model.IndicatorsOfSelfNeglect.HealthCare_helper.Any())
+        {
+                   <div class="row nextline">
+                         <div class="col-lg-12">
+
+                             <div>
+                                 @Html.TextAreaFor(model => model.IndicatorsOfSelfNeglect.Comments, new { @class = "form-control" })
+                             </div>
+                         </div>
+
+
+                     </div>
+             }*@
+
+
+
+</div>

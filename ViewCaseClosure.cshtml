@@ -1,0 +1,855 @@
+﻿@model AGE.CMS.Data.Models.Case.viewCaseClosure
+
+@{
+    ViewBag.Title = "Case Closure";   
+}
+
+<script>
+    $(document).ready(function () {
+        $("#editclientbutton").hide();
+        $('input').each(function () {
+            $(this).attr("disabled", true);
+        });
+        $('select').each(function () {
+            $(this).attr("disabled", true);
+        });
+        $('button').each(function () {
+            $(this).attr("disabled", true);
+        });
+        $('a').each(function () {
+            $(this).attr("disabled", true);
+        });
+        $('#PrintCaseClosure').removeAttr("disabled");
+        $('#cancelCaseClosure').removeAttr("disabled");
+        $('#submitCaseClosure').removeAttr("disabled");
+
+        
+    });
+
+    function SubmitCaseClosureForm() {
+        bootbox.confirm({
+            title: "Confirm Submission? This cannot be undone if submitted",
+            message: "Supervisor to submit all <b>invoices</b> related to this client in the <b>Case Recording Form</b> before submitting Case Closure! <br/> Any <b>reconciliations</b> needed before or after closure should be completed on the <b>Reconciliation Tab</b>.",
+            size: "large",
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Cancel'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Confirm'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $('input').each(function () {
+                        $(this).removeAttr("disabled");
+                    });
+                    $('select').each(function () {
+                        $(this).removeAttr("disabled");
+                    });
+                    $('button').each(function () {
+                        $(this).removeAttr("disabled");
+                    });
+                    $('a').each(function () {
+                        $(this).removeAttr("disabled");
+                    });
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("SubmitCaseClosure", "Case")',
+                        dataType: "json",
+                        data: $('#ViewCaseClosure').find('select, textarea, input').serialize(),
+                        success: function (data) {
+                            console.log(data);
+                           
+                            $('input').each(function () {
+                                $(this).attr("disabled", true);
+                            });
+                            $('select').each(function () {
+                                $(this).attr("disabled", true);
+                            });
+                            $('button').each(function () {
+                                $(this).attr("disabled", true);
+                            });
+                            $('a').each(function () {
+                                $(this).attr("disabled", true);
+                            });
+                        }
+
+                    });
+
+
+
+                }
+            }
+        });
+    }
+</script>
+<script>
+
+    $(document).ready(function () {
+        $('#PrintCaseClosure').on('click', function () {
+
+            $('#PrintCaseClosure').hide();
+            var template = $('#ReferralData').clone();
+
+            template.find("#heading").show();
+            template.find('.noprint').remove();
+            Print(template);
+            $('#PrintCaseClosure').show();
+        });
+
+        function Print(template) {
+            //alert(template.html());
+            //var w = window.open();
+            var w = window.open("", "popupWindow", "width=600, height=400, scrollbars=yes");
+            var html = template.html();
+
+            $(w.document.body).html(html);
+            w.print();
+
+
+
+
+        }
+
+        $("#heading").hide();
+
+    });
+</script>
+<style>
+    .pad {
+        padding-top: 25px;
+    }
+
+    .container1 {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-family: Calibri;
+        font-size: 14px;
+        font-weight: normal !important;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+        .container1 input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 15px;
+        width: 15px;
+        background-color: #dedede;
+    }
+    /* On mouse-over, add a grey background color */
+    .container1:hover input ~ .checkmark {
+        background-color: #ccc;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .container1 input:checked ~ .checkmark {
+        background-color: #2196F3;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .container1 input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .container1 .checkmark:after {
+        left: 5px;
+        top: 3px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+
+
+
+    /* Hide the browser's default radio button */
+    .container1 input {
+        position: absolute;
+        opacity: 0;
+    }
+
+    /* Create a custom radio button */
+    .radiomark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 15px;
+        width: 15px;
+        background-color: #dedede;
+        border-radius: 50%;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .container1:hover input ~ .radiomark {
+        background-color: #ccc;
+    }
+
+    /* When the radio button is checked, add a blue background */
+    .container1 input:checked ~ .radiomark {
+        background-color: #2196F3;
+    }
+
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+    .radiomark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the indicator (dot/circle) when checked */
+    .container1 input:checked ~ .radiomark:after {
+        display: block;
+    }
+
+    /* Style the indicator (dot/circle) */
+    .container1 .radiomark:after {
+        top: 3px;
+        left: 4px;
+        width: 8px;
+        height: 8px;
+        border-radius: 55%;
+        background: white;
+    }
+</style>
+<div class="container" id="ViewCaseClosure">
+
+
+    @*@using (Html.BeginForm("SubmitCaseClosure", "Case", FormMethod.Post))
+    {*@
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.CaseheaderId)
+        @*@Html.HiddenFor(model => model.IntakeId)*@
+        @Html.HiddenFor(model => model.ClientClosureInfo.Id)
+
+    <div class="panel panel-warning" id="ReferralData">
+        <div class="row nextline " id="heading" style="border-bottom: 2px solid black">
+            <div class="pull-left" id="logoidoa" style="float:left">
+                <div id="imagelogo" align="center" style="float:left">
+                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+                         width="185px" height="70px" viewBox="0 0 250.000000 99.000000"
+                         preserveAspectRatio="xMidYMid meet">
+
+                        <g transform="translate(0.000000,99.000000) scale(0.100000,-0.100000)"
+                           fill="#000000" stroke="none">
+                            <path d="M310 903 c0 -7 5 -13 10 -13 6 0 10 -7 10 -15 0 -8 5 -15 10 -15 31
+                                    0 -4 -58 -38 -63 -35 -5 -49 -24 -35 -46 10 -16 8 -24 -14 -47 -16 -18 -28
+                                    -44 -31 -69 -4 -36 0 -47 29 -80 18 -21 33 -47 34 -59 0 -17 5 -20 28 -18 30
+                                    3 34 -11 15 -53 -10 -23 -9 -29 14 -50 14 -13 28 -22 31 -19 9 9 27 -24 31
+                                    -55 2 -18 8 -37 13 -42 6 -6 139 -9 344 -7 322 3 336 4 379 25 44 22 44 22 65
+                                    3 39 -37 70 -41 256 -34 165 7 179 9 179 26 0 14 -8 18 -34 18 -19 0 -38 5
+                                    -41 11 -4 5 7 45 24 87 l31 77 132 -2 132 -2 27 -68 c39 -95 38 -103 -11 -103
+                                    -33 0 -40 -3 -40 -20 0 -19 7 -20 135 -20 128 0 135 1 135 20 0 14 -7 20 -22
+                                    20 -13 0 -29 4 -36 9 -13 8 -163 345 -249 559 -20 49 -29 62 -47 62 -17 0 -27
+                                    -14 -50 -67 -16 -38 -53 -123 -84 -191 l-55 -123 -13 36 c-24 71 -95 121 -183
+                                    132 -43 5 -49 9 -60 39 -6 18 -37 55 -67 83 -91 83 -96 84 -556 86 -328 2
+                                    -398 0 -398 -12z m113 -15 c3 -11 17 -18 43 -20 37 -3 39 -5 46 -43 7 -38 -2
+                                    -207 -9 -175 -3 13 -24 14 -128 12 -69 -2 -125 -1 -125 2 0 3 9 20 20 38 13
+                                    23 16 38 10 48 -15 23 -12 30 10 30 26 0 70 43 70 68 0 11 -7 25 -15 32 -26
+                                    21 -17 30 29 28 32 -2 46 -8 49 -20z m310 -58 c5 -19 7 -145 5 -278 -6 -271
+                                    -4 -264 -73 -260 l-40 3 -3 279 c-2 217 1 281 10 288 7 4 31 7 52 6 36 -3 41
+                                    -6 49 -38z m327 20 c59 -11 112 -46 141 -94 37 -59 35 -72 -13 -124 -33 -35
+                                    -48 -62 -58 -100 -12 -53 -7 -130 11 -164 7 -14 3 -20 -18 -31 -59 -31 -180
+                                    -45 -252 -31 l-31 7 0 268 0 268 23 4 c43 8 145 7 197 -3z m753 -227 l45 -103
+                                    -108 0 -108 0 50 113 c27 61 52 119 56 127 4 10 8 7 13 -10 4 -14 27 -71 52
+                                    -127z m-376 2 c51 -58 68 -197 34 -272 -31 -67 -90 -89 -158 -56 -55 26 -61
+                                    52 -25 102 41 56 64 131 66 206 l1 62 30 -8 c17 -5 40 -20 52 -34z m-202 -113
+                                    c-4 -26 -10 -41 -12 -34 -3 7 -2 34 2 60 4 26 10 41 12 34 3 -7 2 -34 -2 -60z">
+
+
+                            </path>
+                        </g>
+                    </svg><br />
+                </div>
+            </div>
+
+            <h2 style="text-align: center"> Illinois Department on Aging APS</h2>
+
+            <h3 style="text-align: center"> Case Closure</h3>
+        </div>
+                       
+        <div class="panel-heading">
+            <h2 class="panel-title noprint">
+                <span class="titletextbegin">
+                    <span class="glyphicon glyphicon-eye-open"></span><span class="textspace">
+                        <text>Case Closure</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-lg-12 pull-right">
+                    <div class="btn-group pull-right" style="margin-right: 10px;">
+                        <a id="PrintCaseClosure" rel="tooltip" class="btn btn-warning" title=" Print ">Print</a>
+                         <a id="cancel" rel="tooltip" class="btn btn-default btn-md noprint" title=" Cancel " href="@Url.Action("ManageCase", "Case", new{ CaseheaderId = Model.CaseheaderId})">Cancel</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-heading">
+                @Html.Partial("_ViewClientCMS", Model.viewCaseHeader.Client)
+            </div>
+
+            <div class="panel-heading" style="border: groove; background-color: #f7f6dd; margin-left: 13px; margin-right: 11px">
+                <b>This form is only completed for those cases which are <u>substantiated and client consents</u> to services.</b><br />
+
+                1) The APS PA shall make a final judgment as to the level of risk of further harm or injury prior to closing the case in accordance with the Risk Assessment. Please be sure to complete a closure risk assessment considering status of client at close of case.<br />
+
+                2) The caseworker should complete and the supervisor approve a case closure entry in the Case Recording Form.<br />
+
+                3) Be sure to review the Client Status information (benefits, employment status, etc.) and make sure all information is up to date before closing.<br />
+
+                4) If the client continues to need community based services at case closure, the APS PA shall refer him or her to the appropriate service provider in the area where he/she resides.<br />
+
+
+            </div>
+            <div class="row nextline"></div>
+
+            <div class="well" style="background-color: #f5f5f5; margin-left: 13px; margin-right: 11px">
+                <h4 style="text-decoration: underline">Additional Client Information</h4>
+                <div class="container">
+                    <div class="container">
+                        <div class="container" style="border: 2px solid #808080; background-color: #fff">
+                            <div class="container">
+                                <div class="row nextline"></div>
+
+                                <div class="row nextline">
+                                    <div class="col-lg-2">
+                                        @Html.LabelFor(model => model.ClientClosureInfo.DateCaseClosure, new { @class = "control-label" })
+                                        <div>
+                                            @Html.TextBoxFor(model => model.ClientClosureInfo.DateCaseClosure, new { @class = "form-control datepicker", @placeholder = "Case Closure Date", @disabled = "disabled" })
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        @Html.LabelFor(m => m.ClientClosureInfo.ClosureReasonId, new { @class = "control-label" })
+                                        <div>
+                                            @Html.DropDownListFor(model => model.ClientClosureInfo.ClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = null, Description = " Select Case Closure Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsAble), "Id", "Description", Model.ClientClosureInfo.ClosureReasonId), new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        @Html.LabelFor(m => m.ClientClosureInfo.LivingArrangementId, new { @class = "control-label" })
+                                        <div>
+                                            @Html.DropDownListFor(model => model.ClientClosureInfo.LivingArrangementId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewLivingArrangements { Id = null, Description = " Select Living Arrangement" } }.Union(Model.caselookup.ListOfClosureLivingArrangements), "Id", "Description", Model.ClientClosureInfo.LivingArrangementId), new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 pad">
+                                        @Html.LabelFor(model => model.ClientClosureInfo.IsLivingWithAbuser)
+                                        @Html.RadioButtonFor(model => model.ClientClosureInfo.IsLivingWithAbuser, "y") Yes
+                                        @Html.RadioButtonFor(model => model.ClientClosureInfo.IsLivingWithAbuser, "n") No
+                                        @Html.RadioButtonFor(model => model.ClientClosureInfo.IsLivingWithAbuser, "u") Unknown
+                                    </div>
+                                </div>
+
+
+
+                                <div class="row nextline"></div>
+                                <div class="row nextline" id="clientlegalstatus">
+
+
+                                    @*<b style="text-decoration: underline">Substitute Decision Maker at Close</b>*@
+
+
+
+
+
+
+
+                                    <div class="well ">
+                                        <div class="">
+                                            <legend>Substitute Decision Maker at Close</legend>
+                                        </div>
+                                        <div class=" container">
+                                            <div class="">
+                                                @for (int idx = 0; idx < Model.ClientClosureInfo.LegalStatus.Count; idx++)
+                                                {
+
+                                                    @Html.HiddenFor(x => Model.ClientClosureInfo.LegalStatus[idx].Id)
+                                                    @Html.HiddenFor(x => Model.ClientClosureInfo.LegalStatus[idx].Code)
+                                                    @Html.CheckBoxFor(x => Model.ClientClosureInfo.LegalStatus[idx].IsChecked) @Html.DisplayFor(x => Model.ClientClosureInfo.LegalStatus[idx].Description)
+                                                    @Html.HiddenFor(x => Model.ClientClosureInfo.LegalStatus[idx].Description)
+
+                                                    if (Model.ClientClosureInfo.LegalStatus[idx].Id == 1)
+                                                    {
+                                                        <div class="row next-line"></div>
+                                                    }
+                                                    if (Model.ClientClosureInfo.LegalStatus[idx].Id == 2)
+                                                    {
+                                                        <div class="" id="legalstatus_guardianofestate">
+                                                            <div id="Guardianofestate">
+                                                                <div class="row next-line"></div>
+                                                                @*       <div class="row nextline">
+                                                                        <div class="col-lg-1" style="padding-left: 20%;">
+                                                                            <button type="button" id="AddGuardianOfEstate" value="Plus" class="btn btn-default zero-Zindex" data-toggle="tooltip" title="Add">
+                                                                                <span class="glyphicon glyphicon-plus" style="color: blue"></span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>*@
+                                                                @for (int m = 0; m < Model.ClientClosureInfo.LegalStatus[idx].GuardiansofEstate.Count; m++)
+                                                                {
+
+                                                                    <div id=@("Guardianofestate_" + m) class="guardianofestate">
+
+                                                                        <div class="row nextline">
+                                                                            <div class="col-md-3">
+                                                                                @Html.LabelFor(model => model.ClientClosureInfo.LegalStatus[idx].GuardiansofEstate[m].LegalStatusGuardianOfEstateName, htmlAttributes: new { @class = "" })
+                                                                                <br />
+                                                                                @Html.TextBoxFor(model => model.ClientClosureInfo.LegalStatus[idx].GuardiansofEstate[m].LegalStatusGuardianOfEstateName, new { @class = "form-control zero-Zindex", placeholder = "Name" })
+                                                                            </div>
+                                                                            <div class="col-md-1" style="padding-top: 25px">
+
+                                                                                <button type="button" id="GuardianOdEstateRemoveButton_@(m)" class="btn delete-guardianofestate btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                                                                                    <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                                                                </button>
+
+                                                                            </div>
+                                                                            <div class="col-md-1" style="padding-top: 25px">
+                                                                                <button type="button" id="@("AddGuardianOfEstate" + m)" value="Plus" class="btn btn-default zero-Zindex" data-toggle="tooltip" title="Add">
+                                                                                    <span class="glyphicon glyphicon-plus" style="color: blue"></span>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                }
+
+
+                                                            </div>
+
+                                                        </div>
+                                                        <br />
+                                                    }
+                                                    if (Model.ClientClosureInfo.LegalStatus[idx].Id == 3)
+                                                    {
+                                                        <div id="legalstatus_guardianofperson">
+                                                            <div id="Guardianofperson">
+
+                                                                <div class="row nextline"></div>
+                                                                @for (int m = 0; m < Model.ClientClosureInfo.LegalStatus[idx].GuardiansofPerson.Count; m++)
+                                                                {
+                                                                    <div id=@("Guardianofperson_" + m) class="guardianofperson">
+                                                                        <div class="row nextline">
+                                                                            <div class="col-md-3">
+                                                                                @Html.LabelFor(model => model.ClientClosureInfo.LegalStatus[idx].GuardiansofPerson[m].LegalStatusGuardianOfPersonName, htmlAttributes: new { @class = "" })
+                                                                                <br />
+                                                                                @Html.TextBoxFor(model => model.ClientClosureInfo.LegalStatus[idx].GuardiansofPerson[m].LegalStatusGuardianOfPersonName, new { @class = "form-control", placeholder = "Name" })
+                                                                            </div>
+                                                                            <div class="col-md-1" style="padding-top: 25px">
+                                                                                <button type="button" id="GuardianofpersonRemove_@(m)" class="btn delete-guardianofperson btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                                                                                    <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="col-md-1 pad">
+                                                                                <button type="button" id="AddGuardianOfPerson@(m)" value="Plus" class="btn btn-default zero-Zindex" data-toggle="tooltip" title="Add">
+                                                                                    <span class="glyphicon glyphicon-plus" style="color: blue"></span>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                }
+
+                                                                <div class="row nextline" style="padding-left: 25%;">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                    }
+                                                    if (Model.ClientClosureInfo.LegalStatus[idx].Id == 4)
+                                                    {
+                                                        <div id="legalstatus_poahealthcare">
+                                                            <div id="POAhealthcare">
+
+                                                                <div class="row nextline"></div>
+                                                                @for (int m = 0; m < Model.ClientClosureInfo.LegalStatus[idx].POAHealthCare.Count; m++)
+                                                                {
+                                                                    <div id=@("POAhealthcare_" + m) class="poahealthcare">
+                                                                        <div class="row nextline">
+                                                                            <div class="col-md-3">
+                                                                                @Html.LabelFor(model => model.ClientClosureInfo.LegalStatus[3].POAHealthCare[m].LegalStatusHealthcareName, htmlAttributes: new { @class = "" })
+                                                                                <br />
+                                                                                @Html.TextBoxFor(model => model.ClientClosureInfo.LegalStatus[3].POAHealthCare[m].LegalStatusHealthcareName, new { @class = "form-control zero-Zindex", placeholder = "Name" })
+                                                                            </div>
+                                                                            @*<div class="col-md-3">
+                                                                                    @Html.LabelFor(model => model.ClientClosureInfo.LegalStatus[3].POAHealthCare[m].LegalStatusHealthcarePhone, htmlAttributes: new { @class = "" })
+                                                                                    <br />
+                                                                                    @Html.TextBoxFor(model => model.ClientClosureInfo.LegalStatus[3].POAHealthCare[m].LegalStatusHealthcarePhone, new { @class = "form-control zero-Zindex", placeholder = "Phone" })
+                                                                                </div>*@
+                                                                            <div class="col-md-1" style="padding-top: 25px">
+                                                                                <button type="button" id="POAhealthcareRemove_@(m)" class="btn delete-poahealthcare btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                                                                                    <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="col-md-1 pad">
+                                                                                <button type="button" id="AddPOAHealthcare@(m)" value="Plus" class="btn btn-default zero-Zindex" data-toggle="tooltip" title="Add">
+                                                                                    <span class="glyphicon glyphicon-plus" style="color: blue"></span>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                }
+
+
+
+                                                                <div class="row nextline" style="padding-left: 25%;">
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                    }
+                                                    if (Model.ClientClosureInfo.LegalStatus[idx].Id == 5)
+                                                    {
+                                                        <div id="legalstatus_poafinances">
+                                                            <div id="POAfinances">
+
+                                                                <div class="row next-line"></div>
+                                                                @for (int m = 0; m < Model.ClientClosureInfo.LegalStatus[idx].POAFinances.Count; m++)
+                                                                {
+                                                                    <div id=@("POAfinances_" + m) class="poafinances">
+                                                                        <div class="row nextline">
+                                                                            <div class="col-md-3">
+                                                                                @Html.LabelFor(model => model.ClientClosureInfo.LegalStatus[4].POAFinances[m].LegalStatusFinancesName, htmlAttributes: new { @class = "" })
+                                                                                <br />
+                                                                                @Html.TextBoxFor(model => model.ClientClosureInfo.LegalStatus[4].POAFinances[m].LegalStatusFinancesName, new { @class = "form-control zero-Zindex", placeholder = "Name" })
+                                                                            </div>
+                                                                            @*<div class="col-md-3">
+                                                                                    @Html.LabelFor(model => model.ClientClosureInfo.LegalStatus[4].POAFinances[m].LegalStatusFinancesPhone, htmlAttributes: new { @class = "" })
+                                                                                    <br />
+                                                                                    @Html.TextBoxFor(model => model.ClientClosureInfo.LegalStatus[4].POAFinances[m].LegalStatusFinancesPhone, new { @class = "form-control zero-Zindex", placeholder = "Phone" })
+                                                                                </div>*@
+                                                                            <div class="col-md-1" style="padding-top: 25px">
+                                                                                <button type="button" id="POAfinancesRemove_@(m)" class="btn delete-poafinances btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                                                                                    <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="col-lg-1 pad">
+                                                                                <button type="button" id="AddPOAFinances@(m)" value="Plus" class="btn btn-default zero-Zindex" data-toggle="tooltip" title="Add">
+                                                                                    <span class="glyphicon glyphicon-plus" style="color: blue"></span>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                }
+
+
+
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                    }
+                                                    if (Model.ClientClosureInfo.LegalStatus[idx].Id == 6)
+                                                    {
+                                                        <div id="legalstatus_representativepayee">
+                                                            <div id="Representativepayee">
+                                                                @*<legend>Guardian of Estate</legend>*@
+                                                                <div class=" row nextline"></div>
+                                                                @for (int m = 0; m < Model.ClientClosureInfo.LegalStatus[idx].RepresentativePayee.Count; m++)
+                                                                {
+                                                                    <div id=@("Representativepayee_" + m) class="representativepayee">
+                                                                        <div class="row nextline">
+                                                                            <div class="col-lg-3">
+                                                                                @Html.LabelFor(model => model.ClientClosureInfo.LegalStatus[5].RepresentativePayee[m].LegalStatusPayeeName, htmlAttributes: new { @class = "" })
+                                                                                <br />
+                                                                                @Html.TextBoxFor(model => model.ClientClosureInfo.LegalStatus[5].RepresentativePayee[m].LegalStatusPayeeName, new { @class = "form-control zero-Zindex", placeholder = "Name" })
+                                                                            </div>
+                                                                            @*<div class="col-md-3">
+                                                                                    @Html.LabelFor(model => model.ClientClosureInfo.LegalStatus[5].RepresentativePayee[m].LegalStatusPayeePhone, htmlAttributes: new { @class = "" })
+                                                                                    <br />
+                                                                                    @Html.TextBoxFor(model => model.ClientClosureInfo.LegalStatus[5].RepresentativePayee[m].LegalStatusPayeePhone, new { @class = "form-control zero-Zindex", placeholder = "Phone" })
+                                                                                </div>*@
+                                                                            <div class="col-lg-1" style="padding-top: 25px;">
+                                                                                <button type="button" id="RepresentativepayeeRemove_@(m)" class="btn delete-representativepayee btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                                                                                    <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="col-lg-1 pad">
+                                                                                <button type="button" id="AddRepresentativePayee@(m)" value="Plus" class="btn btn-default zero-Zindex" data-toggle="tooltip" title="Add">
+                                                                                    <span class="glyphicon glyphicon-plus" style="color: blue"></span>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                    }
+                                                    <br />
+                                                }
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+
+                                    @*@for (int idx = 0; idx < Model.ClientClosureInfo.LegalStatus.Count; idx++)
+                                        {
+                                            <div id="status@(idx)">
+                                                @Html.HiddenFor(x => Model.ClientClosureInfo.LegalStatus[idx].Id)
+                                                @Html.HiddenFor(x => Model.ClientClosureInfo.LegalStatus[idx].Code)
+                                                @Html.CheckBoxFor(x => Model.ClientClosureInfo.LegalStatus[idx].IsChecked) @Html.DisplayFor(x => Model.ClientClosureInfo.LegalStatus[idx].Description)
+                                                @Html.HiddenFor(x => Model.ClientClosureInfo.LegalStatus[idx].Description)<br />
+                                                @if (idx != 0)
+                                                {
+                                                    if (Model.Count > 0)
+                                                    {
+                                                        for (int idx1 = 0; idx1 < Model.Count; idx1++)
+                                                        {
+                                                            @Html.TextBoxFor(x => Model.ClientClosureInfo.LegalStatus[idx].Name[idx1], new { @class = "form-control", @style = "max-width:60%" })
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.TextBoxFor(x => Model.ClientClosureInfo.LegalStatus[idx].Name, new { @class = "form-control", @style = "max-width:60%" }) <div class="" style="background-color:ActiveBorder;display:inline">
+                                                            <button type="button" id="task@(idx)" class="btn btn-default addButton"><i class="glyphicon glyphicon-plus"></i></button>
+                                                        </div>
+                                                    }
+
+
+                                                    <div class="form-group hide" id="taskTemplate@(idx)">
+                                                        @Html.TextBoxFor(x => Model.ClientClosureInfo.LegalStatus[idx].Name, new { @class = "form-control", @style = "max-width:60%" }) <button type="button" class="btn btn-danger removeButton"><i class="glyphicon glyphicon-minus"></i></button>
+
+
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBoxFor(x => Model.ClientClosureInfo.LegalStatus[idx].Name, new { @class = "form-control", @placeholder = "Enter Name", @hidden = "hidden", @style = "max-width:60%" , @value=""})
+                                                }
+                                            </div>
+                                        }*@
+                                </div>
+
+                                <div class="row nextline">
+                                    <div class="col-lg-3" id="clientservicesatclose">
+                                        <b style="text-decoration: underline">Services at Close</b>
+                                        @for (int idx = 0; idx < Model.ClientClosureInfo.Services.Count; idx++)
+                                        {
+                                            <div id="status1@(idx)">
+                                                @Html.HiddenFor(x => Model.ClientClosureInfo.Services[idx].Id)
+                                                @Html.HiddenFor(x => Model.ClientClosureInfo.Services[idx].Code)
+                                                @Html.CheckBoxFor(x => Model.ClientClosureInfo.Services[idx].IsChecked) @Html.DisplayFor(x => Model.ClientClosureInfo.Services[idx].Description)
+                                                @Html.HiddenFor(x => Model.ClientClosureInfo.Services[idx].Description)<br />
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row nextline"></div>
+                <div class="row nextline"></div>
+                <div class="row nextline"></div>
+
+                <div class=" container">
+                    <div class="container">
+
+                        @if (Model.ListAbusers.Count > 0)
+                        {
+                            <h4 style="text-decoration: underline">Abuser Information</h4>
+                            for (int m = 0; m < Model.ListAbusers.Count; m++)
+                            {
+                                @Html.HiddenFor(model => model.ListAbusers[m].Id)
+                                <div class="container" id="abuserclosureinfo@(m)" style="border:2px solid #808080;background-color:#fff">
+                                    <div class="row nextline">
+                                        <div class="col-lg-3">
+                                            @Html.LabelFor(model => model.ListAbusers[m].FirstName, "Abuser Name: ")
+                                            <div style="border: groove; text-align: center; font-weight: bold; border-radius: 2px">@Html.DisplayFor(model => model.ListAbusers[m].FirstName),@Html.DisplayFor(model => model.ListAbusers[m].LastName)</div>
+                                        </div>
+                                        <div class="col-lg-2 ">
+                                            @Html.LabelFor(model => model.ListAbusers[m].AANumber, "AANumber # ")
+                                            <div style="border: groove; text-align: center; font-weight: bold; border-radius: 2px">@Html.DisplayFor(model => model.ListAbusers[m].AANumber)</div>
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <div class="row nextline"></div>
+                                    <div class="row nextline"></div>
+                                    <div class="row nextline">
+                                        <div class="col-lg-3">
+                                            @Html.LabelFor(model => model.ListAbusers[m].DateClientsGuardianNotificationMailed, new { @class = "control-label" })
+                                            <div>
+                                                @Html.TextBoxFor(model => model.ListAbusers[m].DateClientsGuardianNotificationMailed, new { @class = "form-control  datepicker", placeholder = "Notification Mailed Date" })
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            @Html.LabelFor(model => model.ListAbusers[m].AAAssociationsId, new { @class = "control-label" })
+                                            <div>
+                                                @Html.DropDownListFor(model => model.ListAbusers[m].AAAssociationsId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewAbuserAssociations { Id = null, Description = " Select Association" } }.Union(Model.caselookup.ListOfAAAssociations), "Id", "Description", Model.ListAbusers[m].AAAssociationsId), new { @class = "form-control" })
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+                                    <div class="row nextline"></div>
+                                    <div class="row nextline"></div>
+
+                                    <div class="row nextline">
+
+
+                                        <div class="col-lg-12">
+
+                                            @Html.LabelFor(model => model.ListAbusers[m].IsEmploymentTerminated, new { @class = "@errorclass" })
+                                            @Html.RadioButtonFor(model => model.ListAbusers[m].IsEmploymentTerminated, "x") Not Applicable
+                                            @Html.RadioButtonFor(model => model.ListAbusers[m].IsEmploymentTerminated, "y") Yes
+                                            @Html.RadioButtonFor(model => model.ListAbusers[m].IsEmploymentTerminated, "n") No
+                                            @Html.RadioButtonFor(model => model.ListAbusers[m].IsEmploymentTerminated, "u") Unknown
+                                            <br />
+                                            @Html.LabelFor(model => model.ListAbusers[m].IsReferredToCountyStatesAttorney, new { @class = "@errorclass" })
+                                            @Html.RadioButtonFor(model => model.ListAbusers[m].IsReferredToCountyStatesAttorney, "x") Not Applicable
+                                            @Html.RadioButtonFor(model => model.ListAbusers[m].IsReferredToCountyStatesAttorney, "y") Yes
+                                            @Html.RadioButtonFor(model => model.ListAbusers[m].IsReferredToCountyStatesAttorney, "n") No
+                                            <br />
+                                            @Html.LabelFor(model => model.ListAbusers[m].IsClientsGuardian, new { @class = "@errorclass" }) (Copy of letter to Probate Judge should be uploaded under Supporting Documentation)&nbsp;
+                                            @Html.RadioButtonFor(model => model.ListAbusers[m].IsClientsGuardian, "y", new { }) Yes
+                                            @Html.RadioButtonFor(model => model.ListAbusers[m].IsClientsGuardian, "n", new { }) No
+                                            @Html.RadioButtonFor(model => model.ListAbusers[m].IsClientsGuardian, "x", new { }) Not Applicable
+
+
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row nextline"></div>
+                                    <div class="row nextline"></div>
+                                    <div id="clientsguardian" class="row nextline well ifyes">
+
+                                        <div class="col-lg-2">
+                                            @Html.LabelFor(model => model.ListAbusers[m].StateTypeId, new { @class = "control-label" })
+                                            <div>
+                                                @Html.DropDownListFor(model => model.ListAbusers[m].StateTypeId, new SelectList(new[] { new PersonProfile.Data.Entities.dtoStateType { Id = 0, Description = " Select State" } }.Union(Model.caselookup.listofstates), "Id", "Description", Model.ListAbusers[m].StateTypeId), new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            @Html.LabelFor(model => model.ListAbusers[m].CountyTypeId, new { @class = "control-label" })
+                                            <div>
+                                                @Html.DropDownListFor(model => model.ListAbusers[m].CountyTypeId, new SelectList(new[] { new PersonProfile.Data.Entities.dtoCountyType { Id = 0, Description = " Select County" } }.Union(Model.caselookup.listofcounties), "Id", "Description", Model.ListAbusers[m].CountyTypeId), new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            @Html.LabelFor(model => model.ListAbusers[m].Outcomes)
+                                            <div>
+                                                @for (int idx = 0; idx < Model.ListAbusers[m].Outcomes.Count; idx++)
+                                                {
+                                                    @Html.HiddenFor(x => Model.ListAbusers[m].Outcomes[idx].Id)
+                                                    @Html.HiddenFor(x => Model.ListAbusers[m].Outcomes[idx].Code)
+                                                    @Html.CheckBoxFor(x => Model.ListAbusers[m].Outcomes[idx].IsChecked) @Html.DisplayFor(x => Model.ListAbusers[m].Outcomes[idx].Description)
+                                                    @Html.HiddenFor(x => Model.ListAbusers[m].Outcomes[idx].Description)<br />
+                                                }
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row nextline"></div>
+                                    <div class="row nextline"></div>
+                                    <div class="row nextline">
+                                        <div class="IsClientsGuardianOptions">
+                                            <div class="col-lg-3">
+                                                <b>Abuser Subsititute Decision maker at Close</b>
+                                                <div>
+                                                    @for (int idx = 0; idx < Model.ListAbusers[m].LegalStatus.Count; idx++)
+                                                    {
+                                                        @Html.HiddenFor(x => Model.ListAbusers[m].LegalStatus[idx].Id)
+                                                        @Html.HiddenFor(x => Model.ListAbusers[m].LegalStatus[idx].Code)
+                                                        @Html.CheckBoxFor(x => Model.ListAbusers[m].LegalStatus[idx].IsChecked) @Html.DisplayFor(x => Model.ListAbusers[m].LegalStatus[idx].Description)
+                                                        @Html.HiddenFor(x => Model.ListAbusers[m].LegalStatus[idx].Description)<br />
+                                                    }
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-2">
+                                                <b>Abuser Legal Remedy at Close</b>
+                                                <div>
+                                                    @for (int idx = 0; idx < Model.ListAbusers[m].LegalRemedies.Count; idx++)
+                                                    {
+                                                        @Html.HiddenFor(x => Model.ListAbusers[m].LegalRemedies[idx].Id)
+                                                        @Html.HiddenFor(x => Model.ListAbusers[m].LegalRemedies[idx].Code)
+                                                        @Html.CheckBoxFor(x => Model.ListAbusers[m].LegalRemedies[idx].IsChecked) @Html.DisplayFor(x => Model.ListAbusers[m].LegalRemedies[idx].Description)
+                                                        @Html.HiddenFor(x => Model.ListAbusers[m].LegalRemedies[idx].Description)<br />
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <b>Abuser Services at Close</b>
+                                                <div>
+                                                    @for (int idx = 0; idx < Model.ListAbusers[m].Services.Count; idx++)
+                                                    {
+                                                        @Html.HiddenFor(x => Model.ListAbusers[m].Services[idx].Id)
+                                                        @Html.HiddenFor(x => Model.ListAbusers[m].Services[idx].Code)
+                                                        @Html.CheckBoxFor(x => Model.ListAbusers[m].Services[idx].IsChecked) @Html.DisplayFor(x => Model.ListAbusers[m].Services[idx].Description)
+                                                        @Html.HiddenFor(x => Model.ListAbusers[m].Services[idx].Description)<br />
+                                                    }
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row nextline"></div> <div class="row nextline"></div>
+                            }
+                        }
+                    </div>
+
+                </div>
+
+                <div class="row nextline"></div>
+                <div class="row nextline"></div>
+
+                <div class="container">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    @*}*@
+
+</div>
+
+<script>
+
+</script>

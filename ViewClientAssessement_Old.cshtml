@@ -1,0 +1,2825 @@
+﻿@model AGE.CMS.Data.Models.ClientAssessment.viewClientAssesssment
+
+@{
+    ViewBag.Title = "View Client Assessment";
+    var errorclass = "";
+}
+
+
+    @*<script src="~/Assets/Basic/Scripts/CMS/Case/js"></script>*@
+
+<script>
+    $(document).ready(function () {
+      
+        //$(function () {
+        //    $('input, select, textarea').attr('disabled', 'disabled');
+            
+        //});
+
+        $("#cancel").click(function () {
+            //window.location.href = window.location.href = $("#hiddenRootUrl").val() + '/' + $("#hiddenApplication").val() + '/' + $("#hiddenInstance").val() + '/CaseIntake/ListClientIntake/' + $("#ClientId").val();
+            window.history.back();
+        });
+        $(document).scroll(0, 0);
+        $('#print').on('click', function () {
+
+            var template = $('#ViewClientAssessmentData').clone();
+
+            template.find("#heading").show();
+            template.find('.noprint').remove();
+            Print(template);
+        });
+
+        $('#approveclientassessmentmodal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var Id = button.data('transfer2')
+            var ClientId = button.data('transfer1')
+            var modal = $(this)
+            modal.find('.modal-body #id').val(Id)
+            modal.find('.modal-body #clientid').val(ClientId)
+
+        })
+
+        //$("#approveclientassessmentmodal").on("submit", "#approveclientassessmentform", function (e) {
+        //    e.preventDefault();  // prevent standard form submission
+
+        //    var form = $(this);
+        //    $.ajax({
+        //        url: form.attr("ApproveClientAssessmentPost"),
+        //        method: form.attr("post"),  // post
+        //        data: form.serialize(),
+        //        success: function (partialResult) {
+        //            //$("#form-container").html(partialResult);
+        //        }
+        //    });
+        //});
+    });
+
+    function Print(template) {
+        //alert(template.html());
+        //var w = window.open();
+        var w = window.open("", "popupWindow", "width=600, height=400, scrollbars=yes");
+        var html = template.html();
+
+        $(w.document.body).html(html);
+        w.print();
+
+    }
+    //function enableFields() {
+    //    $('#viewAssessmentStatus_EsignatureOfSupervisor').removeAttr("disabled", "disabled"); //Enable
+
+    //    $('#viewAssessmentStatus_DateOfESignatureBySupervisor').removeAttr('disabled', 'disabled'); //Enable
+    //};
+  
+    function validateForm() {
+        $('form').submit(function () { 
+        var x = $('#viewAssessmentStatus_EsignatureOfSupervisor').val();
+        var y = $('#viewAssessmentStatus_DateOfESignatureBySupervisor').val();
+        var AssessmentId = $('#Id').val();
+        var clientid = $('#ClientId').val();
+        if (x == "" && y == "") {
+            if (confirm("Please Sign and enter Date  at the End of the Page")) {
+                $('html, body').animate({ scrollTop: $(document).height() }, 'slow');
+                console.log('alertcreted');
+            }
+          
+            var html = "";
+
+            html = "<b><span class=";
+            html = html + "danger";
+            html = html + ">Please Sign and enter date</span>";
+            $('#SupervisorError').html(html);
+            errorclass = "has-error";
+            return false;
+        }
+        else if (x == "") {
+           alert("Please Sign");
+            var html = "";
+
+            html = "<b><span class=";
+            html = html + "danger";
+            html = html + ">Please Sign</span>";
+            $('#SupervisorSignError').html(html);
+            errorclass = "has-error";
+            return false;
+        }
+        else if (y == "") {
+           alert("Please enter date");
+            var html = "";
+
+            html = "<b><span class=";
+            html = html + "danger";
+            html = html + ">Please enter date</span>";
+            $('#SupervisorDateError').html(html);
+            errorclass = "has-error";
+            return false;
+        }
+        else {
+            $('#SupervisorError').remove();
+            $('#SupervisorSignError').remove();
+            $('#SupervisorDateError').remove();
+          
+          //  $("#ApprovePostClientAssessment").submit();
+            //$.ajax({
+            //    type: 'POST',
+            //    url: '/Case/ApprovePostClientAssessment',                                                                
+            //    data: { 'id': id, 'clientid': clientid, 'Supsign': x , 'Supsigndate' : y },
+            //    contentType: 'application/json; charset=utf-8',
+            //    success: function (data) {
+            //        alert(data.success);
+            //    },
+            //    error: function () {
+            //        alert("error");
+            //    }
+            //});
+
+            //$('#approveclientassessmentform').form().submit();
+
+        }
+        });
+
+
+        $('#viewAssessmentStatus_DateOfESignatureBySupervisor').blur(function () {
+            $("html, body").animate({ scrollTop: 0 }, { duration: 500, queue: false });
+
+        });
+    }
+</script>
+
+
+ @using (Html.BeginForm("ApprovePostClientAssessment", "Case", FormMethod.Post))
+ {
+@Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.CaseheaderId)
+
+<div class="container" id="ViewClientAssessmentData">
+    <div class="panel panel-warning">
+
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="titletextbegin">
+                    @if (Model.mode == "approve")
+                    {
+                        <span class="glyphicon glyphicon-ok"></span>
+                    }
+                    else
+                    {
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                    }
+                    <span class="textspace">
+                        <text>Client Assessement</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+
+
+
+        <div class="panel-body">
+
+
+            <div class="form-group">
+                <div class="col-md-1 pull-right">
+                    @if (Model.mode == "approve")
+                    {
+                        if (User.IsInRole("Supervisor") || User.IsInRole("IDOAStaff"))
+                        {
+                        <button id="ApproveClientAssessment" rel="tooltip" type="submit" class="btn btn-primary btn-md" title=" ApproveClientAssessment " onclick="validateForm();">Approve</button>                       
+                        }
+                    }
+                    else
+                    {
+                        <a href="" class="btn btn-warning noprint" id="print" value="Print">Print</a>
+                    }
+                    <a id="cancel" rel="tooltip" class="btn btn-default btn-md" title=" Cancel ">Cancel</a>
+                    @* <input type="button" class="btn btn-warning noprint" id="print" value="Print" />*@
+                </div>
+            </div>
+
+            <br />
+            <br />
+                    <div class="row nextline">
+                        @Html.Partial("_ViewClient", Model.viewIntake.viewCaseHeader.Client)
+                    </div>
+
+
+            <div class="row">
+                <div class="col-lg-3" style="padding-top: 20px">
+                    @Html.LabelFor(model => model.IsClientInterviewedANE)
+                    <br />
+                        @Html.RadioButtonFor(model => model.IsClientInterviewedANE, "y", new { @disabled = "disabled" }) Yes
+                    @Html.RadioButtonFor(model => model.IsClientInterviewedANE, "n", new { @disabled = "disabled" }) No
+                    @Html.RadioButtonFor(model => model.IsClientInterviewedANE, "x", new { @disabled = "disabled" }) Not applicable
+                </div>
+                <div class="col-lg-3" style="padding-top: 20px">
+                    @Html.LabelFor(model => model.IsClientInterviewedSN)
+                    <br />
+                        @Html.RadioButtonFor(model => model.IsClientInterviewedSN, "y", new { @disabled = "disabled" }) Yes
+                    @Html.RadioButtonFor(model => model.IsClientInterviewedSN, "n", new { @disabled = "disabled" }) No
+                    @Html.RadioButtonFor(model => model.IsClientInterviewedSN, "x", new { @disabled = "disabled" }) Not applicable
+                </div>
+
+                <div class="col-lg-34" style="padding-top: 20px">
+                        @Html.CheckBoxFor(model => model.IsClientUnableToInterviewed, new { @disabled = "disabled" })
+                    @Html.LabelFor(m => m.IsClientUnableToInterviewed, new { @class = "control-label" })
+                </div>
+            </div>
+
+
+            <br />
+            <div class="well">
+
+                <div id="physical">
+                    @if (
+                            Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuse.Any() ||
+                            Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse.Any() ||
+                            Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse.Any() ||
+                            Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse.Any() ||
+                            Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint.Any() ||
+                            Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse.Any() ||
+                            Model.IndicatorsOfPhysicalAbuse.IsOthers == true
+                            )
+                    {
+                        <div class="well container" style="background-color: #fff">
+                            <div class="ma">
+                                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Physical Abuse: </h4>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-lg-12">
+                                    <h5 style="font-weight: bold">Allegations:  </h5>
+                                    <div>
+                                        @Html.DisplayFor(model => model.IndicatorsOfPhysicalAbuse.Comments, new { @class = "form-control", placeholder = "Write Comments" })
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuse.Count != 0)
+                                    {
+
+
+
+                                        <b>Injuries: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuse.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuse[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuse[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuse[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuse[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse.Count != 0)
+                                    {
+
+                                        <b>Pattern Of Injuries: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse[idx].Description)<br />
+
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuse[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuse[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+
+
+                            </div>
+
+                            <div class="row nextline"></div>
+
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse.Count != 0)
+                                    {
+
+
+
+                                        <b>Injuries: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse.Count != 0)
+                                    {
+
+
+
+                                        <b>Injuries: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="row nextline"></div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint.Count != 0)
+                                    {
+
+
+
+                                        <b>Injuries: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+
+                                        </fieldset>
+
+
+
+                                    }
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse.Count != 0)
+                                    {
+
+
+
+                                        <b>Injuries: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="row nextline"></div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+
+                                    @if (Model.IndicatorsOfPhysicalAbuse.IsOthers == true)
+                                    {
+
+
+                                        <b>Others: </b>
+
+                                        <br />
+                                        <fieldset>
+                                            <b>@Html.LabelFor(model => model.IndicatorsOfPhysicalAbuse.OtherRefutingFacts) </b>
+                                            @Html.DisplayFor(model => model.IndicatorsOfPhysicalAbuse.OtherRefutingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+                                            <br />
+                                            <b>@Html.LabelFor(model => model.IndicatorsOfPhysicalAbuse.OtherSupportingFacts)</b>
+                                            @Html.DisplayFor(model => model.IndicatorsOfPhysicalAbuse.OtherSupportingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div id="sexual">
+                    @if (
+                            Model.IndicatorsOfSexualAbuse.MedicalEvidence.Any() ||
+                            Model.IndicatorsOfSexualAbuse.BehaviorOfClient.Any() ||
+                            Model.IndicatorsOfSexualAbuse.ViolentActions.Any() ||
+                            Model.IndicatorsOfSexualAbuse.BehaviorOfAA.Any() ||
+                            Model.IndicatorsOfSexualAbuse.IsOthers == true
+                            )
+                    {
+                        <div class="well container" style="background-color: #fff">
+                            <div class="ma">
+                                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Sexual Abuse: </h4>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-lg-12">
+                                    <h5 style="font-weight: bold">Allegations:  </h5>
+                                    <div>
+                                        @Html.DisplayFor(model => model.IndicatorsOfSexualAbuse.Comments, new { @class = "form-control", placeholder = "Write Comments" })
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfSexualAbuse.MedicalEvidence.Count != 0)
+                                    {
+
+
+
+                                        <b>Medical Evidence: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfSexualAbuse.MedicalEvidence.Count; idx++)
+                                            {
+
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence[idx].IsChecked, new { @disabled = "Disabled" })
+                                                <b>@Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence[idx].Description)</b><br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfSexualAbuse.BehaviorOfClient.Count != 0)
+                                    {
+
+                                        <b>Behavior Of Client:</b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfSexualAbuse.BehaviorOfClient.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient[idx].Description)<br />
+
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+
+
+                            </div>
+
+                            <div class="row nextline"></div>
+
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfSexualAbuse.ViolentActions.Count != 0)
+                                    {
+
+
+
+                                        <b>Violent Actions: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfSexualAbuse.ViolentActions.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfSexualAbuse.BehaviorOfAA.Count != 0)
+                                    {
+
+
+
+                                        <b>Behavior Of AA: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfSexualAbuse.BehaviorOfAA.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="row nextline"></div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+
+                                    @if (Model.IndicatorsOfSexualAbuse.IsOthers == true)
+                                    {
+
+
+                                        <b>Others: </b>
+
+                                        <br />
+                                        <fieldset>
+                                            <b>@Html.LabelFor(model => model.IndicatorsOfSexualAbuse.OtherRefutingFacts) </b>
+                                            @Html.DisplayFor(model => model.IndicatorsOfSexualAbuse.OtherRefutingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+                                            <br />
+
+                                            <b>@Html.LabelFor(model => model.IndicatorsOfSexualAbuse.OtherSupportingFacts)</b>
+                                            @Html.DisplayFor(model => model.IndicatorsOfSexualAbuse.OtherSupportingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div id="emotional">
+                    @if (
+                            Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser.Any()
+                            )
+                    {
+                        <div class="well container" style="background-color: #fff">
+                            <div class="ma">
+                                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Emotional Abuse: </h4>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-lg-12">
+                                    <h5 style="font-weight: bold">Allegations:  </h5>
+                                    <div>
+                                        @Html.DisplayFor(model => model.IndicatorsOfEmotionalAbuse.Comments, new { @class = "form-control", placeholder = "Write Comments" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser.Count != 0)
+                                    {
+
+
+
+                                        <b>Actions Of Abuser: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser.Count; idx++)
+                                            {
+
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser[idx].IsChecked, new { @disabled = "Disabled" })
+                                                <b>@Html.DisplayFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser[idx].Description)</b><br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+
+
+                            </div>
+
+                            <div class="row nextline"></div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+
+                                    @if (Model.IndicatorsOfEmotionalAbuse.IsOthers == true)
+                                    {
+
+
+                                        <b>Others: </b>
+
+                                        <br />
+                                        <fieldset>
+                                            <b>@Html.LabelFor(model => model.IndicatorsOfEmotionalAbuse.OtherRefutingFacts) </b>
+                                            @Html.DisplayFor(model => model.IndicatorsOfEmotionalAbuse.OtherRefutingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+                                            <br />
+
+                                            <b>@Html.LabelFor(model => model.IndicatorsOfEmotionalAbuse.OtherSupportingFacts)</b>
+                                            @Html.DisplayFor(model => model.IndicatorsOfEmotionalAbuse.OtherSupportingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div id="confinment">
+                    @if (
+                            Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint.Any()
+                            )
+                    {
+                        <div class="well container" style="background-color: #fff">
+                            <div class="ma">
+                                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Confinment: </h4>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-lg-12">
+                                    <h5 style="font-weight: bold">Allegations:  </h5>
+                                    <div>
+                                        @Html.DisplayFor(model => model.IndicatorsOfConfinment.Comments, new { @class = "form-control", placeholder = "Write Comments" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint.Count != 0)
+                                    {
+
+
+
+                                        <b>Actions Of Abuser: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint.Count; idx++)
+                                            {
+
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint[idx].IsChecked, new { @disabled = "Disabled" })
+                                                <b>@Html.DisplayFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint[idx].Description)</b><br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+
+
+                            </div>
+
+                            <div class="row nextline"></div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+
+                                    @if (Model.IndicatorsOfConfinment.IsOthers == true)
+                                    {
+
+
+                                        <b>Others: </b>
+
+                                        <br />
+                                        <fieldset>
+                                            <b>@Html.LabelFor(model => model.IndicatorsOfConfinment.OtherRefutingFacts) </b>
+                                            @Html.DisplayFor(model => model.IndicatorsOfConfinment.OtherRefutingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+                                            <br />
+
+                                            <b>@Html.LabelFor(model => model.IndicatorsOfConfinment.OtherSupportingFacts)</b>
+                                            @Html.DisplayFor(model => model.IndicatorsOfConfinment.OtherSupportingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div id="Passsive Neglect">
+                    @if (
+                            Model.IndicatorsofPassiveNeglect.Skin.Any() ||
+                            Model.IndicatorsofPassiveNeglect.Nutrition.Any() ||
+                            Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson.Any() ||
+                            Model.IndicatorsofPassiveNeglect.BehavioursOfPerson.Any() ||
+                            Model.IndicatorsofPassiveNeglect.SocialIsolation.Any() ||
+                            Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson.Any() ||
+                             Model.IndicatorsofPassiveNeglect.ConditionsOfHome.Any() ||
+                            Model.IndicatorsofPassiveNeglect.BehavioursOfAA_helper.Any() ||
+                            Model.IndicatorsofPassiveNeglect.IsOthers == true
+                            )
+                    {
+                        <div class="well container" style="background-color: #fff">
+                            <div class="ma">
+                                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Passive Neglect: </h4>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-lg-12">
+                                    <h5 style="font-weight: bold">Allegations:  </h5>
+                                    <div>
+                                        @Html.DisplayFor(model => model.IndicatorsofPassiveNeglect.Comments, new { @class = "form-control", placeholder = "Write Comments" })
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsofPassiveNeglect.Skin.Count != 0)
+                                    {
+
+
+
+                                        <b>Skin: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.Skin.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.Skin[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.Skin[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.Skin[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.Skin[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsofPassiveNeglect.Nutrition.Count != 0)
+                                    {
+
+                                        <b>Nutrition: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.Nutrition.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.Nutrition[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.Nutrition[idx].Description)<br />
+
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.Nutrition[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.Nutrition[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+                            </div>
+
+                            <div class="row nextline"></div>
+
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson.Count != 0)
+                                    {
+
+
+
+                                        <b>Physical Care Of Person: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsofPassiveNeglect.BehavioursOfPerson.Count != 0)
+                                    {
+
+
+
+                                        <b>Behaviours Of Person: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.BehavioursOfPerson.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="row nextline"></div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsofPassiveNeglect.SocialIsolation.Count != 0)
+                                    {
+
+
+
+                                        <b>Social Isolation: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.SocialIsolation.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+
+                                        </fieldset>
+
+
+
+                                    }
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson.Count != 0)
+                                    {
+                                        <b>Medical Care Of Person: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="row nextline"></div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsofPassiveNeglect.ConditionsOfHome.Count != 0)
+                                    {
+
+
+
+                                        <b>Conditions Of Home: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.ConditionsOfHome.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+
+                                        </fieldset>
+
+
+
+                                    }
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsofPassiveNeglect.BehavioursOfAA.Count != 0)
+                                    {
+
+
+
+                                        <b>Behaviours Of AA: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.BehavioursOfAA.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="row nextline"></div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+
+                                    @if (Model.IndicatorsofPassiveNeglect.IsOthers == true)
+                                    {
+
+
+                                        <b>Others: </b>
+
+                                        <br />
+                                        <fieldset>
+                                            <b>@Html.LabelFor(model => model.IndicatorsofPassiveNeglect.OtherRefutingFacts) </b>
+                                            @Html.DisplayFor(model => model.IndicatorsofPassiveNeglect.OtherRefutingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+                                            <br />
+                                            <b>@Html.LabelFor(model => model.IndicatorsofPassiveNeglect.OtherSupportingFacts)</b>
+                                            @Html.DisplayFor(model => model.IndicatorsofPassiveNeglect.OtherSupportingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div id="WillfulDeprivations">
+                    @if (
+                            Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse.Any()
+                            )
+                    {
+                        <div class="well container" style="background-color: #fff">
+                            <div class="ma">
+                                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Willful Deprivations: </h4>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-lg-12">
+                                    <h5 style="font-weight: bold">Allegations:  </h5>
+                                    <div>
+                                        @Html.DisplayFor(model => model.IndicatorsofWillfulDeprivations.Comments, new { @class = "form-control", placeholder = "Write Comments" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse.Count != 0)
+                                    {
+
+
+
+                                        <b>Behaviors of Abuse: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse.Count; idx++)
+                                            {
+
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse[idx].IsChecked, new { @disabled = "Disabled" })
+                                                <b>@Html.DisplayFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse[idx].Description)</b><br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+
+
+                            </div>
+
+                            <div class="row nextline"></div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+
+                                    @if (Model.IndicatorsofWillfulDeprivations.IsOthers == true)
+                                    {
+
+
+                                        <b>Others: </b>
+
+                                        <br />
+                                        <fieldset>
+                                            <b>@Html.LabelFor(model => model.IndicatorsofWillfulDeprivations.OtherRefutingFacts) </b>
+                                            @Html.DisplayFor(model => model.IndicatorsofWillfulDeprivations.OtherRefutingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+                                            <br />
+
+                                            <b>@Html.LabelFor(model => model.IndicatorsofWillfulDeprivations.OtherSupportingFacts)</b>
+                                            @Html.DisplayFor(model => model.IndicatorsofWillfulDeprivations.OtherSupportingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div id="Finantial Exploitation">
+                    @if (
+                            Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities.Any() ||
+                            Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors.Any() ||
+                            Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking.Any() ||
+                            Model.IndicatorsOfFinantialExploitation.Theft.Any() ||
+                            Model.IndicatorsOfFinantialExploitation.Abusercontrolscash.Any() ||
+                            Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser.Any() ||
+                             Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions.Any() ||
+                            Model.IndicatorsOfFinantialExploitation.IsOthers == true
+                            )
+                    {
+                        <div class="well container" style="background-color: #fff">
+                            <div class="ma">
+                                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Finantial Exploitation: </h4>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-lg-12">
+                                    <h5 style="font-weight: bold">Allegations:  </h5>
+                                    <div>
+                                        @Html.DisplayFor(model => model.IndicatorsOfFinantialExploitation.Comments, new { @class = "form-control", placeholder = "Write Comments" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities.Count != 0)
+                                    {
+                                        <b>Unusual inappropriate bank activities: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors.Count != 0)
+                                    {
+
+                                        <b>Unusual cash transactions: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors[idx].Description)<br />
+
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+                            </div>
+
+                            <div class="row nextline"></div>
+
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking.Count != 0)
+                                    {
+
+
+
+                                        <b>Inappropriate decision making: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+                                        </fieldset>
+                                    }
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfFinantialExploitation.Theft.Count != 0)
+                                    {
+
+
+
+                                        <b>Theft: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Theft.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfFinantialExploitation.Theft[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Theft[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Theft[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Theft[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="row nextline"></div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfFinantialExploitation.Abusercontrolscash.Count != 0)
+                                    {
+
+
+
+                                        <b>Abuser controls cash: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Abusercontrolscash.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+
+                                        </fieldset>
+
+
+
+                                    }
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions.Count != 0)
+                                    {
+
+
+
+                                        <b>Abuser controls banking decisions: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="row nextline"></div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser.Count != 0)
+                                    {
+
+
+
+                                        <b>Vandalism by abuser: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+
+                                        </fieldset>
+
+
+
+                                    }
+
+                                </div>
+
+                            </div>
+                            <div class="row nextline"></div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+
+                                    @if (Model.IndicatorsOfFinantialExploitation.IsOthers == true)
+                                    {
+
+
+                                        <b>Others: </b>
+
+                                        <br />
+                                        <fieldset>
+                                            <b>@Html.LabelFor(model => model.IndicatorsOfFinantialExploitation.OtherRefutingFacts) </b>
+                                            @Html.DisplayFor(model => model.IndicatorsOfFinantialExploitation.OtherRefutingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+                                            <br />
+                                            <b>@Html.LabelFor(model => model.IndicatorsOfFinantialExploitation.OtherSupportingFacts)</b>
+                                            @Html.DisplayFor(model => model.IndicatorsOfFinantialExploitation.OtherSupportingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div id="General Baehaviour">
+                    @if (
+                            Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser.Any() ||
+                            Model.IndicatorsOfGeneralBehavior.Statementsofabuser.Any() ||
+                            Model.IndicatorsOfGeneralBehavior.StatementsofPerson.Any() ||
+                            Model.IndicatorsOfGeneralBehavior.IsOthers == true
+                            )
+                    {
+                        <div class="well container" style="background-color: #fff">
+                            <div class="ma">
+                                <h4 style="font-weight: bold; text-decoration: underline">Indicators of General Behavior: </h4>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-lg-12">
+                                    <h5 style="font-weight: bold">Allegations:  </h5>
+                                    <div>
+                                        @Html.DisplayFor(model => model.IndicatorsOfGeneralBehavior.Comments, new { @class = "form-control", placeholder = "Write Comments" })
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser.Count != 0)
+                                    {
+
+
+
+                                        <b>Behaviors of Abuser: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser.Count; idx++)
+                                            {
+
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser[idx].IsChecked, new { @disabled = "Disabled" })
+                                                <b>@Html.DisplayFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser[idx].Description)</b><br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfGeneralBehavior.Statementsofabuser.Count != 0)
+                                    {
+
+                                        <b>Statements of abuser:</b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfGeneralBehavior.Statementsofabuser.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser[idx].Description)<br />
+
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+
+
+                            </div>
+
+                            <div class="row nextline"></div>
+
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfGeneralBehavior.StatementsofPerson.Count != 0)
+                                    {
+
+
+
+                                        <b>Statements of Person: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfGeneralBehavior.StatementsofPerson.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+
+                            </div>
+                            <div class="row nextline"></div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+
+                                    @if (Model.IndicatorsOfGeneralBehavior.IsOthers == true)
+                                    {
+
+
+                                        <b>Others: </b>
+
+                                        <br />
+                                        <fieldset>
+                                            <b>@Html.LabelFor(model => model.IndicatorsOfGeneralBehavior.OtherRefutingFacts) </b>
+                                            @Html.DisplayFor(model => model.IndicatorsOfGeneralBehavior.OtherRefutingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+                                            <br />
+
+                                            <b>@Html.LabelFor(model => model.IndicatorsOfGeneralBehavior.OtherSupportingFacts)</b>
+                                            @Html.DisplayFor(model => model.IndicatorsOfGeneralBehavior.OtherSupportingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div id="SelfNeglect">
+                    @if (
+                            Model.IndicatorsOfSelfNeglect.Food.Any() ||
+                            Model.IndicatorsOfSelfNeglect.Clothing.Any() ||
+                            Model.IndicatorsOfSelfNeglect.Shelter.Any() ||
+                            Model.IndicatorsOfSelfNeglect.HealthCare.Any() ||
+                            Model.IndicatorsOfSelfNeglect.IsOthers == true
+                            )
+                    {
+                        <div class="well container" style="background-color: #fff">
+                            <div class="ma">
+                                <h4 style="font-weight: bold; text-decoration: underline">Indicators of Self Neglect: </h4>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-lg-12">
+                                    <h5 style="font-weight: bold">Allegations:  </h5>
+                                    <div>
+                                        @Html.DisplayFor(model => model.IndicatorsOfSelfNeglect.Comments, new { @class = "form-control", placeholder = "Write Comments" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfSelfNeglect.Food.Count != 0)
+                                    {
+
+
+
+                                        <b>Medical Evidence: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfSelfNeglect.Food.Count; idx++)
+                                            {
+
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfSelfNeglect.Food[idx].IsChecked, new { @disabled = "Disabled" })
+                                                <b>@Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.Food[idx].Description)</b><br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.Food[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.Food[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfSelfNeglect.Clothing.Count != 0)
+                                    {
+
+                                        <b>Behavior Of Client:</b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfSelfNeglect.Clothing.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfSelfNeglect.Clothing[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.Clothing[idx].Description)<br />
+
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.Clothing[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.Clothing[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+
+
+                            </div>
+
+                            <div class="row nextline"></div>
+
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfSelfNeglect.Shelter.Count != 0)
+                                    {
+
+
+
+                                        <b>Violent Actions: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfSelfNeglect.Shelter.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfSelfNeglect.Shelter[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.Shelter[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.Shelter[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.Shelter[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+
+                                            }
+                                        </fieldset>
+
+
+                                    }
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    @if (Model.IndicatorsOfSelfNeglect.HealthCare.Count != 0)
+                                    {
+
+
+
+                                        <b>Behavior Of AA: </b>
+                                        <br />
+                                        <fieldset>
+                                            @for (int idx = 0; idx < Model.IndicatorsOfSelfNeglect.HealthCare.Count; idx++)
+                                            {
+
+                                                @Html.CheckBoxFor(x => Model.IndicatorsOfSelfNeglect.HealthCare[idx].IsChecked, new { @disabled = "Disabled" })
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.HealthCare[idx].Description)<br />
+
+                                                <b>Refuting Facts:  </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.HealthCare[idx].RefutingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <b>Supporting Facts: </b>
+                                                @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.HealthCare[idx].SupportingFacts, new { @class = "form-control", @disabled = "Disabled" })
+                                                <br />
+                                                <br />
+                                            }
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="row nextline"></div>
+                            <div class="row nextline">
+                                <div class="col-lg-6">
+
+                                    @if (Model.IndicatorsOfSelfNeglect.IsOthers == true)
+                                    {
+
+
+                                        <b>Others: </b>
+
+                                        <br />
+                                        <fieldset>
+                                            <b>@Html.LabelFor(model => model.IndicatorsOfSelfNeglect.OtherRefutingFacts) </b>
+                                            @Html.DisplayFor(model => model.IndicatorsOfSelfNeglect.OtherRefutingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+                                            <br />
+
+                                            <b>@Html.LabelFor(model => model.IndicatorsOfSelfNeglect.OtherSupportingFacts)</b>
+                                            @Html.DisplayFor(model => model.IndicatorsOfSelfNeglect.OtherSupportingFacts, new { @class = "form-control", placeholder = "Write Comments" })
+
+                                        </fieldset>
+
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+
+
+
+
+            </div>
+
+            <div class="row nextline">
+                <div class="col-lg-2">
+                    @Html.LabelFor(m => m.viewAssessmentStatus.DateDecesionMade, new { @class = "control-label" })
+                    <div>
+                            @Html.TextBoxFor(model => model.viewAssessmentStatus.DateDecesionMade, new { @class = "form-control  DateDecisionMade", placeholder = "Substantiation Decision Date", @disabled = "Disabled" })
+                    </div>
+                </div>
+
+                <div class="col-lg-9">
+                    @Html.LabelFor(m => m.viewAssessmentStatus.IfDecesionMadeExplain, new { @class = "control-label" })
+                    <div>
+                        @Html.DisplayFor(model => model.viewAssessmentStatus.IfDecesionMadeExplain, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+
+            <br />
+            <div class="row nextline"></div>
+
+            <div id="physicalassessment">
+                <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+                    <div class="ma">
+                        <h4 style="font-weight: bold; text-decoration: underline">Indicators of Physical Abuse: </h4>
+                    </div>
+                </div>
+
+
+
+                <div style="border: groove; border-bottom-color: #efeed6;">
+                    <div class="container">
+                        <div class="row nextline">
+
+                            <div class="col-lg-2">
+                                <br />
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification.Count; idx++)
+                                {
+                                    // if (Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].Id == 4)
+                                    if (idx == 3)
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].Code)
+                                        @Html.CheckBoxFor(x => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].IsChecked, new { @disabled = "disabled" }) @Html.DisplayFor(x => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].Description) <br />
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                    else
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].Code)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                }
+                            </div>
+
+
+                            <div id="case1" class="col-lg-3">
+                                @Html.LabelFor(m => m.viewAssessmentStatus.PhysicalAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.viewAssessmentStatus.PhysicalAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.PhysicalAssessementStatus.CaseClosureReasonId), new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="abuserlist1">
+                            <div class="row nextline">
+                            </div>
+                            <div class="row nextline">
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfAbusers.Count; idx++)
+                                {
+                                    <div class="col-lg-2">
+                                        <div style="padding-top: 9px">
+                                            @Html.HiddenFor(model => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfAbusers[idx].Id)
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfAbusers[idx].LastName)
+                                        </div>
+
+                                    </div>
+                                    <div class="Classifications col-lg-3">
+                                            @Html.DropDownListFor(model => model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.PhysicalAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control", @disabled = "disabled" })
+                                    </div>
+
+
+
+                                    <div class="row nextline"></div>
+                                    <br />
+
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="SexualAssessement">
+                <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+                    <div class="ma">
+                        <h4 style="font-weight: bold; text-decoration: underline">Indicators of Sexual Abuse: </h4>
+                    </div>
+                </div>
+
+                <div style="border: groove; border-bottom-color: #efeed6;">
+                    <div class="container">
+                        <div class="row nextline">
+
+                            <div class="col-lg-2">
+                                <br />
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification.Count; idx++)
+                                {
+                                    //   if (Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].Id == 4)
+                                    if (idx == 3)
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].Code)
+                                        @Html.CheckBoxFor(x => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].IsChecked, new { @disabled = "disabled" }) @Html.DisplayFor(x => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].Description) <br />
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                    else
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].Code)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                }
+                            </div>
+
+
+                            <div id="case2" class="col-lg-3">
+                                @Html.LabelFor(m => m.viewAssessmentStatus.SexualAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.viewAssessmentStatus.SexualAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.SexualAssessementStatus.CaseClosureReasonId), new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="abuserlist2">
+                            <div class="row nextline">
+                                <br />
+
+                            </div>
+                            <div class="row nextline">
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.SexualAssessementStatus.ListOfAbusers.Count; idx++)
+                                {
+                                    <div class="col-lg-2">
+                                        <div style="padding-top: 9px">
+                                            @Html.HiddenFor(model => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfAbusers[idx].Id)
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.SexualAssessementStatus.ListOfAbusers[idx].LastName)
+                                        </div>
+
+                                    </div>
+                                    <div class="Classifications col-lg-3">
+                                        @Html.DropDownListFor(model => model.viewAssessmentStatus.SexualAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.SexualAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control", @disabled = "disabled" })
+                                    </div>
+
+
+
+                                    <div class="row nextline"></div>
+                                    <br />
+
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row nextline"></div>
+            <div class="row nextline"></div>
+
+            <div id="EmotionalAssessement">
+                <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+                    <div class="ma">
+                        <h4 style="font-weight: bold; text-decoration: underline">Indicators of Emotional Abuse: </h4>
+                    </div>
+                </div>
+
+
+
+                <div style="border: groove; border-bottom-color: #efeed6;">
+                    <div class="container">
+                        <div class="row nextline">
+
+                            <div class="col-lg-2">
+                                <br />
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification.Count; idx++)
+                                {
+                                    //if (Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].Id == 4)
+                                    if (idx == 3)
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].Code)
+                                        @Html.CheckBoxFor(x => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].IsChecked, new { @disabled = "disabled" }) @Html.DisplayFor(x => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].Description) <br />
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                    else
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].Code)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                }
+
+                            </div>
+
+
+                            <div id="case3" class="col-lg-3">
+                                @Html.LabelFor(m => m.viewAssessmentStatus.EmotionalAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                                <div>
+                                        @Html.DropDownListFor(model => model.viewAssessmentStatus.EmotionalAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.EmotionalAssessementStatus.CaseClosureReasonId), new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="abuserlist3">
+                            <div class="row nextline">
+                                <br />
+                            </div>
+                            <div class="row nextline">
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfAbusers.Count; idx++)
+                                {
+                                    <div class="col-lg-2">
+                                        <div style="padding-top: 9px">
+                                            @Html.HiddenFor(model => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfAbusers[idx].Id)
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfAbusers[idx].LastName)
+                                        </div>
+
+                                    </div>
+                                    <div class="Classifications col-lg-3">
+                                        @Html.DropDownListFor(model => model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.EmotionalAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control", @disabled = "disabled" })
+                                    </div>
+
+
+
+                                    <div class="row nextline"></div>
+                                    <br />
+
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row nextline"></div>
+            <div class="row nextline"></div>
+
+            <div id="ConfinementAssessementStatus">
+                <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+                    <div class="ma">
+                        <h4 style="font-weight: bold; text-decoration: underline">Indicators of Confinement: </h4>
+                    </div>
+                </div>
+
+
+
+                <div style="border: groove; border-bottom-color: #efeed6;">
+                    <div class="container">
+                        <div class="row nextline">
+
+                            <div class="col-lg-2">
+                                <br />
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification.Count; idx++)
+                                {
+                                    //if (Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].Id == 4)
+                                    if (idx == 3)
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].Code)
+                                        @Html.CheckBoxFor(x => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].IsChecked, new { @disabled = "disabled" }) @Html.DisplayFor(x => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].Description) <br />
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                    else
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].Code)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                }
+                            </div>
+
+
+                            <div id="case4" class="col-lg-3">
+                                @Html.LabelFor(m => m.viewAssessmentStatus.ConfinementAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.viewAssessmentStatus.ConfinementAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.ConfinementAssessementStatus.CaseClosureReasonId), new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="abuserlist4">
+                            <div class="row nextline">
+                                <br />
+
+                            </div>
+                            <div class="row nextline">
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfAbusers.Count; idx++)
+                                {
+                                    <div class="col-lg-2">
+                                        <div style="padding-top: 9px">
+                                            @Html.HiddenFor(model => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfAbusers[idx].Id)
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfAbusers[idx].LastName)
+                                        </div>
+
+                                    </div>
+                                    <div class="Classifications col-lg-3">
+                                        @Html.DropDownListFor(model => model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.ConfinementAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control", @disabled = "disabled" })
+                                    </div>
+
+
+                                    <div class="row nextline"></div>
+                                    <br />
+
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row nextline"></div>
+            <div class="row nextline"></div>
+
+            <div id="PassiveNeglectAssessementStatus">
+                <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+                    <div class="ma">
+                        <h4 style="font-weight: bold; text-decoration: underline">Indicators of Passive Neglect: </h4>
+                    </div>
+                </div>
+
+
+
+                <div style="border: groove; border-bottom-color: #efeed6;">
+                    <div class="container">
+                        <div class="row nextline">
+
+                            <div class="col-lg-2">
+                                <br />
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification.Count; idx++)
+                                {
+                                    //if (Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].Id == 4)
+                                    if (idx == 3)
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                        @Html.CheckBoxFor(x => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].IsChecked, new { @disabled = "disabled" }) @Html.DisplayFor(x => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].Description) <br />
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                    else
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfClassification[idx].Description)
+
+                                    }
+                                }
+                            </div>
+
+
+                            <div id="case5" class="col-lg-3">
+                                @Html.LabelFor(m => m.viewAssessmentStatus.PassiveNeglectAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                                <div>
+                                        @Html.DropDownListFor(model => model.viewAssessmentStatus.PassiveNeglectAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.CaseClosureReasonId), new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="abuserlist5">
+                            <div class="row nextline">
+                                <br />
+                            </div>
+                            <div class="row nextline">
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfAbusers.Count; idx++)
+                                {
+                                    <div class="col-lg-2">
+                                        <div style="padding-top: 9px">
+                                            @Html.HiddenFor(model => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfAbusers[idx].Id)
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfAbusers[idx].LastName)
+                                        </div>
+
+                                    </div>
+                                    <div class="Classifications col-lg-3">
+                                        @Html.DropDownListFor(model => model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.PassiveNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control", @disabled = "disabled" })
+                                    </div>
+
+
+
+                                    <div class="row nextline"></div>
+                                    <br />
+
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row nextline"></div>
+            <div class="row nextline"></div>
+
+            <div id="WillfulDeprivationNeglectAssessementStatus">
+                <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+                    <div class="ma">
+                        <h4 style="font-weight: bold; text-decoration: underline">Indicators of Willful Deprivation: </h4>
+                    </div>
+                </div>
+
+
+
+                <div style="border: groove; border-bottom-color: #efeed6;">
+                    <div class="container">
+                        <div class="row nextline">
+
+                            <div class="col-lg-2">
+                                <br />
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification.Count; idx++)
+                                {
+                                    //if (Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].Id == 4)
+                                    if (idx == 3)
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                        @Html.CheckBoxFor(x => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].IsChecked, new { @disabled = "disabled" }) @Html.DisplayFor(x => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].Description) <br />
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                    else
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                }
+                            </div>
+
+
+                            <div id="case6" class="col-lg-3">
+                                @Html.LabelFor(m => m.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.CaseClosureReasonId), new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="abuserlist6">
+                            <div class="row nextline">
+                                <br />
+
+
+                            </div>
+                            <div class="row nextline">
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfAbusers.Count; idx++)
+                                {
+                                    <div class="col-lg-2">
+                                        <div style="padding-top: 9px">
+                                            @Html.HiddenFor(model => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfAbusers[idx].Id)
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfAbusers[idx].LastName)
+                                        </div>
+
+                                    </div>
+                                    <div class="Classifications col-lg-3">
+                                            @Html.DropDownListFor(model => model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.WillfulDeprivationNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control", @disabled = "disabled" })
+                                    </div>
+
+
+
+                                    <div class="row nextline"></div>
+                                    <br />
+
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row nextline"></div>
+            <div class="row nextline"></div>
+
+            <div id="FinancialExploitationNeglectAssessementStatus">
+                <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+                    <div class="ma">
+                        <h4 style="font-weight: bold; text-decoration: underline">Indicators of Financial Exploitation: </h4>
+                    </div>
+                </div>
+
+
+
+                <div style="border: groove; border-bottom-color: #efeed6;">
+                    <div class="container">
+                        <div class="row nextline">
+
+                            <div class="col-lg-2">
+                                <br />
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification.Count; idx++)
+                                {
+                                    //if (Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].Id == 4)
+                                    if (idx == 3)
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                        @Html.CheckBoxFor(x => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].IsChecked, new { @disabled = "disabled" }) @Html.DisplayFor(x => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].Description) <br />
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                    else
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                }
+                            </div>
+
+
+                            <div id="case7" class="col-lg-3">
+                                @Html.LabelFor(m => m.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.CaseClosureReasonId), new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="abuserlist7">
+                            <div class="row nextline">
+                                <br />
+
+                            </div>
+                            <div class="row nextline">
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfAbusers.Count; idx++)
+                                {
+                                    <div class="col-lg-2">
+                                        <div style="padding-top: 9px">
+                                            @Html.HiddenFor(model => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfAbusers[idx].Id)
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfAbusers[idx].LastName)
+                                        </div>
+
+                                    </div>
+                                    <div class="Classifications col-lg-3">
+                                            @Html.DropDownListFor(model => model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.FinancialExploitationNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control", @disabled = "disabled" })
+                                    </div>
+
+
+                                    <div class="row nextline"></div>
+                                    <br />
+
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row nextline"></div>
+            <div class="row nextline"></div>
+
+            <div id="GeneralBehaviorNeglectAssessementStatus">
+                <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+                    <div class="ma">
+                        <h4 style="font-weight: bold; text-decoration: underline">General Behaviour Indicators: </h4>
+                    </div>
+                </div>
+
+
+
+                <div style="border: groove; border-bottom-color: #efeed6;">
+                    <div class="container">
+                        <div class="row nextline">
+
+                            <div class="col-lg-2">
+                                <br />
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification.Count; idx++)
+                                {
+                                    //if (Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].Id == 4)
+                                    if (idx == 3)
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                        @Html.CheckBoxFor(x => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].IsChecked, new { @disabled = "disabled" }) @Html.DisplayFor(x => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].Description) <br />
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                    else
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                }
+                            </div>
+
+
+                            <div id="case8" class="col-lg-3">
+                                @Html.LabelFor(m => m.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.CaseClosureReasonId), new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="abuserlist8">
+                            <div class="row nextline">
+                                <br />
+
+                            </div>
+                            <div class="row nextline">
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfAbusers.Count; idx++)
+                                {
+                                    <div class="col-lg-2">
+                                        <div style="padding-top: 9px">
+                                            @Html.HiddenFor(model => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfAbusers[idx].Id)
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfAbusers[idx].LastName)
+                                        </div>
+
+                                    </div>
+                                    <div class="Classifications col-lg-3">
+                                            @Html.DropDownListFor(model => model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.GeneralBehaviorNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control", @disabled = "disabled" })
+                                    </div>
+
+
+
+                                    <div class="row nextline"></div>
+                                    <br />
+
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row nextline"></div>
+            <div class="row nextline"></div>
+
+            <div id="SelfNeglectNeglectAssessementStatus">
+                <div class="subheadings" style="border: groove; background-color: #f2f1d8">
+
+                    <div class="ma">
+                        <h4 style="font-weight: bold; text-decoration: underline">Indicators Of Self-Neglect: </h4>
+                    </div>
+                </div>
+
+
+
+                <div style="border: groove; border-bottom-color: #efeed6;">
+                    <div class="container">
+                        <div class="row nextline">
+
+                            <div class="col-lg-2">
+                                <br />
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification.Count; idx++)
+                                {
+                                    //if (Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].Id == 4)
+                                    if (idx == 3)
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                        @Html.CheckBoxFor(x => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].IsChecked, new { @disabled = "disabled" }) @Html.DisplayFor(x => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].Description) <br />
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                    else
+                                    {
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].Id)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].Code)
+                                    @Html.HiddenFor(x => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfClassification[idx].Description)
+                                    }
+                                }
+                            </div>
+
+
+                            <div id="case9" class="col-lg-3">
+                                @Html.LabelFor(m => m.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.CaseClosureReasonId, new { @class = "control-label" })
+                                <div>
+                                    @Html.DropDownListFor(model => model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.CaseClosureReasonId), new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="abuserlist9">
+                            <div class="row nextline">
+                                <br />
+
+                            </div>
+                            <div class="row nextline">
+                                @for (int idx = 0; idx < Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfAbusers.Count; idx++)
+                                {
+                                    <div class="col-lg-2">
+                                        <div style="padding-top: 9px">
+                                            @Html.HiddenFor(model => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfAbusers[idx].Id)
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfAbusers[idx].FirstName)
+
+                                            @Html.DisplayFor(model => Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfAbusers[idx].LastName)
+                                        </div>
+
+                                    </div>
+                                    <div class="Classifications col-lg-3">
+                                        @Html.DropDownListFor(model => model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select classification" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewAssessmentStatus.SelfNeglectNeglectAssessementStatus.ListOfAbusers[idx].ClassificationId), new { @class = "form-control", @disabled = "disabled" })
+                                    </div>
+
+
+                                    <div class="row nextline"></div>
+                                    <br />
+
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+        </div>
+
+        <div class="row nextline"></div>
+
+
+
+
+        <br />
+
+
+        <div class="row nextline">
+            <div class="col-lg-4" data-toggle="modal" data-target="myModal">
+                <b>This client receives services through: </b>
+                <br />
+                @for (int idx = 0; idx < Model.viewAssessmentStatus.ClientReceivesServices.Count; idx++)
+                {
+                    @Html.HiddenFor(x => Model.viewAssessmentStatus.ClientReceivesServices[idx].Id)
+                    @Html.HiddenFor(x => Model.viewAssessmentStatus.ClientReceivesServices[idx].Code)
+                        @Html.CheckBoxFor(x => Model.viewAssessmentStatus.ClientReceivesServices[idx].IsChecked, new { @disabled = "disabled" }) @Html.DisplayFor(x => Model.viewAssessmentStatus.ClientReceivesServices[idx].Description) <br />
+                    @Html.HiddenFor(x => Model.viewAssessmentStatus.ClientReceivesServices[idx].Description)
+                }
+            </div>
+        </div>
+
+        <div class="row nextline"></div>
+
+        <div id="report" class="container" style="border: groove; width: 60%; margin: auto">
+
+            <div class="container">
+
+                <div class="row nextline" style="border-bottom: 2px solid #e5e5e5">
+
+
+                    <h2 style="text-align: center">Report Of Substantiation</h2>
+                    <div class="row nextline"></div>
+
+                    <div class="col-lg-2">
+                        <b>Name:</b>
+                    </div>
+                    <div class="col-lg-2">
+                                @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.FirstName, new { @class = "control-label" })
+
+                                @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.LastName, new { @class = "control-label" })
+
+                    </div>
+                </div>
+                <div class="row nextline" style="border-bottom: 2px solid #e5e5e5">
+                    <div class="col-lg-2">
+                        <b>Address:</b>
+                    </div>
+                    <div class="col-lg-2">
+                                @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.Address.AddressLine1, new { @class = "control-label" })
+                        <br />
+                                @if (Model.viewIntake.viewCaseHeader.Client.Person.Address.AddressLine2 != null)
+                        {
+                                    @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.Address.AddressLine2, new { @class = "control-label" })
+                            <br />
+                        }
+                                @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.Address.City, new { @class = "control-label" })
+                        <br />
+                                @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.Address.Zip5, new { @class = "control-label" })  @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.Address.Zip4, new { @class = "control-label" })
+                    </div>
+                </div>
+                <div class="row nextline" style="border-bottom: 2px solid #e5e5e5">
+                    <div class="col-lg-2">
+                        <b>Phone:</b>
+                    </div>
+                    <div class="col-lg-3">
+                                @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.Phone.PhoneNumber, new { @class = "control-label" })
+                    </div>
+                    <br />
+                </div>
+
+
+                <div class="row nextline" style="border-bottom: 2px solid #e5e5e5">
+                    <div class="col-lg-2">
+                        <b>SSN:</b>
+                    </div>
+                    <div class="col-lg-3">
+                                @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.SSN, new { @class = "control-label" })
+                    </div>
+                </div>
+                <div class="row nextline" style="border-bottom: 2px solid #e5e5e5">
+                    <div class="col-lg-2">
+                        <b>Date of Birth:</b>
+                    </div>
+                    <div class="col-lg-3">
+                                @Html.DisplayFor(model => model.viewIntake.viewCaseHeader.Client.Person.DOB, new { @class = "control-label" })
+                    </div>
+
+                </div>
+
+
+                <div class="row nextline">
+                    <div class="col-lg-4" style="padding-top: 20px">
+                        <b>Choose one of the following:</b>
+                        <br />
+                            @Html.RadioButtonFor(model => model.viewReportSubstantiation.IsMedicaid, "y", new { @disabled = "disabled" }) Medicaid
+                        <br />
+                            @Html.RadioButtonFor(model => model.viewReportSubstantiation.IsMedicaid, "n", new { @disabled = "disabled" }) Non-Medicaid
+                        <br />
+                            @Html.RadioButtonFor(model => model.viewReportSubstantiation.IsMedicaid, "u", new { @disabled = "disabled" }) Unknown
+                    </div>
+                </div>
+
+
+                <div class="row nextline">
+                    <div class="col-lg-4">
+                        @Html.LabelFor(m => m.viewReportSubstantiation.ClassificationId, new { @class = "control-label" })
+                        <div>
+                            @Html.DropDownListFor(model => model.viewReportSubstantiation.ClassificationId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewClassification { Id = 0, Description = " Select Decesion" } }.Union(Model.caselookup.ListofClassifications), "Id", "Description", Model.viewReportSubstantiation.ClassificationId), new { @class = "form-control", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-lg-4" id="unable">
+                        @Html.LabelFor(m => m.viewReportSubstantiation.IfUnableToSubstantiateId, new { @class = "control-label" })
+                        <div>@Html.DropDownListFor(model => model.viewReportSubstantiation.IfUnableToSubstantiateId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsUnable), "Id", "Description", Model.viewReportSubstantiation.IfUnableToSubstantiateId), new { @class = "form-control", @disabled = "disabled" })</div>
+                    </div>
+                </div>
+
+
+
+                <div class="row nextline">
+                    <div class="col-lg-4">
+                        @Html.LabelFor(m => m.IntakeDate, new { @class = "control-label datepicker" })
+
+                                <div>@Html.TextBoxFor(model => model.viewReportSubstantiation.DateOfIntake, new { @class = "form-control", @disabled = "disabled" })</div>
+                    </div>
+
+
+
+                    <div class="col-lg-4">
+                        @Html.LabelFor(m => m.viewReportSubstantiation.DateofSubstantiation, new { @class = "control-label" })
+                                @Html.TextBoxFor(m => m.viewReportSubstantiation.DateofSubstantiation, new { @class = "form-control  datepicker", placeholder = "Date", @disabled = "disabled" })
+                    </div>
+
+                </div>
+
+                <div class="row nextline" style="padding-left: 20px">
+                    <b>Type(s) of Abuse Substantiated: </b>
+                    <br />
+
+                    @for (int idx = 0; idx < Model.viewReportSubstantiation.ListOfAbuseTypes.Count; idx++)
+                    {
+
+
+                        @Html.HiddenFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].Id)
+                        @Html.HiddenFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].Code)
+                        @Html.CheckBoxFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].IsChecked) @Html.DisplayFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].Description)
+                        @Html.HiddenFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].Description)
+
+
+                        <div id="abusers@(idx)" style="border:groove; ">
+                            @for (int i = 0; i < Model.viewReportSubstantiation.ListOfAbuseTypes[idx].ListofAbusers.Count; i++)
+                            {
+
+                                <div class="container" style="background-color: #f2f1d8">
+                                    @Html.HiddenFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].ListofAbusers[i].Id)
+                                        @Html.CheckBoxFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].ListofAbusers[i].IsChecked, new { @disabled = "disabled" }) @Html.DisplayFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].ListofAbusers[i].FirstName)   @Html.DisplayFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].ListofAbusers[i].LastName)<div style="float: right; display: inline; width: 49%;">&nbsp; @Html.DisplayFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].ListofAbusers[i].RelationDescription) </div>
+
+
+
+                                    @Html.HiddenFor(x => x.viewReportSubstantiation.ListOfAbuseTypes[idx].ListofAbusers[i].RelationId)
+
+                                </div>
+
+
+                            }
+                        </div>
+                        <br />
+                    }
+
+
+                </div>
+
+
+
+                <div class="row nextline">
+                    <div class="col-lg-12">
+                        @Html.LabelFor(m => m.viewReportSubstantiation.Summary, new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.viewReportSubstantiation.Summary, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+
+
+
+                <div class="row nextline">
+                    <div class="col-lg-4">
+                        @Html.LabelFor(m => m.viewReportSubstantiation.AgencyName, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.viewReportSubstantiation.AgencyName, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+
+                    <div class="col-lg-4">
+                        @Html.LabelFor(m => m.viewReportSubstantiation.CompletedBy, new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.viewReportSubstantiation.CompletedBy, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+
+                    <div class="col-lg-4">
+
+                        @Html.LabelFor(m => m.viewReportSubstantiation.Email, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.viewReportSubstantiation.Email, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+        <div class="row nextline"></div>
+        <div class="container">
+        <div class="row nextline">
+            <div class="col-lg-3">
+                @Html.LabelFor(m => m.viewAssessmentStatus.CaseClosureReasonId, new { @class = "control-label" })
+                    @Html.DropDownListFor(model => Model.viewAssessmentStatus.CaseClosureReasonId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewCaseClosureReason { Id = 0, Description = " Select Reason" } }.Union(Model.caselookup.ListOfCaeClosureReasons_IsAble), "Id", "Description", Model.viewAssessmentStatus.CaseClosureReasonId), new { @class = "form-control", @disabled = "disabled" })
+            </div>
+        </div>
+        <div class="row nextline"></div>
+        <div class="row nextline">
+
+            <div class="col-lg-5">
+                @Html.LabelFor(m => m.viewAssessmentStatus.EsignatureOfCaseWorker, new { @class = "control-label" })
+
+
+            </div>
+            <div class="col-lg-3">
+                @Html.TextBoxFor(model => model.viewAssessmentStatus.EsignatureOfCaseWorker, new { @class = "form-control", @disabled = "disabled" })
+            </div>
+            <div class="col-lg-3">
+
+                @Html.TextBoxFor(model => model.viewAssessmentStatus.DateOfESignatureByCaseWorker, new { @class = "form-control  DateOfESignatureByCaseWorker", placeholder = "Date", @disabled = "disabled" })
+
+            </div>
+
+
+        </div>
+            <br />
+            <div class="row nextline"></div>
+            <div class="row nextline"></div>
+        <div class="row ">
+            <div class="col-lg-12">
+                <div id="SupervisorError"></div>
+                @Html.LabelFor(m => m.viewAssessmentStatus.EsignatureOfSupervisor, new { @class = "control-label" })
+            </div>
+        </div>
+            <div class="row nextline ">
+
+            <div class="col-lg-4">
+                <div id="SupervisorSignError" class="@errorclass"></div>
+                @Html.TextBoxFor(model => model.viewAssessmentStatus.EsignatureOfSupervisor, new { @class = "form-control", placeholder = "Sign" })
+            </div>
+            <div class="col-lg-4">
+                <div id="SupervisorDateError" class="@errorclass"></div>
+                    @Html.TextBoxFor(model => model.viewAssessmentStatus.DateOfESignatureBySupervisor, new { @class = "form-control  datepicker", placeholder = "Date" })
+
+            </div>
+        </div>
+        </div>
+         <div class="row nextline"></div>
+    </div>
+</div>
+ }

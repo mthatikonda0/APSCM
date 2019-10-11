@@ -1,0 +1,133 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewCaseHeader
+
+@*<script src="~/Scripts/ApplicationScripts/CMS/Intake/ListOIRA.js"></script>*@
+<script>
+    $(document).ready(function () {
+
+        $('#myRecordReleaseModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var Id = button.data('transfer1')
+            var IntakeId = button.data('transfer2')
+            var ClientId = button.data('transfer3')
+            var modal = $(this)
+            //modal.find('.modal-title').text('Intake ' + Id)
+            modal.find('.modal-body #id').val(Id)
+            modal.find('.modal-body #intakeid').val(IntakeId)
+            modal.find('.modal-body #clientid').val(ClientId)
+            //$("input[Id=hidden_field_id]").val(Id)
+
+        })
+
+    });
+</script>
+
+
+<div class="container">
+
+    <p>
+
+        <a id="newRecordRelease" class="btn btn-success btn-outline create" data-toggle="modal" data-target="#myRecordReleaseModal">
+            <span class="glyphicon glyphicon-plus"></span><span style="margin-left: 5px;">
+                <text>New Record Release</text>
+            </span>
+        </a>
+
+        @*@if (Model.ListRecordRelease != null && Model.ListRecordRelease.Any())
+        {
+            <table class="table table-striped table-hover ">
+                <caption style="display: none">List of Record Releases</caption>
+                <thead>
+                    <tr>
+                        <th class="col-md-1">&nbsp;</th>
+                        <th class="col-lg-1">From Intake</th>
+                        <th class="col-lg-1">Intake Date</th>
+                        <th class="col-lg-1">Date of Request</th>
+                        <th class="col-lg-1">Request Granted</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.ListRecordRelease)
+                    {
+
+                        <tr class="">
+                            <td>
+
+                                <div class="btn-group">
+                                    <a rel="tooltip" class="btn btn-default btn-xs" title="Edit Record Release" href='@Url.Action("EditRecordRelease", "Case", new { Id = Model.Id, CaseheaderId = Model.CaseheaderId, IntakeId = @item.IntakeId, recordreleaseId = @item.Id })'><span class="glyphicon glyphicon-edit"></span></a>
+                                    <a rel="tooltip" class="btn btn-default btn-sm" title="View Intake " href='@Url.Action("ViewIntake" ,"Intake", new { ClientId = Model.Id, Id = item.Id})'><span class="glyphicon glyphicon-eye-open"></span></a>
+                                    <a rel="tooltip" class="btn btn-default btn-sm" title="Print Intake " href='@Url.Action("PrintIntake" ,"Intake", new { ClientId = Model.Id, Id = item.Id})'><span class="glyphicon glyphicon-print"></span></a>
+                             
+                                   </div>
+
+                            </td>
+                            <td>@Html.DisplayFor(modelitem => item.IntakeId)</td>
+                            <td>@Html.DisplayFor(modelItem => item.DateIntake)</td>
+                            <td>@Html.DisplayFor(modelItem => item.DateRequestReceived)</td>
+                            <td>@Html.DisplayFor(modelItem => item.DateRecordReleaseRequestGranted)</td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </p>
+
+
+    <div class="modal fade" id="myRecordReleaseModal" tabindex="-1" role="dialog" aria-labelledby="RecordReleaseModalLabel">
+        <div class="modal-dialog " role="document" style="padding-top: 300px">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="RecordReleaseModalLabel">Select Intake</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="selectintake">
+                        <div class="row">
+                            @Html.HiddenFor(model => model.Id, new { @class = "form-control disabled", clientid = "clientid" })
+                            @Html.HiddenFor(model => model.viewabuserinfo.Id, new { @class = "form-control disabled", id = "id" })
+                            @Html.HiddenFor(model => model.viewabuserinfo.IntakeId, new { @class = "form-control disabled", intakeid = "intakeid" })
+                        </div>
+                        @if (Model.listofintakes != null && Model.listofintakes.Any())
+                        {
+                            <table class="table table-striped table-hover ">
+                                <caption style="display: none">List of Intakes</caption>
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-1">Id</th>
+                                        <th class="col-md-1">Date Intake</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model.listofintakes)
+                                    {
+
+                                        <tr class="">
+                                            <td><a href='@Url.Action("EditRecordRelease", "Case", new { Id = Model.Id, CaseheaderId = Model.CaseheaderId, IntakeId = @item.Id, recordreleaseId = 0 })'>@Html.DisplayFor(modelItem => item.Id)</a></td>
+                                            <td><a href='@Url.Action("EditRecordRelease", "Case", new { Id = Model.Id, CaseheaderId = Model.CaseheaderId, IntakeId = @item.Id, recordreleaseId = 0 })'>@Html.DisplayFor(modelItem => item.DateIntake)</a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+
+ 
+
+</div>
+
+
+
+

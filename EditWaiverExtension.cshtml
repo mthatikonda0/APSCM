@@ -1,0 +1,463 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewWaiverExtension
+@{
+    Layout = null;
+}
+
+@using (Html.BeginForm("SaveWaiverExtension", "Case", FormMethod.Post))
+{
+
+
+    <div id="WaiverExtensionform" class="container">
+
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.IntakeId)
+        @Html.HiddenFor(model => model.CaseheaderId)
+        @Html.HiddenFor(model => model.viewIntake.viewCaseHeader.Client.Person.FirstName)
+        @Html.HiddenFor(model => model.viewIntake.viewCaseHeader.Client.Person.LastName)
+        @Html.HiddenFor(model => model.viewIntake.mode)
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <span class="titletextbegin">
+                        <span class="glyphicon glyphicon-edit"></span><span class="textspace">
+                            <text>Waivers Extension</text>
+                        </span>
+                    </span>
+                </h2>
+            </div>
+
+            <div class="panel-body">
+                <div class="row nextline">
+                    <div class="col-lg-12 pull-right">
+                        <div class="btn-group pull-right" style="margin-right: 10px;">
+                            @if (!(User.IsInRole("CMS_IDOAStaff") || User.IsInRole("CMS_RAAAdmin")))
+                            {
+                                <button id="Submit" rel="tooltip" type="button" class="btn btn-success btn-md" title=" Submit ">Submit</button>
+                                <button id="supervisorapprove" rel="tooltip" type="button" class="btn btn-primary btn-md btn-outline" title=" Approve ">Approve</button>
+                                @*<a id="cancel" rel="tooltip" class="btn btn-default btn-md" title=" Cancel " href='@Url.Action("ManageCase", "Case", new { CaseheaderId = @Model.CaseheaderId})'>Cancel</a>*@
+
+                            }
+                            else
+                            {
+                                <button id="Approve" rel="tooltip" type="button" class="btn btn-primary btn-md btn-outline" title=" Approve ">Approve</button>
+                                @*<a id="cancel" rel="tooltip" class="btn btn-default btn-md" title=" Cancel " href='@Url.Action("ManageCase", "Case", new { CaseheaderId = @Model.CaseheaderId})'>Cancel</a>*@
+
+                            }
+
+                            @if (Model.viewIntake.mode == "ManageCase")
+                            {
+
+                                <a id="cancel" rel="tooltip" class="btn btn-default btn-md noprint" title=" Cancel " href="@Url.Action("ManageCase", "Case", new{ CaseheaderId = Model.CaseheaderId})">Cancel</a>
+                            }
+                            @if (Model.viewIntake.mode == "Waiver")
+                            {
+
+                                <a id="cancel" rel="tooltip" class="btn btn-default btn-md noprint" title=" Cancel " href="@Url.Action("ListAllWaiverExtensions", "Case")">Cancel</a>
+
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row nextline"></div>
+                <div class="">
+                    @Html.Partial("_ViewClientCMS", Model.viewIntake.viewCaseHeader.Client)
+                </div>
+                <div class="row nextline"></div>
+                <div class="well container">
+                    <div class="col-md-6">
+                        @*@Html.RadioButtonFor(model => model.WaiverType, "Administrative", new { @class = "", @id = "Administrative" }) Administrative Waiver*@
+                        @Html.RadioButtonFor(model => model.WaiverType, "EIS", new { @class = "", @id = "EIS" }) EIS Waiver
+                        @Html.RadioButtonFor(model => model.WaiverType, "AssessmentDelay", new { @class = "", @id = "AssessmentDelay" }) Assessment Delay
+                    </div>
+                </div>
+                <div class=@(@User.IsInRole("CMS_RAAAdmin") || @User.IsInRole("CMS_IDOAStaff") ? "disablediv" : "enablediv")>
+                    <div id="AdministrativeWaiver" class="container">
+
+                        <div class="alert alert-info">
+                            <h4 class="alert-heading">Note</h4>
+                            <p>When determined necessary the APS PA can request an administrative waiver to allow the follow-up services to continue for up to an additional 12 months.</p>
+                        </div>
+
+                    </div>
+                    <div id="EISWaiver" class="container">
+                        <div class="alert alert-info">
+                            <h4 class="alert-heading">Note</h4>
+                            <p>Early Intervention Services are services purchased by the APS PA for specified temporary short term or emergency services needed to secure the health and safety of an eligible client when existing resources are unavailable.</p>
+                        </div>
+                        <div class="row nextline">
+                            <div class="col-lg-3">
+                                @Html.LabelFor(model => model.ExactAmount)<br />
+
+                                @Html.CheckBoxFor(model => model.IsGreaterThan1000) @Html.LabelFor(model => model.IsGreaterThan1000)<br />
+                                @Html.CheckBoxFor(model => model.IsGreaterThan2000) @Html.LabelFor(model => model.IsGreaterThan2000)<br />
+
+                                @Html.TextBoxFor(model => model.ExactAmount, new { @class = "form-control", @placeholder = "Enter Amount", @style = "width:50%" })
+                            </div>
+                            <div class="col-lg-2">
+                                @Html.LabelFor(model => model.DateEISWaiver)
+                                @Html.TextBoxFor(model => model.DateEISWaiver, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", placeholder = "Date" })
+                            </div>
+                            <div class="col-lg-4 servicetypes">
+                                @Html.LabelFor(model => model.ListService)<br />
+                                @for (int i = 0; i < Model.ListService.Count; i++)
+                                {
+                                    @Html.HiddenFor(model => model.ListService[i].Id)
+                                    @Html.CheckBoxFor(model => model.ListService[i].IsChecked)<span class="textspace"></span>    <b>@Html.DisplayFor(model => model.ListService[i].Description)</b><br />
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="AssessmentDelayWaiver" class="container">
+                        <div class="alert alert-info">
+                            <h4 class="alert-heading">Note</h4>
+                            <p>Below confirms the caseworker request and discussion with the supervisor of a delay for the assessment and report classification up to an additional 15 days. This exception does not affect the required timeframe of 90 days for casework (from date of Intake)</p>
+                        </div>
+
+                        <div id="approveassessmentdelay">
+                            <p>Assessment and Report Classification Delay up to an additional 15 days requested by caseworker</p>
+
+                            @Html.LabelFor(model => model.ListAssessmentDelayReason)<br />
+                            @for (int i = 0; i < Model.ListAssessmentDelayReason.Count; i++)
+                            {
+                                @Html.HiddenFor(model => model.ListAssessmentDelayReason[i].Id)
+                                @Html.CheckBoxFor(model => model.ListAssessmentDelayReason[i].IsChecked)    <b>@Html.DisplayFor(model => model.ListAssessmentDelayReason[i].Description)</b><br />
+                            }
+
+                            @Html.CheckBoxFor(model => model.DeniedAssessmentDelay) <b>@Html.LabelFor(model => model.DeniedAssessmentDelay)</b>
+                        </div>
+                    </div>
+
+                    <div class="row nextline"></div>
+                    <div id="justificationdiv" class="well container">
+                        @Html.LabelFor(model => model.Justification)
+                        @Html.TextAreaFor(model => model.Justification, new { @class = "form-control", @rows = 10 })
+                    </div>
+                </div>
+
+                <div class="container" id="approvals">
+                    <div id="RAADecision" class=@(@User.IsInRole("CMS_RAAAdmin") ? "enablediv" : "disablediv")>
+                        <b>RAA Decision</b>
+                        <div class="row nextline">
+                            <div class="col-lg-10">
+                                @Html.RadioButtonFor(model => model.RAADecision, "approved", new { @class = "", @id = "RAAApproved" }) Approved
+                                @Html.RadioButtonFor(model => model.RAADecision, "denied", new { @class = "", @id = "RAADenied" }) Denied
+                            </div>
+                        </div>
+                        <div class="row nextline">
+                            <div class="col-lg-10">
+                                @Html.LabelFor(model => model.RAADecisionNotes)
+                                @Html.TextAreaFor(model => model.RAADecisionNotes, new { @class = "form-control", @rows = 10 })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row nextline"></div>
+                    <div id="IDoADecision" class=@(@User.IsInRole("CMS_IDOAStaff") ? "enablediv" : "disablediv")>
+                        <b>IDoA Decision</b>
+                        <div class="row nextline">
+                            <div class="col-lg-10">
+                                @Html.RadioButtonFor(model => model.IDoADecision, "approved", new { @class = "", @id = "IDoAApproved" }) Approved
+                                @Html.RadioButtonFor(model => model.IDoADecision, "denied", new { @class = "", @id = "IDoADenied" }) Denied
+                            </div>
+                        </div>
+                        <div class="row nextline">
+                            <div class="col-lg-10">
+                                @Html.LabelFor(model => model.IDoADecisionNotes)
+                                @Html.TextAreaFor(model => model.IDoADecisionNotes, new { @class = "form-control", @rows = 10 })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    $(document).ready(function () {
+
+        $('.disablediv').find("select, input, textarea").attr("disabled", "disabled")
+        $('#Submit').hide();
+        $('#supervisorapprove').hide();
+        $('#AdministrativeWaiver').hide();
+        $('#EISWaiver').hide();
+        $('#AssessmentDelayWaiver').hide();
+        $('#justificationdiv').hide();
+        //$('#approvals').hide();
+        $('.datepicker').datepicker({
+            format: 'mm-dd-yyyy',
+            changeMonth: true,
+            changeYear: true,
+            maxDate: new Date
+        });
+
+        //if ($("#Administrative").is(':checked')) {
+        //    $('#AdministrativeWaiver').show();
+        //    $('#justificationdiv').show();
+        //    $('#RAADecision').hide();
+        //    $('#IDoADecision').show();
+        //}
+        //else
+        if ($("#EIS").is(':checked')) {
+            $('#EISWaiver').show();
+            $('#justificationdiv').show();
+            $('#RAADecision').show();
+        }
+        else if ($("#AssessmentDelay").is(':checked')) {
+            $('#AssessmentDelayWaiver').show();
+            $('#justificationdiv').show();
+            $('#approvals').hide();
+        }
+        else {
+            //$('#AdministrativeWaiver').hide();
+            $('#EISWaiver').hide();
+            $('#AssessmentDelayWaiver').hide();
+            $('#justificationdiv').hide();
+            $('#RAADecision').hide();
+            $('#approvals').hide();
+
+        }
+
+
+        //$('#Administrative').on('click', function (e) {
+        //    if (e.target.checked) {
+        //        $('#AdministrativeWaiver').show();
+        //        $('#justificationdiv').show();
+        //        $('#EISWaiver').hide();
+        //        $('#AssessmentDelayWaiver').hide();
+        //        $('#Approve').hide();
+        //        $('#Submit').show();
+        //        //$('#RAADecision').hide();
+        //        $('#EISWaiver').find('[type=checkbox]').prop("checked", false)
+        //        $('#EISWaiver').find('[type=text]').val("")
+        //        $('#AssessmentDelayWaiver').find('[type=checkbox]').prop("checked", false)
+        //        $('#Justification').find('[type=text]').val("")
+        //        $('#approvals').hide();
+        //    }
+        //});
+
+        $('#EIS').on('click', function (e) {
+            if (e.target.checked) {
+                $('#EISWaiver').show();
+                $('#justificationdiv').show();
+                $('#AdministrativeWaiver').hide();
+                $('#AssessmentDelayWaiver').hide();
+                $('#Approve').hide();
+                $('#Submit').show();
+                //$('#RAADecision').show();
+                $('#AssessmentDelayWaiver').find('[type=checkbox]').prop("checked", false)
+                $('#Justification').find('[type=text]').val("")
+                $('#approvals').hide();
+            }
+        });
+
+        $('#AssessmentDelay').on('click', function (e) {
+            if (e.target.checked) {
+                $('#AssessmentDelayWaiver').show();
+                $('#justificationdiv').show();
+                $('#supervisorapprove').show();
+                $('#EISWaiver').hide();
+                $('#AdministrativeWaiver').hide();
+                $('#approvals').hide();
+                $('#Submit').hide();
+                $('#EISWaiver').find('[type=checkbox]').prop("checked", false)
+                $('#EISWaiver').find('[type=text]').val("")
+                $('#Justification').find('[type=text]').val("")
+                $('#approvals').hide();
+            }
+        });
+
+        $('#DeniedAssessmentDelay').on('click', function (e) {
+            if (e.target.checked) {
+                $(this).parent('div').find('[type=checkbox]').not(this).prop("checked", false)
+            }
+        });
+
+        $('select option:selected').each(function () {
+            if ($(this).val() != 0) {
+                $(this).closest('.has-error').removeClass("has-error");
+            }
+        });
+        $('input').each(function () {
+            if ($(this).val() != '') {
+                $(this).closest('.has-error').removeClass("has-error");
+            }
+        });
+
+        $('textarea').each(function () {
+            if ($(this).val() != '') {
+                $(this).closest('.has-error').removeClass("has-error");
+            }
+        });
+
+        $('input').on("change paste keyup", function () {
+            $(this).closest('.has-error').removeClass("has-error");
+            // $(this).css('border-color', '#000');
+            //$(this).closest('div').addClass("form-control");
+        });
+
+        $('select').on("change", function () {
+            $(this).closest('.has-error').removeClass("has-error");
+            //$(this).closest('div').addClass("form-control");
+        });
+
+        $('textarea').on("change paste keyup", function () {
+            $(this).closest('.has-error').removeClass("has-error");
+            $(this).css('border-color', '#000');
+
+            //$(this).closest('div').addClass("form-control");
+        });
+        $("#Submit").click(function (e) {
+            e.preventDefault();
+            var count = 0;
+            if ($('#IsGreaterThan1000').is(":checked") || $('#IsGreaterThan2000').is(":checked")) {
+
+            }
+            else {
+                $('#IsGreaterThan1000').parent('div').find('label').css('color', '#a94442');
+                count = 1;
+            }
+            if ($('#DateEISWaiver').val() == "") {
+                $('#DateEISWaiver').parent('div').addClass("has-error");
+                count = 1;
+            }
+            if ($('#ExactAmount').val() == "") {
+                $('#ExactAmount').parent('div').addClass("has-error");
+                count = 1;
+            }
+            var servicecount = 0;
+            $(".servicetypes [type = 'checkbox']").each(function () {
+                if ($(this).prop('checked') == true) {
+                    //count = 1;
+                    servicecount = 1;
+                }
+                else {
+                }
+
+            });
+
+            if (servicecount == 0) {
+                $(".servicetypes b").css('color', '#a94442');
+                servicecount = 1;
+                count = 1;
+
+            }
+            if ($('#Justification').val() == "") {
+                $('#Justification').parent('div').addClass("has-error");
+                count = 1;
+            }
+
+
+            if (count != 0) {
+                console.log('not submitted')
+            }
+            else {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SubmitWaiverExtension", "Case")',
+                    dataType: "json",
+                    data: $('#WaiverExtensionform').find('select, textarea, input').serialize(),
+                    success: function (data) {
+                        console.log(data);
+                        $('#Id').val(data.Id);
+                        $("#Issubmitasp").val(false);
+                        notification("<strong>Success</strong> Submited!     Wait for the Supervisor Approval");
+                        window.location.href = data.url;
+                    }
+
+                });
+            }
+
+        });
+
+
+
+        $("#supervisorapprove").click(function (e) {
+            e.preventDefault();
+            $("#WaiverExtensionform").find("select, input, textarea").removeAttr("disabled")
+            var allcount = 0;
+            var delaycount = 0;
+            $("#approveassessmentdelay [type = 'checkbox']").each(function () {
+                if ($(this).prop('checked') == true) {
+                    delaycount = 1;
+                }
+                else {
+                }
+
+            });
+
+            if (delaycount == 0) {
+                $("#approveassessmentdelay b").css('color', '#a94442');
+                delaycount = 1;
+                allcount = 1;
+
+            }
+            if ($('#Justification').val() == "") {
+                $('#Justification').parent('div').addClass("has-error");
+                allcount = 1;
+            }
+            if (allcount != 0) {
+                console.log('not submitted')
+            }
+            else {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ApproveWaiverExtension", "Case")',
+                    dataType: "json",
+                    data: $('#WaiverExtensionform').find('select, textarea, input').serialize(),
+                    success: function (data) {
+                        console.log(data);
+                        $('#Id').val(data.Id);
+                        $("#IsApproveasp").val(false);
+                        notification("<strong>Success</strong> Approved!!");
+                        window.location.href = data.url;
+                    }
+
+                });
+            }
+
+        });
+
+        $("#Approve").click(function (e) {
+            e.preventDefault();
+            $("#WaiverExtensionform").find("select, input, textarea").removeAttr("disabled")
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ApproveWaiverExtension", "Case")',
+                dataType: "json",
+                data: $('#WaiverExtensionform').find('select, textarea, input').serialize(),
+                success: function (data) {
+                    console.log(data);
+                    $('#Id').val(data.Id);
+                    $("#IsApproveasp").val(false);
+                    notification("<strong>Success</strong> Approved!!");
+                    window.location.href = data.url;
+                }
+
+            });
+
+        });
+    });
+
+    function notification(message) {
+        var notify = $.notify({ message: '<strong>Saving</strong> ...' }, {
+            allow_dismiss: false,
+            offset: {
+                X: 0,
+                y: 180
+            },
+            z_index: 10000000,
+            showProgressbar: true,
+            placement: {
+                from: "top",
+                align: "center"
+            },
+            delay: 100
+        });
+
+
+        setTimeout(function () {
+            notify.update({ 'type': 'success', 'message': message, 'progress': 10 });
+        }, 1800);
+    };
+</script>

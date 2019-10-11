@@ -1,0 +1,576 @@
+﻿@model AGE.CMS.Data.Models.CaseRecording.CaseRecordingModel
+
+@{
+    ViewBag.Title = "Edit Case Recording";
+    var fiscalperiodddl = (List<SelectListItem>)ViewBag.FiscalPeriodddl;  
+}
+
+<script src="~/Assets/Basic/Scripts/CMS/Case/EditCaseRecording.js"></script>
+<script>
+    $(document).ready(function () {
+
+        //Warn user about autosave every 15 minutes
+        noti("This form will save every 15 minutes and reload.");
+
+        //after 13 minutes warn user of impending auto save
+        setTimeout(function () {
+            noti('The form will auto save in two minutes.');
+        }, 780000)
+
+        //after 14 minutes warn user of impending auto save
+        setTimeout(function () {
+            noti('The form will auto save one minute.');
+        }, 840000);
+
+        //At 15 minutes save the case recordings
+        setTimeout(function () {
+            saveNote();
+        }, 900000)
+
+        //Old auto save wouldn't always work
+        //var hasTriggedSave = false;
+        
+        //$(document).on('focusout','.noteText', function(){
+        //    if (hasTriggedSave == false) {
+
+        //        hasTriggedSave = true;
+
+        //        setInterval(function (e) {
+
+        //            noti('You have not saved for 13 minutes. If you do not save in the next two minutes, the form will auto save and the page will refresh.')
+
+        //        }, 780000)
+
+
+        //        setInterval(function (e) {
+
+        //            noti('You have not saved for 14 minutes. If you do not save in the next minute, the form will auto save and the page will refresh.')
+
+        //        }, 840000)
+
+        //        setInterval(function (e) {
+
+        //            noti('Form is autosaving.')
+
+
+        //            saveNote();
+                 
+
+        //        }, 900000)
+        //    }
+        //})
+
+
+
+        ////$("input").change(function () {
+        //$(document).on('change', 'input', function(){
+
+        //    if (hasTriggedSave == false) {
+
+        //        hasTriggedSave = true;
+
+        //        setInterval(function (e) {
+
+        //            noti('You have not saved for 13 minutes. If you do not save in the next two minutes, the form will auto save and the page will refresh.')
+
+        //        }, 780000)
+
+
+        //        setInterval(function (e) {
+
+        //            noti('You have not saved for 14 minutes. If you do not save in the next minute, the form will auto save and the page will refresh.')
+
+        //        }, 840000)
+
+        //        setInterval(function (e) {
+
+        //            noti('Form is autosaving.')
+
+        //            saveNote();
+                
+
+        //        }, 900000)
+        //    }
+
+        //});
+
+
+
+
+
+
+
+
+            
+
+        
+
+
+
+        $(".closealert").hide();
+        $(".closealertheading").hide();
+
+        $("#casedetails_0").find('button').hide();
+        $("select").each(function () {
+            if ($(this).val() == "Closure At Assessement") {
+                $(this).parent().parent().siblings().find("eb").show();
+                $(this).parent().parent().parent().parent().parent().siblings().find("eb").show()
+            }
+        });
+
+        $("select").on('change', function () {
+            if ($(this).val() == "Closure At Assessement") {
+                $(this).parent().parent().siblings().find("eb").show();
+                $(this).parent().parent().parent().parent().parent().siblings().find("eb").show()
+            }
+            else {
+                $(this).parent().parent().siblings().find("eb").hide();
+                $(this).parent().parent().parent().parent().parent().siblings().find("eb").hide()
+            }
+        });
+
+        $(document).change(function () {
+
+            $("select").on('click', function () {
+                if ($(this).val() == "Closure At Assessement") {
+                    $(this).parent().parent().siblings().find("eb").show();
+                    $(this).parent().parent().parent().parent().parent().siblings().find("eb").show()
+                }
+                else {
+                    $(this).parent().parent().siblings().find("eb").hide();
+                    $(this).parent().parent().parent().parent().parent().siblings().find("eb").hide()
+                }
+            });
+
+
+        });
+
+        $("select").each(function () {
+            if ($(this).val() == "Closure After Assessement") {
+                $(this).parent().parent().siblings().find("er").show();
+                $(this).parent().parent().parent().parent().parent().siblings().find("er").show()
+            }
+        });
+
+        $("select").on('change', function () {
+            if ($(this).val() == "Closure After Assessement") {
+                $(this).parent().parent().siblings().find("er").show();
+                $(this).parent().parent().parent().parent().parent().siblings().find("er").show()
+            }
+            else {
+                $(this).parent().parent().siblings().find("er").hide();
+                $(this).parent().parent().parent().parent().parent().siblings().find("er").hide()
+            }
+        });
+
+        $(document).change(function () {
+
+            $("select").on('click', function () {
+                if ($(this).val() == "Closure After Assessement") {
+                    $(this).parent().parent().siblings().find("er").show();
+                    $(this).parent().parent().parent().parent().parent().siblings().find("er").show()
+                }
+                else {
+                    $(this).parent().parent().siblings().find("er").hide();
+                    $(this).parent().parent().parent().parent().parent().siblings().find("er").hide()
+                }
+            });
+
+
+        });
+
+        //window.setInterval(function () {
+        //    bootbox.confirm({
+        //        title: "Server about to time out",
+        //        message: "Please save your progress before you continue",
+        //        buttons: {
+        //            cancel: {
+        //                label: '<i class="fa fa-times"></i> Cancel'
+        //            },
+        //            confirm: {
+        //                label: '<i class="fa fa-check"></i> Save'
+        //            }
+        //        },
+        //        callback: function (result) {
+        //            if (result) {
+        //                $("#MakeSessionLive").val(true);
+        //                $('form').submit();
+        //            }
+        //        }
+
+
+        //    })
+
+        //}, 7* 60 * 1000);
+
+
+        //$(document).on("shown.bs.modal", function (event) {
+        //    window.setInterval(function () {
+        //        $("#MakeSessionLive").val(true);
+        //        $('form').submit();
+        //    }, 1.5 * 60 * 1000);
+        //});
+
+
+
+
+        $("#savecaserecordingform").click(function (e) {
+            //Old way, no longer sending in the background
+            //e.preventDefault();
+            //$('#MakeSessionLive').val(true);
+            //$('form').submit();
+
+            saveNote();
+          
+        });
+    });
+
+
+    function saveNote() {
+        idValue = $('#Id').val();
+
+        if (idValue == 0)
+        {
+            var CRId;
+            var CHId; 
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("AjaxSaveCaseRecording", "Case")',
+                dataType: "json",
+                data: $('#CaseRecordingForm').find('select, textarea, input').serialize(),
+                success: function (data) {
+
+                    CRId = data[0];
+                    CHId = data[1];
+
+                    console.log(data);
+
+                    //Set the URL to the new Caserecording ID and the CaseHeaderID
+                    var redirectUrl = "@Url.Action("EditCaseRecording", "Case", new {Id = "__CRId__", CaseheaderId = "__CHId__"})".replace('__CRId__', CRId).replace('__CHId__', CHId);
+                    //Replace the current URL *note* - Replace() replaces the URL in the browser history so they cannot go back to a blank recording
+                    window.location.replace(redirectUrl)
+
+                    
+                }
+
+
+            });
+        }
+        else
+        {
+
+        
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("AjaxSaveCaseRecording", "Case")',
+                dataType: "json",
+                data: $('#CaseRecordingForm').find('select, textarea, input').serialize(),
+                success: function (data) {
+                    //true sets the forceGet parameter so the page is reloaded from the server
+                    window.location.reload(true);
+                }
+
+
+            });
+        }
+
+
+
+
+    }
+</script>
+@if (User.IsInRole("CMS_IDOAStaff"))
+{
+    <script>
+
+        if ($("#Id").val() == 0) {
+            $(".casedetailspanelbody").slice(1).removeClass();
+        }
+        else {
+            $(".casedetailspanelbody").removeClass();
+
+        }
+
+
+    </script>
+}
+@using (Html.BeginForm("SaveCaseRecording", "Case", FormMethod.Post, new { id = "CaseRecordingForm" }))
+{
+
+    @Html.ValidationSummary(true)
+    <div id="alldiv" class="container">
+
+        @if (ViewBag.Submitted && ViewBag.Success)
+        {
+
+
+            <div class="modal fade" role="dialog" id="showsuccess">
+                <div class="modal-dialog" style="width: 20%; text-align: center; margin-top: 20%;">
+                    <div class="modal-content">
+                        <div class="modal-body center @(ViewBag.Success ? "alert alert-success" : "alert alert-danger")" style="margin-bottom:0px">
+                            @if (ViewBag.Success)
+                            {
+                                <span style="font-size: 2em">Successfully Saved</span>
+                            }
+                            else
+                            {
+                                <span style="font-size: 2em">Something went wrong, Please contact administrator.</span>
+                            }
+                            <br />
+                            <button type="button" class="btn btn-default" id="close">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="container">
+            <div class="panel panel-warning">
+
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        <span class="titletextbegin">
+                            <span class="glyphicon glyphicon-edit"></span><span class="textspace">
+                                <text>Case Recording</text>
+                            </span>
+                        </span>
+                    </h2>
+                </div>
+                <br />
+
+                <div class="form-group">
+                    <div class="row nextline">
+                        <div class="col-lg-12 pull-right">
+                            <div class="btn-group pull-right" style="margin-right: 10px;">
+                                <button id="savecaserecordingform" rel="tooltip" type="button" class="btn btn-success btn-md saving" title=" Save">Save</button>
+                                <button id="saveAsDraft" rel="tooltip" type="submit" class="btn btn-success btn-md btn-outline saving" title=" Save & Close ">Save & Close</button>
+                                <a id="cancelCR" rel="tooltip" class="btn btn-default btn-md" title=" Cancel " href='@Url.Action("ManageCase", "Case", new { CaseheaderId = Model.CaseheaderId})'>Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="panel-body">
+                    @Html.HiddenFor(model => model.Id)
+                    @Html.HiddenFor(model => model.CaseheaderId)
+                    @Html.HiddenFor(model => model.isAjax)
+                    @Html.HiddenFor(model => model.MakeSessionLive)
+
+
+                    <div class="alert alert-info">
+                        <strong>Info!</strong> The Case Recording form should be used to provide a chronological record of all activity associated with the assessment, casework, follow-up and case closure completed by the caseworker.<br /> All verbal client consents should be clearly documented.
+                    </div>
+                    <div class="row nextline" style="margin: 1px">
+                        @Html.Partial("_ViewClientCMS", Model.viewCaseHeader.Client)
+                    </div>
+
+                    <div class="well container">
+                        <div class=" form-horizontal">
+
+                            <div id="ListCaseRecordings" class=" well form-group" style="width: 99%; background-color: #fff; margin-left: 1%!important">
+                                <fieldset>
+                                    <legend>List Of Case Recording Entries</legend>
+
+                                    <div style="overflow-y: scroll; max-height: 200px; overflow-x: hidden; min-height: 0px">
+
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <b>Date of Activity(MM/DD/YYYY)</b>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <b>Type</b>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <b>User Created</b>
+                                            </div>
+
+                                        </div>
+
+                                        @for (int i = 0; i < Model.helper.DraftCaseRecordings.Count; i++)
+                                        {
+                                            if (Model.helper.DraftCaseRecordings[i].Id > 0)
+                                            {
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <a href="@("#casedetailspanelheading_" + i)">@Html.DisplayFor(model => model.helper.DraftCaseRecordings[i].Date, "{0:MM/dd/yyyy}", new { @class = "form-control" })</a>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        @Model.helper.DraftCaseRecordings[i].Type
+                                                    </div>
+                                                    <div class="col-md-3 byname">
+                                                        <r class="bynamecreate">@Model.helper.DraftCaseRecordings[i].CreatedBy </r>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="row nextline">
+                                <div class="pull-right">
+
+                                    <button type="button" id="AddRecord" value=" plus" class="btn btn-primary zero-Zindex addgoalbutton" data-toggle="tooltip" title="Add">
+                                        <span class="glyphicon glyphicon-plus" style="color: white"></span>Add New Entry
+                                    </button>
+                                </div>
+
+                            </div>
+                            <br />
+                            <div class=" well form-group" style="width: 99%; background-color: #fff; margin-left: 1%!important">
+                                <fieldset id="DetailCaseRecordings">
+                                    <legend>Detail Case Recordings</legend>
+
+
+                                    @for (int i = 0; i < Model.helper.DraftCaseRecordings.Count; i++)
+                                    {
+                                        <div id="@("casedetails_" + i)" class="casedetails panel panel-default">
+
+                                            <div id="@("casedetailspanelheading_" + i)" class="panel-heading casedetailspanelheading " style="cursor:pointer">
+                                                Date:-
+                                                <b>  @Html.DisplayFor(model => model.helper.DraftCaseRecordings[i].Date, "{0:MM/dd/yyyy}", new { @class = "form-control validate" })</b>&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                                <b>     @Html.DisplayFor(model => model.helper.DraftCaseRecordings[i].IsLateEntry, new { @class = "form-control" })  Late Entry</b>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                Type:-
+                                                <b>   @Html.DisplayFor(model => model.helper.DraftCaseRecordings[i].Type, new { @class = "form-control" })</b>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                Time:-
+                                                <b>     @Html.DisplayFor(model => model.helper.DraftCaseRecordings[i].Time, new { @class = "form-control" })</b>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                Travel Time:-
+                                                <b>     @Html.DisplayFor(model => model.helper.DraftCaseRecordings[i].TravelTime, new { @class = "form-control" })</b>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <br />
+                                                <br />
+                                                <div clss="row nextline ">
+                                                    <div class="col-md-12">
+                                                        <er class="closealertheading" style="color:red;border-radius:2px">Supervisor to review client record, sign-off where needed and submit all invoices before agreeing with this entry.</er>
+                                                        <eb class="closealertheading" style="color:red;border-radius:2px">Supervisor to review client record, sign-off where needed and submit all invoices before agreeing with this entry, Supervisor saving this entry locks forms!</eb>
+                                                    </div>
+                                                    <br />
+                                                </div>
+                                                @Html.LabelFor(model => model.helper.DraftCaseRecordings[i].CreatedBy) :-
+                                                <r class="bynamecreate">@Model.helper.DraftCaseRecordings[i].CreatedBy</r> &nbsp;&nbsp;&nbsp;&nbsp;
+                                                @Html.LabelFor(model => model.helper.DraftCaseRecordings[i].ModifiedBy):-
+                                                <r class="bynamecreate">@Model.helper.DraftCaseRecordings[i].ModifiedBy</r> &nbsp;&nbsp;&nbsp;&nbsp;
+                                                @Html.DisplayFor(model => model.helper.DraftCaseRecordings[i].IsSupervisoragrees, new { @class = "form-control" })  <b>Supervisor Agrees</b>
+
+                                                <p id="para@(i)">@Html.Raw(Model.helper.DraftCaseRecordings[i].DocumentationOfActivity)</p>
+
+                                            </div>
+                                            <div class="panel-body casedetailspanelbody">
+                                                <div class="caserecordinglist ">
+                                                    <div id="@("CaseRecord_" + i)" class="case-record">
+                                                        <div class="row nextline">
+                                                            <div class="col-md-1">
+                                                                @Html.Label("Action", "Action")
+                                                                <br />
+                                                                <div class="btn-group">
+                                                                    <button type="button" class="btn delete-case btn-default zero-Zindex" data-toggle="tooltip" title="Delete">
+                                                                        <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                                                                    </button>
+                                                                   
+                                                                </div>
+                                                                @Html.HiddenFor(model => model.helper.DraftCaseRecordings[i].Deleted, new { htmlAttributes = new { @class = "isdelete" } })
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                @Html.LabelFor(model => model.helper.DraftCaseRecordings[i].Date, htmlAttributes: new { @class = "" })
+                                                                <br />
+                                                                @Html.HiddenFor(model => model.helper.DraftCaseRecordings[i].Id, new { @class = "" })
+                                                                @Html.TextBoxFor(model => model.helper.DraftCaseRecordings[i].Date, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker validate", @placeholder = "Date" })
+                                                            </div>
+
+                                                            <div class="col-md-2 col-lg-2 col-sm-3 col-xs-6">
+                                                                @Html.LabelFor(model => model.helper.DraftCaseRecordings[i].Type, htmlAttributes: new { @class = "" })
+                                                                @Html.Hidden("Type_" + i, Model.helper.DraftCaseRecordings[i].Type, new { @class = "ddlValue" })
+                                                                <br />
+                                                                @Html.DropDownListFor(model => model.helper.DraftCaseRecordings[i].Type, (List<SelectListItem>)ViewBag.CaseRecordingTypes, "Select", new { @class = "form-control ddlType zero-Zindex" })
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                @Html.LabelFor(model => model.helper.DraftCaseRecordings[i].Time, htmlAttributes: new { @class = "control-label" })
+
+                                                                @Html.TextBoxFor(model => model.helper.DraftCaseRecordings[i].Time, new { @class = "form-control time zero-Zindex", @type = "number" })
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                @Html.LabelFor(model => model.helper.DraftCaseRecordings[i].TravelTime, htmlAttributes: new { @class = "control-label" })
+
+                                                                @Html.TextBoxFor(model => model.helper.DraftCaseRecordings[i].TravelTime, new { @class = "form-control time zero-Zindex", @style = "width:50%", @type = "number" })
+                                                            </div>
+                                                        </div>
+                                                        <div clss="row nextline"></div><br />
+                                                            <div clss="row nextline">
+                                                                <div class="col-md-12">
+                                                                    <er class="closealertheading" style="color:red;border-radius:2px">Supervisor to review client record, sign-off where needed and submit all invoices before agreeing with this entry.</er>
+                                                                    <eb class="closealertheading" style="color:red;border-radius:2px">Supervisor to review client record, sign-off where needed and submit all invoices before agreeing with this entry, Supervisor saving this entry locks forms! </eb>
+                                                                </div>
+                                                                <br />
+                                                            </div>
+                                                            <div clss="row nextline">
+
+                                                                <div class="col-md-2" style="padding-top:28px">
+                                                                    @Html.CheckBoxFor(model => model.helper.DraftCaseRecordings[i].IsLateEntry) @Html.LabelFor(model => model.helper.DraftCaseRecordings[i].IsLateEntry, htmlAttributes: new { @class = "" })
+                                                                </div>
+
+                                                                <div class="col-md-3" style="padding-top:28px">
+
+                                                                    @if (User.IsInRole("CMS_Supervisor"))
+                                                                {
+                                                                    @Html.CheckBoxFor(m => m.helper.DraftCaseRecordings[i].IsSupervisoragrees)
+                                                                }
+                                                                else
+                                                                {
+                                                                        @*@Html.CheckBoxFor(m => m.helper.DraftCaseRecordings[i].IsSupervisoragrees, new { @disabled = "disabled" })*@
+                                                                    @Html.CheckBoxFor(m => m.helper.DraftCaseRecordings[i].IsSupervisoragrees, new { @disabled = "disabled" , @class = "supervisoragree"})
+
+                                                                }
+                                                                    @Html.LabelFor(m => m.helper.DraftCaseRecordings[i].IsSupervisoragrees)
+                                                                </div>
+                                                            </div>
+                                                            <div class="row nextline">
+                                                                <div class="col-md-12" onblur = "saveNote()" >
+                                                                    @Html.LabelFor(model => model.helper.DraftCaseRecordings[i].DocumentationOfActivity, htmlAttributes: new { @class = "" })
+                                                                    @Html.HiddenFor(model => model.helper.DraftCaseRecordings[i].CaseStatus, new { htmlAttributes = new { @class = "" } })
+                                                                    <br />
+                                                                    @Html.TextAreaFor(model => model.helper.DraftCaseRecordings[i].DocumentationOfActivity, new { @class = "noteText", @style = "width:100%;min-height:90%", rows = "5", @spellcheck = "true"})
+
+                                                                    <br />
+                                                                    @Html.LabelFor(model => model.helper.DraftCaseRecordings[i].CreatedBy)
+                                                                    <v class="bynamecreate">@Model.helper.DraftCaseRecordings[i].CreatedBy</v>  <x class="datecreated"> on @Model.helper.DraftCaseRecordings[i].CreatedOn</x>
+                                                                    <br />
+                                                                    @Html.LabelFor(model => model.helper.DraftCaseRecordings[i].ModifiedBy)
+                                                                    <v class="bynamecreate">@Model.helper.DraftCaseRecordings[i].ModifiedBy</v>  <x class="datecreated"> on @Model.helper.DraftCaseRecordings[i].ModifiedOn</x>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                </fieldset>
+                            </div>
+                            <div class="form-group" style="width: 99%; margin-left: 1%!important">
+                                <table style="width: 30%">
+                                    <tr>
+                                        <th colspan="3">
+                                            Calculated Total Time
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 60%">Type</th>
+                                        <th>Time</th>
+                                        <th>Travel Time</th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            <table id="TotalTime" style="width: 100%"></table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

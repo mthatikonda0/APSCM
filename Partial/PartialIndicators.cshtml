@@ -1,0 +1,914 @@
+﻿@model AGE.CMS.Data.Models.ClientAssessment.viewClientAssesssment
+
+
+     @Html.HiddenFor(m => m.Id)
+
+     <div id="Indicators">
+         <div class="panel-heading" style="border: groove; background-color: #efeed6; margin: 10px;">
+             <h3>Indicators of Abuse, Neglect, Exploitation and Self-Neglect</h3>
+             Mark all indicator codes evident in the assessment which are in support of the substantiation decision where ANE/SN is substantiated as ‘Some Indication’ or ‘Verified’. 
+There may be important evidence that helps you substantiate ANE that is not listed in the indicators.<br />
+             When needed, mark “Other” and further describe such evidence in the “Comment” section. 
+         </div>
+
+
+         <div class="row nextline"></div>
+
+         <div id="PhysicalAbuse" class="container">
+
+             @Html.HiddenFor(model => model.IndicatorsOfPhysicalAbuse.Id)
+
+             <div class="subheadings" style="border: groove; background-color: #f9f8ef;">
+                 <div class="m">
+                     <h4 style="font-weight: bold; text-decoration: underline">Indicators of Physical Abuse: </h4>
+                 </div>
+                 <div class="m">The infliction of physical pain or injury to an eligible adult</div>
+
+
+             </div>
+
+              <div class="row nextline">
+        
+                 <div class="col-lg-3">
+                     <b>Injuries: </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuse.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuse[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuse[idx].InjuriesOfPhysicalAbuseId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuse[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuse[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuse[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.InjuriesOfPhysicalAbuse[idx].Description)       
+                     }
+
+                 </div>
+
+                 <div class="col-lg-3">
+                     <b>Pattern of Injuries: </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse[idx].PatternOfInjuriesOfPhysicalAbuseId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.PatternOfInjuriesOfPhysicalAbuse[idx].Description)       
+                     }
+
+                 </div>
+
+                 <div class="col-lg-3">
+                     <b>Behaviour of Client: </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse[idx].Id)
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse[idx].BehaviourOfClientPhysicalAbuseId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.BehaviourOfClientPhysicalAbuse[idx].Description)       
+                     }
+                 </div>
+
+                 <div class="col-lg-3">
+                     <b>Violent Actions Againest Client: </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse[idx].Id)
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse[idx].ViolentActionsPhysicalAbuseId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.ViolentActionsAgainestClientPhysicalAbuse[idx].Description)       
+                     }
+
+                 </div>
+                  </div>
+
+             <div class="row nextline">       
+
+                 <div class="col-lg-3">
+                     <b>Inappropriate Use of Restraints: </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint[idx].Id)
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint[idx].InappropriateChemicalRestraintId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.InappropriateChemicalRestraint[idx].Description)       
+                     }
+                 </div>
+
+                 <div class="col-lg-3">
+                     <b>Medical Evidence: </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse[idx].Id)
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse[idx].MedicalEvidanceOfPhysicalAbuseId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfPhysicalAbuse.MedicalEvidanceOfPhysicalAbuse[idx].Description)       
+                     }
+                 </div>
+                 </div>
+
+             <div class="row nextline">
+                 <div class="col-lg-3" style="border: groove">
+
+                     <br />
+                     @Html.CheckBoxFor(x => Model.IndicatorsOfPhysicalAbuse.IsOthers) @Html.LabelFor(x => Model.IndicatorsOfPhysicalAbuse.IsOthers)
+                     <br />
+                 </div>
+             </div>
+      
+
+             @*              <div class="row nextline">
+                    <div class="col-lg-12">
+                        @Html.LabelFor(m => m.IndicatorsOfPhysicalAbuse.Comments, new { @class = "control-label" })
+                        <div>
+                            @Html.TextAreaFor(model => model.IndicatorsOfPhysicalAbuse.Comments, new { @class = "form-control" })
+                        </div>
+                    </div>*@
+
+
+         </div>
+
+
+         <div class="row nextline"></div>
+
+         <div id="SexuaLAbuse" class="container">
+
+             @Html.HiddenFor(model => model.IndicatorsOfSexualAbuse.Id)
+
+             <div class="subheadings" style="border: groove; background-color: #f9f8ef;">
+                 <div class="ma">
+                     <h4 style="font-weight: bold; text-decoration: underline">Indicators of Sexual Abuse: </h4>
+                 </div>
+                 Means touching, fondling, sexual threats, sexually inappropriate remarks, or any other sexual activity with an eligible adult when<br />
+                 he/she is unable to understand, unwilling to consent, threatened or physically forced to engage in sexual behavior.
+                
+                       
+             </div>
+
+
+             <div class="row nextline">
+           
+
+                 <div class="col-lg-3">
+                     <b>Medical Evidence:  </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfSexualAbuse.MedicalEvidence.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence[idx].MedicalEvidenceId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.MedicalEvidence[idx].Description)       
+                        }
+                 </div>
+
+                 <div class="col-lg-3">
+                     <b>Behavior Of Client: </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfSexualAbuse.BehaviorOfClient.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient[idx].Id)
+                           @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient[idx].BehavioursOfClientId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfClient[idx].Description)       
+                        }
+                 </div>
+
+                 <div class="col-lg-3">
+                     <b>ViolentActions: </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfSexualAbuse.ViolentActions.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions[idx].ViolentActionsId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.ViolentActions[idx].Description)       
+                        }
+                 </div>
+
+                 <div class="col-lg-3">
+                     <b>Behavior Of AA: </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfSexualAbuse.BehaviorOfAA.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA[idx].BehaviorOfAAId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfSexualAbuse.BehaviorOfAA[idx].Description)       
+                        }
+                 </div>
+
+                 </div>
+                 
+           <div  class="row nextline">
+                 <div class="col-lg-3" style="border: groove">
+
+                     <br />
+                     @Html.CheckBoxFor(x => Model.IndicatorsOfSexualAbuse.IsOthers) @Html.LabelFor(x => Model.IndicatorsOfSexualAbuse.IsOthers)
+                     <br />
+                 </div>
+             </div>
+
+       
+                  
+
+          
+
+         </div>
+
+         <div class="row nextline"></div>
+
+         <div id="EmotionalAbuse" class="container">
+
+              @Html.HiddenFor(model => model.IndicatorsOfEmotionalAbuse.Id)
+
+             <div class="subheadings" style="border: groove; background-color: #f9f8ef;">
+                 <div class="ma">
+                     <h4 style="font-weight: bold; text-decoration: underline">Indicators of Emotional Abuse: </h4>
+                 </div>
+                 <div>
+                     Means verbal assaults, threats of maltreatment, harassment or intimidation intended to compel the 
+                      eligible adult to engage in conduct from which he/she wishes and has a right to abstain,
+                        <br />
+                     or to refrain from conduct which the eligible adult wishes and has a right to engage.
+                 </div>
+
+             </div>
+
+             <div class="row nextline">
+
+             <div class="col-lg-3">
+                 <b>Actions of Abuser:  </b>
+                 <br />
+                 @for (int idx = 0; idx < Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser.Count; idx++)
+                 {                        
+                     @Html.HiddenFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser[idx].Id)
+                     @Html.HiddenFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser[idx].ActionsOfAbuseId)
+                     @Html.HiddenFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser[idx].Code)
+                     @Html.CheckBoxFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser[idx].Description) <br />
+                     @Html.HiddenFor(x => Model.IndicatorsOfEmotionalAbuse.ActionsOfAbuser[idx].Description)       
+                 }
+
+             </div>
+                 </div>
+             <br />
+
+             <div  class="row nextline">
+                 <div class="col-lg-3" style="border: groove">
+
+                     <br />
+                     @Html.CheckBoxFor(x => Model.IndicatorsOfEmotionalAbuse.IsOthers) @Html.LabelFor(x => Model.IndicatorsOfEmotionalAbuse.IsOthers)
+                     <br />
+                 </div>
+             </div>
+
+
+            @* <div class="row nextline">
+                 <div class="col-lg-12">
+                     @Html.LabelFor(m => m.IndicatorsOfEmotionalAbuse.Comments, new { @class = "control-label" })
+                     <div>
+                         @Html.TextAreaFor(model => model.IndicatorsOfEmotionalAbuse.Comments, new { @class = "form-control" })
+                     </div>
+                 </div>
+
+
+             </div>*@
+
+
+
+         </div>
+
+         
+         <div class="row nextline"></div>
+
+
+         <div id="confinment" class="container">
+
+               @Html.HiddenFor(model => model.IndicatorsOfConfinment.Id)
+             <div class="subheadings" style="border: groove; background-color: #f9f8ef;">
+                 <div class="ma">
+                     <h4 style="font-weight: bold; text-decoration: underline">Indicators of Confinement: </h4>
+                 </div>
+                 <div>
+                     Means restraining or isolating, without legal authority, an eligible adult for other than medical reasons, as ordered by a physician.
+                 </div>
+
+             </div>
+
+             <div class="row nextline">
+
+
+             <div class="col-lg-6">
+                 <b>Inappropriate Physical Restraint:   </b>
+                 <br />
+                 @for (int idx = 0; idx < Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint.Count; idx++)
+                 {                        
+                     @Html.HiddenFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint[idx].Id)
+                       @Html.HiddenFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint[idx].InappropriatePhysicalRestraintId)
+                     @Html.HiddenFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint[idx].Code)
+                     @Html.CheckBoxFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint[idx].Description) <br />
+                     @Html.HiddenFor(x => Model.IndicatorsOfConfinment.InappropriatePhysicalRestraint[idx].Description)       
+                    }
+
+             </div>
+
+                 </div>
+             <br />
+             <div class="row nextline">
+                 <div class="col-lg-3" style="border: groove">
+
+                     <br />
+                     @Html.CheckBoxFor(x => Model.IndicatorsOfConfinment.IsOthers) @Html.LabelFor(x => Model.IndicatorsOfConfinment.IsOthers)
+                     <br />
+                 </div>
+             </div>
+
+
+         @*    <div class="row nextline">
+                 <div class="col-lg-12">
+                     @Html.LabelFor(m => m.IndicatorsOfConfinment.Comments, new { @class = "control-label" })
+                     <div>
+                         @Html.TextAreaFor(model => model.IndicatorsOfConfinment.Comments, new { @class = "form-control" })
+                     </div>
+                 </div>
+
+
+             </div>*@
+
+         </div>
+
+         <div class="row nextline"></div>
+         <div id="PassiveNeglect" class="container">
+               @Html.HiddenFor(model => model.IndicatorsofPassiveNeglect.Id)
+             <div class="subheadings" style="border: groove; background-color: #f9f8ef;">
+                 <div class="ma">
+                     <h4 style="font-weight: bold; text-decoration: underline">Indicators of Passive Neglect: </h4>
+                 </div>
+                 <div>
+                     Means another individual’s failure to provide an eligible adult with the necessities of life including, but not limited to, 
+                              food, clothing, shelter or medical care because of failure to understand the eligible adult’s needs,
+                               lack of awareness of services to help meet needs, or lack of capacity to care for the eligible adult.
+                 </div>
+
+             </div>
+
+
+             <div class="row nextline">
+             </div>
+
+
+             <div class="row nextline">
+
+                 <div class="col-lg-2" style="padding-top: 20px">
+                     @Html.CheckBoxFor(model => model.IndicatorsofPassiveNeglect.IsImproperHygine) <span class="textspace">
+                         @Html.LabelFor(m => m.IndicatorsofPassiveNeglect.IsImproperHygine, new { @class = "control-label" })</span>
+                 </div>
+
+                 <div class="col-lg-2">
+                     <b>Skin:  </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.Skin.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.Skin[idx].Id)
+                           @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.Skin[idx].SkinId)
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.Skin[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.Skin[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.Skin[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.Skin[idx].Description)       
+                        }
+
+                 </div>
+
+                 <div class="col-lg-2">
+                     <b>Nutrition: </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.Nutrition.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.Nutrition[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.Nutrition[idx].NutritionId)
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.Nutrition[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.Nutrition[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.Nutrition[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.Nutrition[idx].Description)       
+                        }
+
+                 </div>
+
+                 <div class="col-lg-3">
+                     <b>Physical Care of Person: </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson[idx].PhysicalCareOfPersonId)
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.PhysicalCareOfPerson[idx].Description)       
+                        }
+
+                 </div>
+
+                 <div class="col-lg-3">
+                     <b>Behaviors of Person:  </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.BehavioursOfPerson.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson[idx].BehavioursOfPersonId)
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfPerson[idx].Description)       
+                        }
+
+                 </div>
+
+             </div>
+
+
+
+  
+                 <div class="row nextline"></div>
+             <div class="row nextline">
+                 <div class="col-lg-3">
+                     <b>Social Isolation:  </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.SocialIsolation.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation[idx].SocialIsolationId)
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.SocialIsolation[idx].Description)       
+                        }
+
+                 </div>
+
+                 <div class="col-lg-3">
+                     <b>Medical Care of Person:  </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson[idx].MedicalCareOfPersonId)
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.MedicalCareOfPerson[idx].Description)       
+                        }
+
+                 </div>
+
+                 <div class="col-lg-3">
+                     <b>Conditions of Home:  </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.ConditionsOfHome.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome[idx].ConditionsOfHomeId)
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.ConditionsOfHome[idx].Description)       
+                        }
+
+                 </div>
+
+                 <div class="col-lg-3">
+                     <b>Behaviors of Alleged Abuser:  </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsofPassiveNeglect.BehavioursOfAA.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA[idx].BehavioursOfAAId)
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsofPassiveNeglect.BehavioursOfAA[idx].Description)       
+                        }
+
+                 </div>
+                   </div>
+              <div class="row nextline">
+                 <div class="col-lg-3" style="border:groove">
+
+                     <br />
+                     @Html.CheckBoxFor(x => Model.IndicatorsofPassiveNeglect.IsOthers) @Html.LabelFor(x => Model.IndicatorsofPassiveNeglect.IsOthers)
+                     <br />
+                 </div>
+            </div>
+               
+
+
+
+
+       @*      <div class="row nextline">
+                 <div class="col-lg-12">
+                     @Html.LabelFor(m => m.IndicatorsofPassiveNeglect.Comments, new { @class = "control-label" })
+                     <div>
+                         @Html.TextAreaFor(model => model.IndicatorsofPassiveNeglect.Comments, new { @class = "form-control" })
+                     </div>
+                 </div>
+
+
+             </div>*@
+
+
+
+
+         </div>
+
+
+         <div class="row nextline"></div>
+
+         <div id="WillFullDeprivation" class="container">
+              @Html.HiddenFor(model => model.IndicatorsofWillfulDeprivations.Id)
+             <div class="subheadings" style="border: groove; background-color: #f9f8ef;">
+                 <div class="ma">
+                     <h4 style="font-weight: bold; text-decoration: underline">Indicators of Willful Deprivation: </h4>
+                 </div>
+                 <div>
+                     Means deliberate denial of medications, medical care, shelter, food, therapeutic devices,
+                         or other physical assistance to a person who, because of age, health or disability, requires such assistance and 
+                        thereby exposes that person to the risk of physical, mental, or emotional harm because of such denial; except with respect to medical care or 
+                        treatment when the dependent person has expressed an intent to forego such medical care or treatment and has the capacity to understand the consequences. 
+                 </div>
+
+             </div>
+             <div class="row nextline"></div>
+             <div class="row nextline">
+                 <div class="col-lg-3">
+                     <b>Behaviors of Abuser:   </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse[idx].BehaviorsofAbuserId)
+                         @Html.HiddenFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsofWillfulDeprivations.BehaviorsofAbuse[idx].Description)       
+                        }
+
+                 </div>
+                       </div>
+
+                 <div class="row nextline">
+                     <div class="col-lg-3" style="border: groove">
+
+                         <br />
+                         @Html.CheckBoxFor(x => Model.IndicatorsofWillfulDeprivations.IsOthers) @Html.LabelFor(x => Model.IndicatorsofWillfulDeprivations.IsOthers)
+                         <br />
+                     </div>
+                 </div>
+
+       
+
+          @*   <div class="row nextline">
+                 <div class="col-lg-12">
+                     @Html.LabelFor(m => m.IndicatorsofWillfulDeprivations.Comments, new { @class = "control-label" })
+                     <div>
+                         @Html.TextAreaFor(model => model.IndicatorsofWillfulDeprivations.Comments, new { @class = "form-control" })
+                     </div>
+                 </div>
+
+
+             </div>*@
+         </div>
+
+         <div class="row nextline"></div>
+
+         <div id="FinantialExploitation" class="container">
+
+              @Html.HiddenFor(model => model.IndicatorsOfFinantialExploitation.Id)
+             <div class="subheadings" style="border: groove; background-color: #f9f8ef;">
+                 <div class="ma">
+                     <h4 style="font-weight: bold; text-decoration: underline">Indicators of Financial Exploitation: </h4>
+                 </div>
+                 <div>
+                     Means the use of an eligible adult’s resources by another to the disadvantage of that adult or the profit or advantage of a person other than that adult. 
+                 </div>
+
+             </div>
+             <div class="row nextline"></div>
+             <div class="row nextline">
+
+                 <div class="col-lg-3">
+                     <b>Unusual/inappropriate bank activities of person:   </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities[idx].Id)
+                           @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities[idx].UnusualinappropriatebankactivitiesId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Unusualinappropriatebankactivities[idx].Description)       
+                        }
+
+                 </div>
+
+                 <div class="col-lg-2">
+                     <b>Unusual cash transactions/Behaviors of person:  </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors[idx].Id)
+                           @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors[idx].UnusualcashtransactionsBehaviorsId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.UnusualcashtransactionsBehaviors[idx].Description)       
+                        }
+
+                 </div>
+
+                 <div class="col-lg-4">
+                     <b>Inappropriate decision-making by abuser: </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking[idx].Id)
+                           @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking[idx].InappropriatedecisionmakingId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Inappropriatedecisionmaking[idx].Description)       
+                        }
+
+                 </div>
+
+                 <div class="col-lg-3">
+                     <b>Theft: </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Theft.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Theft[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Theft[idx].TheftId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Theft[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfFinantialExploitation.Theft[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Theft[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Theft[idx].Description)       
+                        }
+
+                 </div>
+
+             </div>
+
+
+             <div class="row nextline">
+
+                 <div class="col-lg-3">
+                     <b>Abuser controls banking decisions:  </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions[idx].Id)
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions[idx].AbusercontrolsbankingdecisionsId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolsbankingdecisions[idx].Description)       
+                        }
+
+                 </div>
+
+                 <div class="col-lg-4">
+                     <b>Abuser controls cash:  </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Abusercontrolscash.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash[idx].Id)
+                              @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash[idx].AbusercontrolscashId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Abusercontrolscash[idx].Description)       
+                        }
+
+                 </div>
+
+
+                 <div class="col-lg-3">
+                     <b>Vandalism by abuser: </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser[idx].Id)
+                              @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser[idx].VandalismbyabuserId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfFinantialExploitation.Vandalismbyabuser[idx].Description)       
+                        }
+
+                 </div>
+                   </div>
+
+                 <div class="row nextline">
+                     <div class="col-lg-3" style="border: groove">
+
+                         <br />
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfFinantialExploitation.IsOthers) @Html.LabelFor(x => Model.IndicatorsOfFinantialExploitation.IsOthers)
+                         <br />
+                     </div>
+                 </div>
+
+
+           
+
+
+         @*    <div class="row nextline">
+                 <div class="col-lg-12">
+                     @Html.LabelFor(m => m.IndicatorsOfFinantialExploitation.Comments, new { @class = "control-label" })
+                     <div>
+                         @Html.TextAreaFor(model => model.IndicatorsOfFinantialExploitation.Comments, new { @class = "form-control" })
+                     </div>
+                 </div>
+
+
+             </div>*@
+         </div>
+         <div class="row nextline"></div>
+
+         <div id="General Behavior Indicators: " class="container">
+                @Html.HiddenFor(model => model.IndicatorsOfGeneralBehavior.Id)
+             <div class="subheadings" style="border: groove; background-color: #f9f8ef;">
+                 <div class="ma">
+                     <h4 style="font-weight: bold; text-decoration: underline">General Behavior Indicators: </h4>
+                 </div>
+                 <div>
+                     To be applied across all categories of ANE. These can be used as additional indicators to help make the substantiation decision.
+                         The comment section can be used to indicate whether an indicator pertains to a specific AA if more than one exists, or one ANE type. 
+                 </div>
+
+             </div>
+
+
+             <div class="row nextline">
+
+
+
+                 <div class="col-lg-3">
+                     <b>Behaviors of Abuser:   </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser[idx].Id)
+                            @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser[idx].BehaviorsofAbuserId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.BehaviorsofAbuser[idx].Description)       
+                        }
+
+                 </div>
+
+                 <div class="col-lg-3">
+                     <b>Statements of abuser:  </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfGeneralBehavior.Statementsofabuser.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser[idx].Id)
+                             @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser[idx].StatementsofabuserId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.Statementsofabuser[idx].Description)       
+                        }
+
+                 </div>
+
+                 <div class="col-lg-3">
+                     <b>Statements of person:  </b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfGeneralBehavior.StatementsofPerson.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson[idx].Id)
+                           @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson[idx].StatementsofPersonId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfGeneralBehavior.StatementsofPerson[idx].Description)       
+                        }
+
+                 </div>
+                   </div>
+
+                 <div class="row nextline">
+                     <div class="col-lg-3 " style="border: groove">
+
+                         <br />
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfGeneralBehavior.IsOthers) @Html.LabelFor(x => Model.IndicatorsOfGeneralBehavior.IsOthers)
+                         <br />
+                     </div>
+                 </div>
+
+
+
+           
+
+
+
+         
+
+
+         </div>
+
+         <div class="row nextline"></div>
+
+         <div id="IndicatorsofSelfNeglect " class="container">
+                @Html.HiddenFor(model => model.IndicatorsOfSelfNeglect.Id)
+             <div class="subheadings" style="border: groove; background-color: #f9f8ef;">
+                 <div class="ma">
+                     <h4 style="font-weight: bold; text-decoration: underline">Indicators of Self-Neglect: </h4>
+                 </div>
+                 <div>
+                     Means a condition that is a result of an adult’s inability, due to physical or mental impairments, or both, or a diminished capacity,
+                         to perform essential self-care tasks that substantially threaten his or her own health, including: providing essential food, clothing, shelter,
+                         and health care; and obtaining goods and services necessary to maintain physical health, mental health, emotional well-being, and general safety. 
+                 </div>
+
+             </div>
+
+             <div class="row nextline">
+
+
+                 <div class="col-lg-4">
+                     <b>Food:</b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfSelfNeglect.Food.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Food[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Food[idx].FoodId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Food[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfSelfNeglect.Food[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.Food[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Food[idx].Description)       
+                        }
+
+                 </div>
+
+
+                 <div class="col-lg-2">
+                     <b>Clothing</b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfSelfNeglect.Clothing.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Clothing[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Clothing[idx].ClothingId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Clothing[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfSelfNeglect.Clothing[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.Clothing[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Clothing[idx].Description)       
+                        }
+
+                 </div>
+
+                 <div class="col-lg-3">
+                     <b>Shelter</b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfSelfNeglect.Shelter.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Shelter[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Shelter[idx].ShelterId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Shelter[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfSelfNeglect.Shelter[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.Shelter[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.Shelter[idx].Description)       
+                        }
+
+                 </div>
+
+                 <div id="c_b" class="col-lg-3">
+                     <b>Health Care</b>
+                     <br />
+                     @for (int idx = 0; idx < Model.IndicatorsOfSelfNeglect.HealthCare.Count; idx++)
+                     {                        
+                         @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.HealthCare[idx].Id)
+                          @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.HealthCare[idx].HealthCareId)
+                         @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.HealthCare[idx].Code)
+                         @Html.CheckBoxFor(x => Model.IndicatorsOfSelfNeglect.HealthCare[idx].IsChecked) @Html.DisplayFor(x => Model.IndicatorsOfSelfNeglect.HealthCare[idx].Description) <br />
+                         @Html.HiddenFor(x => Model.IndicatorsOfSelfNeglect.HealthCare[idx].Description)       
+                        }
+
+                 </div>
+
+             </div>
+
+             <div class="row nextline">
+                 <div class="col-lg-3" style="border: groove">
+
+                     <br />
+                     @Html.CheckBoxFor(x => Model.IndicatorsOfSelfNeglect.IsOthers) @Html.LabelFor(x => Model.IndicatorsOfSelfNeglect.IsOthers)
+                     <br />
+                 </div>
+             </div>
+
+
+         </div>
+
+
+         <div class="row nextline"></div>
+@if (Model.mode != "summary")
+{ 
+          <div class="col-lg-12 pull-right">
+                    <div class="btn-group pull-right" style="margin-right: 10px;">
+                        <button id="Next" rel="tooltip" type="submit" class="btn btn-success btn-md" title=" Next ">Next</button>
+                        </div>
+           </div>
+}
+
+
+     </div>
+ 

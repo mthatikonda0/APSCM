@@ -1,0 +1,39 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewClientCMS
+
+
+
+
+<div class="container">
+
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Person.FirstName)
+    @Html.HiddenFor(model => model.Person.LastName)
+    @Html.HiddenFor(model => model.Person.DOB)
+
+    @if (Model.viewsuspiciousdeath.Id > 0)
+    {
+        <p>
+            <a href="@Url.Action("SuspiciousDeath", "Case", new { ClientId = Model.Id, Id = Model.viewsuspiciousdeath.Id, CaseheaderId = Model.CaseheaderId, })">
+                <button id="SuspiciousDeath" class="btn btn-primary edit" type="button">
+                    <span class="glyphicon glyphicon-edit"></span><span style="margin-left: 5px;">
+                        <text>Suspicious Death Reporting Form</text>
+                    </span>
+                </button>
+            </a>
+        </p> 
+    }
+    else
+    {
+        <p>
+            <a href="@Url.Action("SuspiciousDeath", "Case", new { ClientId = Model.Id, Id = Model.viewsuspiciousdeath.Id, CaseheaderId = Model.CaseheaderId, })">
+                <button id="newSuspiciousDeath" class="btn btn-success create" type="button">
+                    <span class="glyphicon glyphicon-plus"></span><span style="margin-left: 5px;">
+                        <text>New Suspicious Death Reporting Form</text>
+                    </span>
+                </button>
+            </a>
+        </p>  
+    }
+
+
+</div>

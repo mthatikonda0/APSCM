@@ -1,0 +1,549 @@
+﻿@model AGE.CMS.Data.Models.Intake.viewLawEnforcement
+
+@{
+    ViewBag.Title = "LawEnforcement";
+}
+
+<script src="~/Assets/Basic/Scripts/CMS/Case/LawEnforcement.js"></script>
+<script>
+    $(document).ready(function () {
+
+        if ($("#PartOneDone").val() == "True") {
+            $("#part1").addClass("disablediv")
+            $("#part2").removeClass("disablediv")
+        }
+
+
+        $('form').submit(function () {
+
+            $("#part1").find("select, input, textarea").removeAttr("disabled")
+            $("#part2").find("select, input, textarea").removeAttr("disabled")
+
+            if ($("#PartOneDone").val() != "") {
+                $("#PartTwoDone").attr("value", "")
+            }
+            else {
+                $("#PartOneDone").attr("value", "")
+            }
+        });
+
+
+        $("#savelawenforcement").click(function (e) {
+            e.preventDefault();
+            $("#part1").find("select, input, textarea").removeAttr("disabled")
+            $("#part2").find("select, input, textarea").removeAttr("disabled")
+            $('#IsAjax').val(true);
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveLawEnforcement", "Case")',
+                dataType: "json",
+                data: $('#alldiv').find('select, textarea, input').serialize(),
+                success: function (data) {
+                    console.log(data);
+                    $('#Id').val(data);
+                    $('#IsAjax').val(false);
+                    notification("<strong>Success</strong> Saved!!");
+                }
+            });
+        });
+
+
+
+        $("#submitlaw").click(function (e) {
+            $("#part1").find("select, input, textarea").removeAttr("disabled")
+            $("#part2").find("select, input, textarea").removeAttr("disabled")
+            e.preventDefault();
+            $('#IsAjax').val(true);
+            if ($("#PartOneDone").val() != "") {
+                $("#PartTwoDone").val(false);
+
+            }
+            else {
+
+                $("#PartOneDone").val(false);
+            }
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SubmitLawEnforcement", "Case")',
+                dataType: "json",
+                data: $('#alldiv').find('select, textarea, input').serialize(),
+                success: function (data) {
+                    console.log(data);
+                    $('#Id').val(data.Id);
+                    $('#IsAjax').val(false);
+                    $("#saveandclose").hide();
+                    notification("<strong>Success</strong> Submited!!");
+                    window.location.href = data.url;
+                }
+            });
+        });
+
+
+
+        $("#Approvelaw").click(function (e) {
+            $("#part1").find("select, input, textarea").removeAttr("disabled")
+            $("#part2").find("select, input, textarea").removeAttr("disabled")
+            e.preventDefault();
+            $('#IsAjax').val(true);
+
+
+            if ($("#PartOneDone").val() == "True") {
+                $("#PartTwoDone").val(true);
+            }
+            else {
+                $("#PartOneDone").val(true);
+            }
+
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ApproveLawEnforcement", "Case")',
+                dataType: "json",
+                data: $('#alldiv').find('select, textarea, input').serialize(),
+                success: function (data) {
+                    console.log(data);
+                    $('#Id').val(data.Id);
+                    $('#IsAjax').val(false);
+
+                    notification("<strong>Success</strong> Approved!!");
+                    window.location.href = data.url;
+                }
+            });
+        });
+
+        $('.disablediv').find("select, input, textarea").attr("disabled", "disabled")
+    });
+
+
+
+</script>
+<style>
+    b {
+        text-decoration: underline;
+    }
+
+    button.accordion {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        transition: 0.4s;
+    }
+
+        button.accordion.active, button.accordion:hover {
+            background-color: #ccc;
+        }
+
+    .btn-xl {
+        align-content: center;
+        width: 100%;
+        text-decoration-color: #fff;
+        font-size: 18px;
+        background-color: #949382;
+        border: 1px solid #949382;
+    }
+
+        .btn-xl:focus {
+            background-color: #c4c3ab;
+            border: 2px solid #949382;
+        }
+
+        .btn-xl:active {
+            background-color: #868575;
+            border: 2px solid #949382;
+        }
+
+        .btn-xl:hover {
+            background-color: #c4c3ab;
+            border: 2px solid #949382;
+        }
+
+
+        .btn-xl:active:hover,
+        .btn-xl.active:hover,
+        .btn-xl:active:focus,
+        .btn-xl.active:focus {
+            background-color: #868575;
+            border: 2px solid #949382;
+        }
+</style>
+
+<div class="container" id="alldiv">
+    <div class="panel panel-warning">
+
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="titletextbegin">
+                    <span class="glyphicon glyphicon-edit"></span><span class="textspace">
+                        <text>Law Enforcement Tracking Instrument</text>
+                    </span>
+                </span>
+            </h2>
+        </div>
+
+        <div class="panel-body">
+
+            @* @Html.HiddenFor(model => model.DateCreated)*@
+
+            @using (Html.BeginForm("SaveLawEnforcement", "Case", FormMethod.Post))
+            {
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.IntakeId)
+                @Html.HiddenFor(m => m.CaseheaderId)
+                @Html.HiddenFor(m => m.IsAjax)
+                @Html.HiddenFor(m => m.PartOneDone)
+                @Html.HiddenFor(m => m.PartTwoDone)
+                @*if (Model.DateCreated != null)
+                    {
+                        var Da = DateTime.Now.Subtract((DateTime)Model.DateCreated).Days;
+                        @(Html.Hidden("NumberOfDays", 45 - Da));
+                    }*@
+
+
+
+
+                <div class="row nextline">
+                    <div class="col-md-6 pull-right">
+                        <div class="btn-group pull-right" style="margin-right: 10px;">
+                            <button id="savelawenforcement" rel="tooltip" class="btn btn-success btn-md" title=" Save ">Save</button>
+                            <button id="saveandclose" rel="tooltip" type="submit" class="btn btn-success btn-md btn-outline" title=" Save ">Save & close</button>
+                            @if (Model.StatusId != 24)
+                            {
+                                <button id="submitlaw" rel="tooltip" class="btn btn-primary btn-md" title=" Save ">Submit</button>
+                            }
+                            @if (User.IsInRole("CMS_Supervisor") || User.IsInRole("CMS_IDOAStaff"))
+                            {
+                                if (Model.StatusId == 24)
+                                {
+                                    <button id="Approvelaw" rel="tooltip" class="btn btn-primary btn-md btn-outline" title=" Save ">Approve</button>
+                                }
+                            }
+                            <a id="cancellawenforcement" rel="tooltip" class="btn btn-default btn-md" title=" Cancel " href='@Url.Action("ManageCase", "Case", new { CaseheaderId = @Model.CaseheaderId})'>Cancel</a>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <p class="alert alert-info">Complete this form when an APS case has been referred to law enforcement for investigation. The APS PA should contact law enforcement to make a report or refer a case. This can happen at any time during a case.</p>
+                <div class="row nextline" style="margin: 1px">
+                    @Html.Partial("_ViewClientCMS", Model.viewIntake.viewCaseHeader.Client)
+                </div>
+
+                <div class="well container">
+                    <div class="row nextline">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-xl btn-primary btn-block" data-toggle="collapse" data-target="#part1">Part 1</button><br />
+                        </div>
+                        <div id="part1" class="collapse">
+                            <div class="">
+                                <div class="well container" style="background-color: #fff;">
+                                    <div class="row ">
+
+                                        <div class="col-xs-4 form-group">
+
+                                            @Html.LabelFor(model => model.IsClientCapable, new { @class = "control-label" })
+
+                                            @Html.RadioButtonFor(model => model.IsClientCapable, true) Yes
+
+                                            @Html.RadioButtonFor(model => model.IsClientCapable, false) No
+
+                                        </div>
+                                        <div class="col-md-2 form-group">
+
+                                            @Html.LabelFor(model => model.DateInformed, new { @class = "control-label" })
+
+                                            @Html.TextBoxFor(model => model.DateInformed, "{0:MM/dd/yyyy}", new { @class = "form-control  datepicker", placeholder = "Date Informed" })
+
+                                        </div>
+
+                                        <div class="col-md-6 form-group">
+                                            <b>Client Reaction</b>
+                                            <br />
+                                            @Html.CheckBoxFor(model => model.IsNoReaction) @Html.LabelFor(model => model.IsNoReaction, new { @class = "control-label" })<br />
+                                            @Html.CheckBoxFor(model => model.IsRefusedServices) @Html.LabelFor(model => model.IsRefusedServices, new { @class = "control-label" })<br />
+                                            @Html.CheckBoxFor(model => model.IsApprovedreferral) @Html.LabelFor(model => model.IsApprovedreferral, new { @class = "control-label" })<br />
+                                            @Html.CheckBoxFor(model => model.IsOtherReaction) @Html.LabelFor(model => model.IsOtherReaction, new { @class = "control-label" })<br />
+
+                                            <div id="otherreactionExplain">
+                                                @Html.LabelFor(model => model.OtherReaction, new { @class = "control-label" }) @Html.TextAreaFor(model => model.OtherReaction, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="well container" style="background-color: #fff;">
+                                    <b>Abuser Information</b><br />
+                                    <div class="row nextline" style="margin: 30px">
+                                        @if (Model.viewIntake.ListofCaseAbusers != null && Model.viewIntake.ListofCaseAbusers.Any())
+                                        {
+                                            <table class="table table-striped table-hover ">
+                                                <caption style="display: none">List of Abusers</caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th class="col-md-1">Abuser Name</th>
+                                                        <th class="col-md-1">Age</th>
+                                                        <th class="col-md-1">Gender</th>
+                                                        <th class="col-md-1">Relationship</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    @foreach (var item in Model.viewIntake.ListofCaseAbusers)
+                                                    {
+
+                                                        <tr class="">
+                                                            <td>@Html.DisplayFor(modelItem => item.LastName),@Html.DisplayFor(modelItem => item.FirstName)</td>
+                                                            <td>@Html.DisplayFor(modelItem => item.Age)</td>
+                                                            <td>@Html.DisplayFor(modelItem => item.GenderTypeDescription)</td>
+                                                            <td>@Html.DisplayFor(modelItem => item.RelationDescription)</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        }
+
+
+                                    </div>
+                                </div>
+
+                                <div class="well container" style="background-color: #fff;">
+
+
+
+
+                                    <div class="row nextline" style="margin: 3px">
+                                        <b>Reason for Referral</b><br />
+                                    </div>
+                                    <div class="row nextline">
+                                        <div class="col-lg-3">
+                                            @for (int idx = 0; idx < Model.ListOfAbusetypes.Count - 2; idx++)
+                                            {
+                                                @Html.HiddenFor(x => Model.ListOfAbusetypes[idx].Id)
+                                                @Html.HiddenFor(x => Model.ListOfAbusetypes[idx].Code)
+                                                @Html.CheckBoxFor(x => Model.ListOfAbusetypes[idx].IsChecked) @Html.DisplayFor(x => Model.ListOfAbusetypes[idx].Description) <br />
+                                                @Html.HiddenFor(x => Model.ListOfAbusetypes[idx].Description)
+                                            }
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row nextline">
+                                        <div class="col-md-8 form-group">
+                                            @Html.LabelFor(model => model.ReferralReason, new { @class = "control-label" })
+                                            <div id="Reason" spellcheck="true">
+                                                @Html.TextAreaFor(model => model.ReferralReason, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row nextline">
+                                        <div class="col-md-3 form-group">
+
+                                            @Html.LabelFor(model => model.DateReferred, new { @class = "control-label" })
+
+                                            @Html.TextBoxFor(model => model.DateReferred, "{0:MM/dd/yyyy}", new { @class = "form-control  datepicker", placeholder = "Date Referred" })
+
+                                        </div>
+                                        <div class="col-md-5 form-group">
+
+                                            @Html.LabelFor(model => model.CaseStatusId, new { @class = "control-label" })
+
+                                            @Html.DropDownListFor(model => model.CaseStatusId, new SelectList(new[] { new AGE.CMS.Data.Models.Intake.viewReportStatus { Id = null, Description = " Select Case Status" } }.Union(Model.viewIntake.caselookup.listofreportstatus.OrderBy(s => s.Code)), "Id", "Description", Model.CaseStatusId), new { @class = "form-control" })
+
+                                            @Html.ValidationMessageFor(model => model.CaseStatusId)
+
+                                        </div>
+                                    </div>
+                                    <div class="row nextline" style="margin: 3px">
+                                        <b>Referred to Whom</b>
+                                    </div>
+                                    <div class="row nextline">
+                                        <div class="col-md-3 form-group">
+
+                                                @Html.LabelFor(model => model.AgencyPhone, new { @class = "control-label" })
+
+                                                @Html.TextBoxFor(model => model.AgencyPhone, new { @class = "form-control" })
+
+                                            </div>
+
+                                        <div class="col-md-3">
+
+                                            @Html.LabelFor(model => model.AgencyName, new { @class = "control-label" })
+
+                                            @Html.TextBoxFor(model => model.AgencyName, new { @class = "form-control" })
+
+                                        </div>
+                                        <div class="col-md-3">
+
+                                            @Html.LabelFor(model => model.AgencyPerson, new { @class = "control-label" })
+
+                                            @Html.TextBoxFor(model => model.AgencyPerson, new { @class = "form-control" })
+
+                                        </div>
+                                        <div class="col-md-3">
+
+                                            @Html.LabelFor(model => model.AgencyTitle, new { @class = "control-label" })
+
+                                            @Html.TextBoxFor(model => model.AgencyTitle, new { @class = "form-control" })
+
+                                        </div>
+                                    </div>
+                                    <div class="row nextline" style="margin: 3px">
+                                        <b>Referred How</b>
+                                    </div>
+                                    <div class="row nextline">
+                                        <div class="col-md-6">
+
+                                            @Html.CheckBoxFor(model => model.IsTelephone) @Html.LabelFor(model => model.IsTelephone, new { @class = "control-label" })
+                                            @Html.CheckBoxFor(model => model.IsLetter) @Html.LabelFor(model => model.IsLetter, new { @class = "control-label" })
+                                            @Html.CheckBoxFor(model => model.IsOther) @Html.LabelFor(model => model.IsOther, new { @class = "control-label" })<br />
+                                            <div id="specifyOther">
+                                                @Html.LabelFor(model => model.Other, new { @class = "control-label" }) @Html.TextBoxFor(model => model.Other, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="row nextline">
+                                        <div class="col-md-4">
+                                            @Html.LabelFor(model => model.APSProviderAgencyPart1, new { @class = "control-label" })
+
+                                            @Html.TextBoxFor(model => model.APSProviderAgencyPart1, new { @class = "form-control" })
+
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(model => model.CaseworkerNamePart1, new { @class = "control-label" })
+
+                                            @Html.TextBoxFor(model => model.CaseworkerNamePart1, new { @class = "form-control" })
+
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="@(User.IsInRole("CMS_Supervisor") || User.IsInRole("CMS_IDOAStaff") ? "enablediv" : "disablediv") row well nextline">
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(model => model.SupervisorNamePart1, new { @class = "control-label" })
+
+                                            @Html.TextBoxFor(model => model.SupervisorNamePart1, new { @class = "form-control" })
+
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            @Html.LabelFor(model => model.DateSupervisorReviewedpart1, new { @class = "control-label" })
+
+                                            @Html.TextBoxFor(model => model.DateSupervisorReviewedpart1, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker" })
+
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row nextline">
+                        <b>Complete Part 2, once 45 days has passed and the APS PA had contacted Law Enforcement for follow-up.</b>
+
+                        <div class="form-group">
+                            <button id="part2law" type="button" class="btn btn-xl btn-primary btn-block" data-toggle="collapse" data-target="#part2">Part 2</button>
+                        </div>
+
+                        <div id="part2" class="disablediv collapse">
+                            <div class="">
+                                <div class="well container" style="background-color: #fff">
+
+
+                                    <br />
+
+                                    <div class="row" style="margin: 3px">
+                                        <b>Follow-Up by Law Enforcement (To Extent Known)</b>
+                                    </div>
+                                    <div class="row nextline">
+                                        <div class="col-md-12">
+
+                                            @Html.CheckBoxFor(model => model.IsReportTaken) @Html.LabelFor(model => model.IsReportTaken, new { @class = "control-label" })<br />
+                                            @Html.CheckBoxFor(model => model.IsInvestigation) @Html.LabelFor(model => model.IsInvestigation, new { @class = "control-label" })<br />
+                                            @Html.CheckBoxFor(model => model.IsArrest) @Html.LabelFor(model => model.IsArrest, new { @class = "control-label" })<br />
+                                            @Html.CheckBoxFor(model => model.IsConviction) @Html.LabelFor(model => model.IsConviction, new { @class = "control-label" })<br />
+                                            @Html.CheckBoxFor(model => model.IsUnknown) @Html.LabelFor(model => model.IsUnknown, new { @class = "control-label" })<br />
+                                            @Html.CheckBoxFor(model => model.IsChargesFiled) @Html.LabelFor(model => model.IsChargesFiled, new { @class = "control-label" })
+                                            <div id="chargesfiledOptions">
+                                                <div class="col-md-2">
+                                                    @Html.LabelFor(model => model.DateChargesFiled, new { @class = "control-label" }) @Html.TextBoxFor(model => model.DateChargesFiled, "{0:MM/dd/yyyy}", new { @class = "form-control  datepicker", placeholder = "Date Filed" })
+                                                </div>
+                                                <div class="col-md-6">
+                                                    @Html.LabelFor(model => model.ChargesFiled, new { @class = "control-label" }) @Html.TextAreaFor(model => model.ChargesFiled, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row nextline"></div>
+                                    <div class="row nextline"></div>
+                                    <div class="row nextline">
+                                        <div class="col-md-8">
+                                            <b>Summary</b>
+                                            @Html.LabelFor(model => model.Comments, new { @class = "control-label" }) @Html.TextAreaFor(model => model.Comments, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row nextline">
+                                        <div class="col-md-4">
+                                            @Html.LabelFor(model => model.APSProviderAgencyPart2, new { @class = "control-label" })
+
+                                            @Html.TextBoxFor(model => model.APSProviderAgencyPart2, new { @class = "form-control" })
+
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(model => model.CaseworkerNamePart2, new { @class = "control-label" })
+
+                                            @Html.TextBoxFor(model => model.CaseworkerNamePart2, new { @class = "form-control" })
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="@(@User.IsInRole("CMS_Supervisor") || User.IsInRole("CMS_IDOAStaff") ? "enablediv" : "disablediv") row well nextline">
+                                        <div class="col-md-3">
+                                            @Html.LabelFor(model => model.SupervisorNamePart2, new { @class = "control-label" })
+
+                                            @Html.TextBoxFor(model => model.SupervisorNamePart2, new { @class = "form-control" })
+
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            @Html.LabelFor(model => model.DateSupervisorReviewedpart2, new { @class = "control-label" })
+
+                                            @Html.TextBoxFor(model => model.DateSupervisorReviewedpart2, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker" })
+
+                                        </div>
+
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+            }
+        </div>
+    </div>
+</div>
